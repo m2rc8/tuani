@@ -9,6 +9,8 @@ import { UploadService } from './services/UploadService'
 import { otpService } from './services/OtpService'
 import { prisma as defaultPrisma } from './lib/prisma'
 import { createAuthRouter } from './routes/auth'
+import { createDoctorsRouter } from './routes/doctors'
+import { createAdminRouter } from './routes/admin'
 
 interface AppDeps {
   authService?:         AuthService
@@ -31,7 +33,9 @@ export function createApp(deps?: AppDeps): { app: express.Express } {
   const prescriptionService = deps?.prescriptionService ?? new PrescriptionService(db)
   const uploadService       = deps?.uploadService       ?? new UploadService()
 
-  app.use('/api/auth', createAuthRouter(authService))
+  app.use('/api/auth',    createAuthRouter(authService))
+  app.use('/api/doctors', createDoctorsRouter(db))
+  app.use('/api/admin',   createAdminRouter(db))
   app.get('/health', (_req, res) => res.json({ ok: true }))
 
   return { app }
