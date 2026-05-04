@@ -1,5 +1,5 @@
 import crypto from 'crypto'
-import { PrismaClient, Consultation, Prescription, ConsultationStatus, PaymentStatus, Role } from '@prisma/client'
+import { PrismaClient, Consultation, Prescription, ConsultationStatus, PaymentStatus, Role, Prisma } from '@prisma/client'
 import type { Server } from 'socket.io'
 
 export interface Medication {
@@ -121,7 +121,7 @@ export class ConsultationService {
         data: {
           consultation_id: id,
           qr_code,
-          medications: data.medications,
+          medications: data.medications as unknown as Prisma.InputJsonValue,
           instructions: data.instructions,
           valid_until,
         },
