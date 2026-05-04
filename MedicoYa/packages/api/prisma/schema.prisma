@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                 String    @id @default(uuid())
+  phone              String    @unique
+  name               String?
+  role               Role
+  preferred_language Language  @default(es)
+  created_at         DateTime  @default(now())
+
+  doctor   Doctor?
+  patient  Patient?
+}
+
+enum Role {
+  patient
+  doctor
+  admin
+}
+
+enum Language {
+  es
+  en
+}
+
+model Doctor {
+  id           String    @id
+  user         User      @relation(fields: [id], references: [id])
+  cedula       String?   @unique
+  cmh_verified Boolean   @default(false)
+  available    Boolean   @default(false)
+  bio          String?
+  approved_at  DateTime?
+}
+
+model Patient {
+  id                String           @id
+  user              User             @relation(fields: [id], references: [id])
+  dob               DateTime?
+  allergies         String?
+  registered_by     String?
+  registration_mode RegistrationMode @default(self)
+}
+
+enum RegistrationMode {
+  self
+  brigade_doctor
+}
