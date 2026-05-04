@@ -13,7 +13,7 @@ export function createApp(deps?: AppDeps): express.Express {
   const app = express()
 
   app.use(helmet())
-  app.use(express.json())
+  app.use(express.json({ limit: '10kb' }))
 
   const authService =
     deps?.authService ?? new AuthService(otpService, prisma)
