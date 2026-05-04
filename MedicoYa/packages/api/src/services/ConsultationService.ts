@@ -135,6 +135,8 @@ export class ConsultationService {
   async confirmPayment(id: string, doctorId: string): Promise<Consultation> {
     const c = await this.db.consultation.findUnique({ where: { id } })
     if (!c) throw new ConsultationError('NOT_FOUND', 'Consultation not found')
+    if (c.doctor_id !== doctorId)
+      throw new ConsultationError('WRONG_ROLE', 'Only the assigned doctor can confirm payment')
     return this.db.consultation.update({
       where: { id },
       data: { payment_status: PaymentStatus.confirmed },

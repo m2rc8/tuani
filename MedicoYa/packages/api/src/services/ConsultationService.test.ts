@@ -1,11 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { ConsultationService, ConsultationError, Medication } from './ConsultationService'
-import { ConsultationStatus, PaymentStatus, Role, Language } from '@prisma/client'
+import { ConsultationStatus, PaymentStatus, Role } from '@prisma/client'
 
 const PATIENT_ID = 'patient-uuid-1'
 const DOCTOR_ID  = 'doctor-uuid-1'
 const CONSULT_ID = 'consult-uuid-1'
-const SECRET     = 'test-secret-medicoya-min-32-chars-ok'
 
 const baseConsultation = {
   id: CONSULT_ID,
@@ -158,7 +157,12 @@ describe('ConsultationService', () => {
       mockDb.$transaction.mockResolvedValue([completedConsult, mockPrescription])
 
       const result = await svc.completeConsultation(CONSULT_ID, DOCTOR_ID, { diagnosis: 'flu', medications: meds })
-      expect(mockDb.$transaction).toHaveBeenCalled()
+      expect(mockDb.$transaction).toHaveBeenCalledWith(
+        expect.arrayContaining([
+          expect.anything(), // consultation update
+          expect.anything(), // prescription create
+        ])
+      )
       expect(result.consultation.status).toBe(ConsultationStatus.completed)
       expect(result.prescription.qr_code).toBeTruthy()
     })
@@ -181,6 +185,13 @@ describe('ConsultationService', () => {
       })
       const result = await svc.confirmPayment(CONSULT_ID, DOCTOR_ID)
       expect(result.payment_status).toBe(PaymentStatus.confirmed)
+    })
+
+    it('throws WRONG_ROLE when caller is not the assigned doctor', async () => {
+      mockDb.consultation.findUnique.mockResolvedValue({
+        ...baseConsultation, doctor_id: DOCTOR_ID, status: ConsultationStatus.completed,
+      })
+      await expect(svc.confirmPayment(CONSULT_ID, 'other-doctor')).rejects.toMatchObject({ code: 'WRONG_ROLE' })
     })
   })
 
