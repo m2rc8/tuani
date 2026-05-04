@@ -83,7 +83,8 @@ export function toFhirPractitioner(
 
 export function toFhirMedicationBundle(
   prescription: Pick<Prescription, 'id' | 'valid_until'> & { medications: unknown },
-  patientId: string
+  patientId: string,
+  now: Date = new Date()
 ) {
   const meds = prescription.medications as Medication[]
   return {
@@ -93,7 +94,7 @@ export function toFhirMedicationBundle(
       resource: {
         resourceType: 'MedicationRequest' as const,
         id: `${prescription.id}-${i}`,
-        status: new Date() <= prescription.valid_until ? 'active' : 'completed',
+        status: now <= prescription.valid_until ? 'active' : 'completed',
         intent: 'order',
         medicationCodeableConcept: {
           coding: [{
