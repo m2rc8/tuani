@@ -3,7 +3,7 @@
 **Fecha:** 2026-05-04
 **Estado:** Aprobado
 **Fase PRD:** Fase 1 MVP
-**Scope:** Backend API completo — consultas, chat Socket.io, recetas QR, fotos Cloudinary
+**Scope:** Backend API completo — consultas, chat Socket.io, recetas QR, fotos Cloudinary, FHIR R4 read endpoints
 
 ---
 
@@ -18,6 +18,8 @@
 | QR text | `MEDICOYA:<qr_code>` | Prefijo para escaneo identificable en futuro |
 | Expiry cron | Query-time filter (`valid_until < now()`) | Sin cron en MVP, diferido a Fase 2 |
 | QR ID | `crypto.randomBytes(7).toString('base64url').slice(0, 10)` | Node built-in, CJS-safe, evita nanoid v5 ESM conflict |
+| FHIR | R4 read-only endpoints (`/fhir/R4/`) | Interoperabilidad con SESAL y sistemas hospitalarios desde Fase 1 sin costo de migración posterior |
+| FHIR serialización | Mappers manuales en `lib/fhir.ts` | 4 recursos, sin librería externa, types locales |
 
 ---
 
@@ -30,6 +32,7 @@ packages/api/
 ├── src/
 │   ├── lib/
 │   │   ├── cloudinary.ts          ← NEW: upload helper (server-side stream)
+│   │   ├── fhir.ts                ← NEW: FHIR R4 resource mappers
 │   │   ├── prisma.ts              (unchanged)
 │   │   └── twilio.ts              (unchanged)
 │   ├── middleware/
@@ -38,6 +41,7 @@ packages/api/
 │   │   ├── auth.ts                (unchanged)
 │   │   ├── consultations.ts       ← NEW
 │   │   ├── doctors.ts             ← NEW
+│   │   ├── fhir.ts                ← NEW: /fhir/R4/ read endpoints
 │   │   ├── prescriptions.ts       ← NEW
 │   │   └── admin.ts               ← NEW
 │   ├── services/
@@ -89,6 +93,7 @@ model Consultation {
   symptoms_text  String?
   symptom_photo  String?
   diagnosis      String?
+  diagnosis_code String?
   price_lps      Decimal?           @db.Decimal(10, 2)
   payment_status PaymentStatus      @default(pending)
   created_at     DateTime           @default(now())
@@ -138,7 +143,9 @@ consultations Consultation[]
 messages Message[]
 ```
 
-`medications` es un array JSON: `[{ name: string, dose: string, frequency: string }]`.
+`medications` es un array JSON: `[{ name: string, dose: string, frequency: string, code?: string }]`.
+El campo `code` es opcional — RxNorm code (e.g. `"1049502"`) o nombre genérico DCI. Se usa en los mappers FHIR.
+`diagnosis_code` es ICD-10 opcional (e.g. `"J06.9"`). Free-text `diagnosis` sigue siendo el campo primario; `diagnosis_code` es el hook FHIR.
 `symptom_photo` almacena la URL completa de Cloudinary.
 `qr_code` es el código corto de 10 chars — generado con `crypto.randomBytes(7).toString('base64url').slice(0, 10)`. Colisión improbable; `@unique` en DB es la garantía final.
 
@@ -190,7 +197,7 @@ PUT  /api/consultations/:id/cancel      requireAuth (patient|doctor)
   → emite consultation_updated al room
 
 PUT  /api/consultations/:id/complete    requireAuth (doctor)
-  body: { diagnosis: string, medications: Medication[], instructions?: string, price_lps?: number }
+  body: { diagnosis: string, diagnosis_code?: string, medications: Medication[], instructions?: string, price_lps?: number }
   → Prisma transaction: Consultation (status: active→completed, completed_at) + Prescription (qr_code, valid_until=+30d)
   → { consultation, prescription }
   → emite consultation_updated al room
@@ -253,6 +260,7 @@ class ConsultationService {
 
   completeConsultation(id: string, doctorId: string, data: {
     diagnosis: string
+    diagnosis_code?: string
     medications: Medication[]
     instructions?: string
     price_lps?: number
@@ -391,6 +399,177 @@ interface AppDeps {
 
 ---
 
+## FHIR R4
+
+### Endpoints
+
+```
+GET /fhir/R4/Encounter/:id            requireAuth + participant  → FHIR Encounter
+GET /fhir/R4/Patient/:id              requireAuth               → FHIR Patient
+GET /fhir/R4/Practitioner/:id         requireAuth               → FHIR Practitioner
+GET /fhir/R4/MedicationRequest/:id    requireAuth + participant  → FHIR Bundle (collection)
+```
+
+Todos retornan `Content-Type: application/fhir+json`.  
+`/:id` en todos los endpoints es el UUID interno de MédicoYa (mismo id que el recurso FHIR).
+
+`GET /fhir/R4/Patient/:id` — acceso: el propio paciente (`req.user.sub === id`) o un médico con consulta activa/completada contra ese paciente. Si ninguna condición se cumple → 403.
+
+### lib/fhir.ts — Mappers
+
+Tipos locales mínimos (sin librería externa):
+
+```typescript
+type FhirStatus = 'planned' | 'in-progress' | 'finished' | 'cancelled'
+
+// Consultation.status → FHIR Encounter.status
+const ENCOUNTER_STATUS: Record<ConsultationStatus, FhirStatus> = {
+  pending:   'planned',
+  active:    'in-progress',
+  completed: 'finished',
+  rejected:  'cancelled',
+  cancelled: 'cancelled',
+}
+```
+
+**toFhirEncounter(consultation)**
+
+```typescript
+{
+  resourceType: 'Encounter',
+  id: consultation.id,
+  status: ENCOUNTER_STATUS[consultation.status],
+  class: {
+    system: 'http://terminology.hl7.org/CodeSystem/v3-ActCode',
+    code: 'VR',
+    display: 'virtual',
+  },
+  subject: { reference: `Patient/${consultation.patient_id}` },
+  ...(consultation.doctor_id && {
+    participant: [{ individual: { reference: `Practitioner/${consultation.doctor_id}` } }],
+  }),
+  ...(consultation.diagnosis && {
+    reasonCode: [{
+      coding: [{
+        system: 'http://hl7.org/fhir/sid/icd-10',
+        ...(consultation.diagnosis_code && { code: consultation.diagnosis_code }),
+        display: consultation.diagnosis,
+      }],
+      text: consultation.diagnosis,
+    }],
+  }),
+  period: {
+    start: consultation.created_at.toISOString(),
+    ...(consultation.completed_at && { end: consultation.completed_at.toISOString() }),
+  },
+}
+```
+
+**toFhirPatient(user, patient)**
+
+```typescript
+{
+  resourceType: 'Patient',
+  id: patient.id,
+  telecom: [{ system: 'phone', value: user.phone, use: 'mobile' }],
+  ...(user.name && { name: [{ text: user.name }] }),
+  ...(patient.dob && { birthDate: patient.dob.toISOString().split('T')[0] }),
+  communication: [{
+    language: {
+      coding: [{ system: 'urn:ietf:bcp:47', code: user.preferred_language }],
+    },
+    preferred: true,
+  }],
+}
+```
+
+**toFhirPractitioner(user, doctor)**
+
+```typescript
+{
+  resourceType: 'Practitioner',
+  id: doctor.id,
+  telecom: [{ system: 'phone', value: user.phone }],
+  ...(user.name && { name: [{ text: user.name }] }),
+  ...(doctor.cedula && {
+    identifier: [{
+      system: 'urn:oid:2.16.840.1.113883.2.341.1',  // Honduras CMH — OID placeholder Fase 3
+      value: doctor.cedula,
+    }],
+  }),
+}
+```
+
+**toFhirMedicationBundle(prescription, patientId)**
+
+Retorna `Bundle` con un `MedicationRequest` por medicamento:
+
+```typescript
+{
+  resourceType: 'Bundle',
+  type: 'collection',
+  entry: (prescription.medications as Medication[]).map((med, i) => ({
+    resource: {
+      resourceType: 'MedicationRequest',
+      id: `${prescription.id}-${i}`,
+      status: new Date() <= prescription.valid_until ? 'active' : 'completed',
+      intent: 'order',
+      medicationCodeableConcept: {
+        coding: [{
+          system: 'http://www.nlm.nih.gov/research/umls/rxnorm',
+          ...(med.code && { code: med.code }),
+          display: med.name,
+        }],
+        text: med.name,
+      },
+      subject: { reference: `Patient/${patientId}` },
+      dosageInstruction: [{ text: `${med.dose} — ${med.frequency}` }],
+      dispenseRequest: {
+        validityPeriod: { end: prescription.valid_until.toISOString().split('T')[0] },
+      },
+    },
+  })),
+}
+```
+
+### routes/fhir.ts
+
+```typescript
+export function createFhirRouter(db: PrismaClient): Router {
+  const router = Router()
+
+  router.get('/Encounter/:id', requireAuth, async (req, res) => {
+    // fetch consultation + assertParticipant
+    // return toFhirEncounter(consultation)
+  })
+
+  router.get('/Patient/:id', requireAuth, async (req, res) => {
+    // fetch user + patient
+    // check: req.user.sub === id OR doctor with shared consultation
+    // return toFhirPatient(user, patient)
+  })
+
+  router.get('/Practitioner/:id', requireAuth, async (req, res) => {
+    // fetch user + doctor
+    // return toFhirPractitioner(user, doctor)
+  })
+
+  router.get('/MedicationRequest/:id', requireAuth, async (req, res) => {
+    // fetch prescription + assertParticipant via consultation
+    // return toFhirMedicationBundle(prescription, patientId)
+  })
+
+  return router
+}
+```
+
+Montado en `app.ts`:
+```typescript
+app.use('/fhir/R4', createFhirRouter(db))
+```
+
+---
+
 ## lib/cloudinary.ts
 
 ```typescript
@@ -463,6 +642,12 @@ CLOUDINARY_API_SECRET=...
 - [ ] Socket.io: `send_message` persiste en DB y llega a ambos participantes del room
 - [ ] `consultation_updated` se emite vía Socket.io al aceptar/rechazar/completar consulta
 - [ ] `GET /api/admin/doctors/pending` rechaza request con role `patient` o `doctor` (403)
+- [ ] `GET /fhir/R4/Encounter/:id` retorna JSON con `resourceType: "Encounter"` y `Content-Type: application/fhir+json`
+- [ ] `GET /fhir/R4/Encounter/:id` mapea status `active` → `"in-progress"`, `completed` → `"finished"`
+- [ ] `GET /fhir/R4/Patient/:id` retorna FHIR Patient con `telecom[phone]` y `communication[preferred_language]`
+- [ ] `GET /fhir/R4/Practitioner/:id` retorna FHIR Practitioner con `identifier[cedula]` si existe
+- [ ] `GET /fhir/R4/MedicationRequest/:id` retorna Bundle con un entry por medicamento
+- [ ] FHIR endpoints respetan participant check — no participante recibe 403
 - [ ] TypeScript compila sin errores (`tsc --noEmit`)
 
 ---
@@ -477,6 +662,10 @@ CLOUDINARY_API_SECRET=...
 - Cron de expiración de recetas (Fase 2)
 - Push notifications (Fase 2)
 - Rating de médicos (Fase 2)
+- FHIR write endpoints (create/update) — Fase 3
+- FHIR search parameters (`?subject=Patient/id`) — Fase 3
+- FHIR CapabilityStatement — Fase 3
+- OID oficial Honduras CMH — requiere coordinación con SESAL, Fase 3
 
 ---
 
