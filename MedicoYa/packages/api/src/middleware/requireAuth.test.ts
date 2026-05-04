@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { Request, Response, NextFunction } from 'express'
 import jwt from 'jsonwebtoken'
-import { requireAuth } from './requireAuth'
+import { requireAuth, requireRole } from './requireAuth'
 import { Language, Role } from '@prisma/client'
 
 const SECRET = 'test-secret-medicoya-min-32-chars-ok'
@@ -65,5 +65,48 @@ describe('requireAuth', () => {
     expect(req.user?.sub).toBe('user-1')
     expect(req.user?.role).toBe(Role.patient)
     expect(req.user?.preferred_language).toBe(Language.es)
+  })
+})
+
+describe('requireRole', () => {
+  function makeAuthedReq(role: Role) {
+    const req = {
+      headers: {},
+      user: { sub: 'user-1', role, preferred_language: Language.es },
+    } as Request
+    const res = {
+      status: vi.fn().mockReturnThis(),
+      json: vi.fn().mockReturnThis(),
+    } as unknown as Response
+    const next = vi.fn() as NextFunction
+    return { req, res, next }
+  }
+
+  it('calls next() when role matches', () => {
+    const { req, res, next } = makeAuthedReq(Role.doctor)
+    requireRole(Role.doctor)(req, res, next)
+    expect(next).toHaveBeenCalled()
+    expect(res.status).not.toHaveBeenCalled()
+  })
+
+  it('returns 403 when role does not match', () => {
+    const { req, res, next } = makeAuthedReq(Role.patient)
+    requireRole(Role.doctor)(req, res, next)
+    expect(res.status).toHaveBeenCalledWith(403)
+    expect(next).not.toHaveBeenCalled()
+  })
+
+  it('accepts multiple roles — allows any matching role', () => {
+    const { req, res, next } = makeAuthedReq(Role.admin)
+    requireRole(Role.doctor, Role.admin)(req, res, next)
+    expect(next).toHaveBeenCalled()
+  })
+
+  it('returns 403 when req.user is undefined', () => {
+    const req = { headers: {} } as Request
+    const res = { status: vi.fn().mockReturnThis(), json: vi.fn().mockReturnThis() } as unknown as Response
+    const next = vi.fn() as NextFunction
+    requireRole(Role.doctor)(req, res, next)
+    expect(res.status).toHaveBeenCalledWith(403)
   })
 })

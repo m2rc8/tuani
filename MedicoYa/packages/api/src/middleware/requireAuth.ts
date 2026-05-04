@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express'
+import { Request, Response, NextFunction, RequestHandler } from 'express'
 import jwt from 'jsonwebtoken'
 import { Language, Role } from '@prisma/client'
 
@@ -38,5 +38,15 @@ export function requireAuth(
   } catch {
     res.status(401).json({ error: 'Invalid or expired token' })
     return
+  }
+}
+
+export function requireRole(...roles: Role[]): RequestHandler {
+  return (req, res, next) => {
+    if (!req.user || !roles.includes(req.user.role)) {
+      res.status(403).json({ error: 'Forbidden' })
+      return
+    }
+    next()
   }
 }
