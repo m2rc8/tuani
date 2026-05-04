@@ -17,6 +17,7 @@ model User {
 
   doctor   Doctor?
   patient  Patient?
+  messages Message[]
 }
 
 enum Role {
@@ -38,6 +39,8 @@ model Doctor {
   available    Boolean   @default(false)
   bio          String?
   approved_at  DateTime?
+
+  consultations Consultation[]
 }
 
 model Patient {
@@ -47,9 +50,73 @@ model Patient {
   allergies         String?
   registered_by     String?
   registration_mode RegistrationMode @default(self)
+
+  consultations Consultation[]
 }
 
 enum RegistrationMode {
   self
   brigade_doctor
+}
+
+enum ConsultationStatus {
+  pending
+  active
+  completed
+  rejected
+  cancelled
+}
+
+enum MessageType {
+  text
+  image
+}
+
+enum PaymentStatus {
+  pending
+  confirmed
+}
+
+model Consultation {
+  id             String             @id @default(uuid())
+  patient_id     String
+  doctor_id      String?
+  status         ConsultationStatus @default(pending)
+  symptoms_text  String?
+  symptom_photo  String?
+  diagnosis      String?
+  diagnosis_code String?
+  price_lps      Decimal?           @db.Decimal(10, 2)
+  payment_status PaymentStatus      @default(pending)
+  created_at     DateTime           @default(now())
+  completed_at   DateTime?
+
+  patient      Patient       @relation(fields: [patient_id], references: [id])
+  doctor       Doctor?       @relation(fields: [doctor_id], references: [id])
+  messages     Message[]
+  prescription Prescription?
+}
+
+model Message {
+  id              String      @id @default(uuid())
+  consultation_id String
+  sender_id       String
+  content         String
+  msg_type        MessageType @default(text)
+  created_at      DateTime    @default(now())
+
+  consultation Consultation @relation(fields: [consultation_id], references: [id])
+  sender       User         @relation(fields: [sender_id], references: [id])
+}
+
+model Prescription {
+  id              String   @id @default(uuid())
+  consultation_id String   @unique
+  qr_code         String   @unique
+  medications     Json
+  instructions    String?
+  valid_until     DateTime
+  created_at      DateTime @default(now())
+
+  consultation Consultation @relation(fields: [consultation_id], references: [id])
 }
