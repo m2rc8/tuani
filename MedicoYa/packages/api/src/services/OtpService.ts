@@ -1,4 +1,4 @@
-import { getTwilioClient, TWILIO_VERIFY_SID } from '../lib/twilio'
+import { getTwilioClient, getTwilioVerifySid } from '../lib/twilio'
 
 export interface OtpService {
   sendOtp(phone: string): Promise<void>
@@ -20,13 +20,13 @@ export class DevOtpService implements OtpService {
 export class TwilioOtpService implements OtpService {
   async sendOtp(phone: string): Promise<void> {
     await getTwilioClient()
-      .verify.v2.services(TWILIO_VERIFY_SID)
+      .verify.v2.services(getTwilioVerifySid())
       .verifications.create({ to: phone, channel: 'sms' })
   }
 
   async verifyOtp(phone: string, code: string): Promise<boolean> {
     const check = await getTwilioClient()
-      .verify.v2.services(TWILIO_VERIFY_SID)
+      .verify.v2.services(getTwilioVerifySid())
       .verificationChecks.create({ to: phone, code })
     return check.status === 'approved'
   }
