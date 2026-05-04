@@ -25,7 +25,8 @@ const mockPrisma = {
 function makeTestApp() {
   const otp = new DevOtpService()
   const authService = new AuthService(otp, mockPrisma as any)
-  return { app: createApp({ authService }), otp }
+  const { app } = createApp({ authService })
+  return { app, otp }
 }
 
 beforeEach(() => {
