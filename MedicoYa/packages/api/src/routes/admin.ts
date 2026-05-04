@@ -1,7 +1,6 @@
 import { Router, Request, Response } from 'express'
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient, Role } from '@prisma/client'
 import { requireAuth, requireRole } from '../middleware/requireAuth'
-import { Role } from '@prisma/client'
 
 export function createAdminRouter(db: PrismaClient): Router {
   const router = Router()

@@ -1,8 +1,7 @@
 import { Router, Request, Response } from 'express'
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient, Role } from '@prisma/client'
 import { z } from 'zod'
 import { requireAuth, requireRole } from '../middleware/requireAuth'
-import { Role } from '@prisma/client'
 
 const availabilitySchema = z.object({ available: z.boolean() })
 
