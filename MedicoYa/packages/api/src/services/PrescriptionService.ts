@@ -1,5 +1,9 @@
 import QRCode from 'qrcode'
-import { PrismaClient, Prescription } from '@prisma/client'
+import { PrismaClient, Prisma, Prescription } from '@prisma/client'
+
+type PrescriptionWithParticipants = Prisma.PrescriptionGetPayload<{
+  include: { consultation: { select: { patient_id: true; doctor_id: true } } }
+}>
 
 export class PrescriptionError extends Error {
   constructor(public readonly code: 'NOT_FOUND' | 'NOT_PARTICIPANT', message: string) {
@@ -15,9 +19,9 @@ export class PrescriptionService {
     const p = await this.db.prescription.findUnique({
       where: { id },
       include: { consultation: { select: { patient_id: true, doctor_id: true } } },
-    })
+    }) as PrescriptionWithParticipants | null
     if (!p) throw new PrescriptionError('NOT_FOUND', 'NOT_FOUND')
-    const { patient_id, doctor_id } = (p as any).consultation
+    const { patient_id, doctor_id } = p.consultation
     if (patient_id !== userId && doctor_id !== userId)
       throw new PrescriptionError('NOT_PARTICIPANT', 'NOT_PARTICIPANT')
     return p
