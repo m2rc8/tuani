@@ -1,0 +1,22 @@
+{
+  "auth": {
+    "phone_label": "Número de teléfono",
+    "send_code": "Enviar código",
+    "sending": "Enviando...",
+    "code_label": "Código OTP",
+    "verify": "Verificar",
+    "verifying": "Verificando...",
+    "change_phone": "← Cambiar teléfono",
+    "error_send": "Error al enviar código",
+    "error_verify": "Código inválido"
+  },
+  "profile": {
+    "title": "Perfil",
+    "language": "Idioma",
+    "logout": "Cerrar sesión"
+  },
+  "common": {
+    "coming_soon": "Próximamente",
+    "error_generic": "Algo salió mal"
+  }
+}

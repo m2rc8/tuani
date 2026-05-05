@@ -1,0 +1,22 @@
+{
+  "auth": {
+    "phone_label": "Phone number",
+    "send_code": "Send code",
+    "sending": "Sending...",
+    "code_label": "OTP code",
+    "verify": "Verify",
+    "verifying": "Verifying...",
+    "change_phone": "← Change phone",
+    "error_send": "Failed to send code",
+    "error_verify": "Invalid code"
+  },
+  "profile": {
+    "title": "Profile",
+    "language": "Language",
+    "logout": "Sign out"
+  },
+  "common": {
+    "coming_soon": "Coming soon",
+    "error_generic": "Something went wrong"
+  }
+}
