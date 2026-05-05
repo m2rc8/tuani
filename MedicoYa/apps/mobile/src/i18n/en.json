@@ -24,5 +24,39 @@
   "common": {
     "coming_soon": "Coming soon",
     "error_generic": "Something went wrong"
+  },
+  "consultation": {
+    "start_cta": "Consult now",
+    "symptoms_placeholder": "What symptoms do you have? (max 500 characters)",
+    "chars_remaining": "{{count}} characters remaining",
+    "add_photo": "Add photo",
+    "doctors_available_one": "{{count}} doctor available",
+    "doctors_available_other": "{{count}} doctors available",
+    "no_doctors": "No doctors available",
+    "waiting_title": "Finding a doctor",
+    "waiting_subtitle": "A doctor will review your symptoms shortly. Estimated wait: 2–5 min.",
+    "cancel": "Cancel consultation",
+    "your_symptoms": "Your symptoms",
+    "chat_placeholder": "Type a message...",
+    "send": "Send",
+    "consultation_completed": "Consultation completed",
+    "prescription_ready": "Your prescription is ready",
+    "view_prescription": "View full prescription →",
+    "prescription_title": "Medical prescription",
+    "diagnosis": "Diagnosis",
+    "medications": "Medications",
+    "valid_until": "Valid until",
+    "share": "Share prescription"
+  },
+  "history": {
+    "title": "History",
+    "empty": "You have no past consultations",
+    "status": {
+      "pending": "Pending",
+      "active": "In progress",
+      "completed": "Completed",
+      "rejected": "Rejected",
+      "cancelled": "Cancelled"
+    }
   }
 }

@@ -24,5 +24,39 @@
   "common": {
     "coming_soon": "Próximamente",
     "error_generic": "Algo salió mal"
+  },
+  "consultation": {
+    "start_cta": "Consultar ahora",
+    "symptoms_placeholder": "¿Qué síntomas tienes? (máx. 500 caracteres)",
+    "chars_remaining": "{{count}} caracteres restantes",
+    "add_photo": "Agregar foto",
+    "doctors_available_one": "{{count}} médico disponible",
+    "doctors_available_other": "{{count}} médicos disponibles",
+    "no_doctors": "Sin médicos disponibles",
+    "waiting_title": "Buscando médico",
+    "waiting_subtitle": "Un médico revisará tus síntomas pronto. Espera estimada: 2–5 min.",
+    "cancel": "Cancelar consulta",
+    "your_symptoms": "Tus síntomas",
+    "chat_placeholder": "Escribe un mensaje...",
+    "send": "Enviar",
+    "consultation_completed": "Consulta completada",
+    "prescription_ready": "Tu receta está lista",
+    "view_prescription": "Ver receta completa →",
+    "prescription_title": "Receta médica",
+    "diagnosis": "Diagnóstico",
+    "medications": "Medicamentos",
+    "valid_until": "Válida hasta",
+    "share": "Compartir receta"
+  },
+  "history": {
+    "title": "Historial",
+    "empty": "No tienes consultas anteriores",
+    "status": {
+      "pending": "Pendiente",
+      "active": "En curso",
+      "completed": "Completada",
+      "rejected": "Rechazada",
+      "cancelled": "Cancelada"
+    }
   }
 }
