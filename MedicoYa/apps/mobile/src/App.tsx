@@ -13,9 +13,12 @@ function App() {
 
   useEffect(() => {
     async function init() {
-      await hydrate()
-      await i18n.changeLanguage(useAuthStore.getState().language)
-      setReady(true)
+      try {
+        await hydrate()
+        await i18n.changeLanguage(useAuthStore.getState().language)
+      } finally {
+        setReady(true)
+      }
     }
     init()
   }, [hydrate])
