@@ -1,0 +1,35 @@
+import React, { useEffect, useState } from 'react'
+import { NavigationContainer } from '@react-navigation/native'
+import { SafeAreaProvider } from 'react-native-safe-area-context'
+import './i18n'
+import i18n from './i18n'
+import { useAuthStore } from './store/authStore'
+import RootNavigator from './navigation/RootNavigator'
+import { registerRootComponent } from 'expo'
+
+function App() {
+  const [ready, setReady] = useState(false)
+  const hydrate = useAuthStore((s) => s.hydrate)
+
+  useEffect(() => {
+    async function init() {
+      await hydrate()
+      await i18n.changeLanguage(useAuthStore.getState().language)
+      setReady(true)
+    }
+    init()
+  }, [hydrate])
+
+  if (!ready) return null
+
+  return (
+    <SafeAreaProvider>
+      <NavigationContainer>
+        <RootNavigator />
+      </NavigationContainer>
+    </SafeAreaProvider>
+  )
+}
+
+registerRootComponent(App)
+export default App

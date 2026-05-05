@@ -12,7 +12,8 @@
     "build:admin": "npm --workspace apps/admin run build",
     "build:api":   "npm --workspace packages/api run build",
     "build":       "npm run build:admin && npm run build:api",
-    "start":       "npm --workspace packages/api run start"
+    "start":       "npm --workspace packages/api run start",
+    "dev:mobile":  "npm --workspace apps/mobile run start"
   },
   "engines": {
     "node": ">=20.0.0"
