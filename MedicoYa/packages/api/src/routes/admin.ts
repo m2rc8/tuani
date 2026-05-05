@@ -11,7 +11,7 @@ export function createAdminRouter(db: PrismaClient): Router {
     requireRole(Role.admin),
     async (_req: Request, res: Response): Promise<void> => {
       const doctors = await db.doctor.findMany({
-        where:   { approved_at: null },
+        where:   { approved_at: null, rejected_at: null },
         include: { user: { select: { name: true, phone: true } } },
       })
       res.json(doctors)

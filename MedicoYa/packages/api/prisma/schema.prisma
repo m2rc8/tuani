@@ -39,6 +39,7 @@ model Doctor {
   available    Boolean   @default(false)
   bio          String?
   approved_at  DateTime?
+  rejected_at  DateTime?
 
   consultations Consultation[]
 }
