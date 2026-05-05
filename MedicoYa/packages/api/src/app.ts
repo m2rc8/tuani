@@ -12,6 +12,8 @@ import { createAuthRouter } from './routes/auth'
 import { createDoctorsRouter } from './routes/doctors'
 import { createAdminRouter } from './routes/admin'
 import { createConsultationsRouter } from './routes/consultations'
+import { createPrescriptionsRouter } from './routes/prescriptions'
+import { createFhirRouter }         from './routes/fhir'
 
 interface AppDeps {
   authService?:         AuthService
@@ -38,6 +40,8 @@ export function createApp(deps?: AppDeps): { app: express.Express } {
   app.use('/api/doctors',       createDoctorsRouter(db))
   app.use('/api/admin',         createAdminRouter(db))
   app.use('/api/consultations', createConsultationsRouter(consultationService, uploadService))
+  app.use('/api/prescriptions', createPrescriptionsRouter(prescriptionService))
+  app.use('/fhir/R4',           createFhirRouter(db))
   app.get('/health', (_req, res) => res.json({ ok: true }))
 
   return { app }
