@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import { useAuthStore } from '../store/authStore'
 
 const api = axios.create({
@@ -16,7 +16,7 @@ api.interceptors.request.use((config) => {
 
 api.interceptors.response.use(
   (res) => res,
-  async (err) => {
+  async (err: AxiosError) => {
     if (err.response?.status === 401) {
       await useAuthStore.getState().logout()
     }
