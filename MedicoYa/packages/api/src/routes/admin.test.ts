@@ -104,6 +104,11 @@ describe('GET /api/admin/doctors/approved', () => {
     expect(res.status).toBe(200)
     expect(res.body).toHaveLength(1)
     expect(res.body[0].available).toBe(true)
+    expect(mockDb.doctor.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: { approved_at: { not: null }, rejected_at: null },
+      })
+    )
   })
 })
 
