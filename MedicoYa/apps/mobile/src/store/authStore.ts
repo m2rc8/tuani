@@ -27,6 +27,10 @@ function resolveLang(raw: string): 'es' | 'en' {
   return raw === 'en' ? 'en' : 'es'
 }
 
+function resolveRole(raw: string): 'patient' | 'doctor' {
+  return raw === 'doctor' ? 'doctor' : 'patient'
+}
+
 export const useAuthStore = create<AuthState>((set) => ({
   token: null,
   userId: null,
@@ -35,7 +39,7 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   login: async (token, user) => {
     const language = resolveLang(user.preferred_language)
-    const stored: StoredUser = { userId: user.id, role: user.role as 'patient' | 'doctor', language }
+    const stored: StoredUser = { userId: user.id, role: resolveRole(user.role), language }
     await SecureStore.setItemAsync(TOKEN_KEY, token)
     await AsyncStorage.setItem(USER_KEY, JSON.stringify(stored))
     set({ token, userId: user.id, role: stored.role, language })
@@ -46,6 +50,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     await SecureStore.deleteItemAsync(TOKEN_KEY)
     await AsyncStorage.removeItem(USER_KEY)
     set({ token: null, userId: null, role: null, language: 'es' })
+    await i18n.changeLanguage('es')
   },
 
   setLanguage: async (lang) => {

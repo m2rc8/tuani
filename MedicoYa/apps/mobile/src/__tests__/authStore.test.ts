@@ -85,6 +85,11 @@ describe('authStore.logout', () => {
     expect(userId).toBeNull()
     expect(role).toBeNull()
   })
+
+  it('resets i18n language to es', async () => {
+    await useAuthStore.getState().logout()
+    expect(i18n.changeLanguage).toHaveBeenCalledWith('es')
+  })
 })
 
 describe('authStore.setLanguage', () => {
