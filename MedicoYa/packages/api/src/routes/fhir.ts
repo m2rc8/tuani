@@ -1,9 +1,13 @@
 import { Router, Request, Response } from 'express'
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient, Prisma } from '@prisma/client'
 import { requireAuth } from '../middleware/requireAuth'
 import { toFhirEncounter, toFhirPatient, toFhirPractitioner, toFhirMedicationBundle } from '../lib/fhir'
 
 const FHIR_JSON = 'application/fhir+json'
+
+type PrescriptionWithConsultation = Prisma.PrescriptionGetPayload<{
+  include: { consultation: { select: { patient_id: true; doctor_id: true } } }
+}>
 
 export function createFhirRouter(db: PrismaClient): Router {
   const router = Router()
@@ -54,7 +58,8 @@ export function createFhirRouter(db: PrismaClient): Router {
       include: { consultation: { select: { patient_id: true, doctor_id: true } } },
     })
     if (!p) { res.status(404).json({ error: 'Not found' }); return }
-    const { patient_id, doctor_id } = (p as any).consultation
+    const typed = p as PrescriptionWithConsultation
+    const { patient_id, doctor_id } = typed.consultation
     if (patient_id !== req.user!.sub && doctor_id !== req.user!.sub) {
       res.status(403).json({ error: 'Not a participant' }); return
     }
