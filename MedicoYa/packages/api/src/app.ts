@@ -1,5 +1,6 @@
 import express from 'express'
 import helmet from 'helmet'
+import path from 'path'
 import type { PrismaClient } from '@prisma/client'
 import type { Server } from 'socket.io'
 import { AuthService } from './services/AuthService'
@@ -26,6 +27,8 @@ interface AppDeps {
 
 export function createApp(deps?: AppDeps): { app: express.Express } {
   const app = express()
+
+  app.use('/admin', express.static(path.join(__dirname, '../../../apps/admin/out')))
 
   app.use(helmet())
   app.use(express.json({ limit: '10kb' }))
