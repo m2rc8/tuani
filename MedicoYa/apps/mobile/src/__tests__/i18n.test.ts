@@ -1,6 +1,10 @@
 import i18n from '../i18n'
 
 describe('i18n translations', () => {
+  afterEach(async () => {
+    await i18n.changeLanguage('es')
+  })
+
   it('loads Spanish auth keys', async () => {
     await i18n.changeLanguage('es')
     expect(i18n.t('auth.phone_label')).toBe('Número de teléfono')
