@@ -42,8 +42,11 @@ export class ConsultationService {
     })
   }
 
-  async getConsultation(id: string, userId: string): Promise<Consultation> {
-    const c = await this.db.consultation.findUnique({ where: { id } })
+  async getConsultation(id: string, userId: string) {
+    const c = await this.db.consultation.findUnique({
+      where: { id },
+      include: { prescription: true },
+    })
     if (!c) throw new ConsultationError('NOT_FOUND', 'Consultation not found')
     if (c.patient_id !== userId && c.doctor_id !== userId)
       throw new ConsultationError('NOT_PARTICIPANT', 'Not a participant of this consultation')

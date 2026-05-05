@@ -83,6 +83,29 @@ describe('ConsultationService', () => {
       mockDb.consultation.findUnique.mockResolvedValue({ ...baseConsultation })
       await expect(svc.getConsultation(CONSULT_ID, 'other-user')).rejects.toMatchObject({ code: 'NOT_PARTICIPANT' })
     })
+
+    it('includes prescription when consultation is completed', async () => {
+      const mockPrescription = {
+        id: 'presc-1',
+        consultation_id: CONSULT_ID,
+        qr_code: 'ABCD123456',
+        medications: [{ name: 'Ibuprofen', dose: '400mg', frequency: 'every 8h' }],
+        instructions: null,
+        valid_until: new Date(),
+        created_at: new Date(),
+      }
+      mockDb.consultation.findUnique.mockResolvedValue({
+        ...baseConsultation,
+        status: ConsultationStatus.completed,
+        prescription: mockPrescription,
+      })
+      const result = await svc.getConsultation(CONSULT_ID, PATIENT_ID)
+      expect(mockDb.consultation.findUnique).toHaveBeenCalledWith(
+        expect.objectContaining({ include: { prescription: true } })
+      )
+      expect(result.prescription).toBeDefined()
+      expect((result as any).prescription?.qr_code).toBe('ABCD123456')
+    })
   })
 
   describe('acceptConsultation', () => {
