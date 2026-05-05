@@ -14,7 +14,10 @@ export async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> 
   })
   if (res.status === 401) {
     clearToken()
-    window.location.href = '/admin'
+    if (typeof window !== 'undefined') {
+      window.location.href = '/admin'
+      return new Promise<T>(() => {})
+    }
     throw new Error('Unauthorized')
   }
   if (!res.ok) {
