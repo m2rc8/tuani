@@ -32,6 +32,7 @@ const mockConsultationService = {
   completeConsultation: vi.fn(),
   confirmPayment:      vi.fn(),
   getUserConsultations: vi.fn(),
+  getPendingQueue:     vi.fn(),
 }
 
 const mockUploadService = {
@@ -187,5 +188,35 @@ describe('PUT /api/consultations/:id/complete', () => {
       .set('Authorization', `Bearer ${makeToken(DOC_ID, Role.doctor)}`)
       .send({ medications: [] })
     expect(res.status).toBe(400)
+  })
+})
+
+describe('GET /api/consultations/queue', () => {
+  it('returns 401 without auth', async () => {
+    const app = makeTestApp()
+    const res = await request(app).get('/api/consultations/queue')
+    expect(res.status).toBe(401)
+  })
+
+  it('returns 403 for patient role', async () => {
+    const app = makeTestApp()
+    const res = await request(app)
+      .get('/api/consultations/queue')
+      .set('Authorization', `Bearer ${makeToken(PAT_ID, Role.patient)}`)
+    expect(res.status).toBe(403)
+  })
+
+  it('returns pending consultations for doctor', async () => {
+    mockConsultationService.getPendingQueue.mockResolvedValue([
+      { ...baseConsultation, patient: { user: { phone: '+50412345678' } } },
+    ])
+    const app = makeTestApp()
+    const res = await request(app)
+      .get('/api/consultations/queue')
+      .set('Authorization', `Bearer ${makeToken(DOC_ID, Role.doctor)}`)
+    expect(res.status).toBe(200)
+    expect(res.body).toHaveLength(1)
+    expect(res.body[0].status).toBe('pending')
+    expect(mockConsultationService.getPendingQueue).toHaveBeenCalledOnce()
   })
 })

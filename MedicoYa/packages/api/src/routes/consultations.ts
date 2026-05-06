@@ -79,6 +79,17 @@ export function createConsultationsRouter(
     }
   )
 
+  // /queue must be before /:id — Express would match literal "queue" as an id param otherwise
+  router.get(
+    '/queue',
+    requireAuth,
+    requireRole(Role.doctor),
+    async (_req: Request, res: Response): Promise<void> => {
+      const consultations = await consultationService.getPendingQueue()
+      res.json(consultations)
+    }
+  )
+
   router.get(
     '/:id',
     requireAuth,
