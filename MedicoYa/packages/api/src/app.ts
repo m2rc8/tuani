@@ -7,6 +7,7 @@ import { AuthService } from './services/AuthService'
 import { ConsultationService } from './services/ConsultationService'
 import { PrescriptionService } from './services/PrescriptionService'
 import { UploadService } from './services/UploadService'
+import { NotificationService } from './services/NotificationService'
 import { otpService } from './services/OtpService'
 import { prisma as defaultPrisma } from './lib/prisma'
 import { createAuthRouter } from './routes/auth'
@@ -14,6 +15,7 @@ import { createDoctorsRouter } from './routes/doctors'
 import { createAdminRouter } from './routes/admin'
 import { createConsultationsRouter } from './routes/consultations'
 import { createPrescriptionsRouter } from './routes/prescriptions'
+import { createNotificationsRouter } from './routes/notifications'
 import { createFhirRouter }         from './routes/fhir'
 
 interface AppDeps {
@@ -21,6 +23,7 @@ interface AppDeps {
   consultationService?: ConsultationService
   prescriptionService?: PrescriptionService
   uploadService?:       UploadService
+  notificationService?: NotificationService
   db?:                  PrismaClient
   io?:                  Server
 }
@@ -47,6 +50,7 @@ export function createApp(deps?: AppDeps): { app: express.Express } {
   app.use('/api/admin',         createAdminRouter(db))
   app.use('/api/consultations', createConsultationsRouter(consultationService, uploadService))
   app.use('/api/prescriptions', createPrescriptionsRouter(prescriptionService))
+  app.use('/api/notifications', createNotificationsRouter(db))
   app.use('/fhir/R4',           createFhirRouter(db))
   app.get('/health', (_req, res) => res.json({ ok: true }))
 
