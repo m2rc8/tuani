@@ -1,4 +1,5 @@
 'use client'
+import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { apiFetch } from '../lib/api'
 
@@ -22,11 +23,11 @@ const STATUS_BADGE: Record<string, string> = {
 }
 
 export default function ConsultationsTable() {
-  const today = new Date().toISOString().split('T')[0]
+  const [date, setDate] = useState(() => new Date().toISOString().split('T')[0])
 
   const { data = [], isLoading, dataUpdatedAt } = useQuery<Consultation[]>({
-    queryKey:        ['consultations', today],
-    queryFn:         () => apiFetch(`/api/admin/consultations?date=${today}`),
+    queryKey:        ['consultations', date],
+    queryFn:         () => apiFetch(`/api/admin/consultations?date=${date}`),
     refetchInterval: 30_000,
   })
 
@@ -37,14 +38,20 @@ export default function ConsultationsTable() {
   return (
     <div>
       <div className="flex items-center gap-3 mb-6">
-        <h1 className="text-2xl font-bold">Consultas hoy</h1>
+        <h1 className="text-2xl font-bold">Consultas</h1>
+        <input
+          type="date"
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
+          className="bg-slate-800 border border-slate-700 rounded px-2 py-1 text-sm text-slate-200"
+        />
         <span className="text-slate-500 text-sm">↻ {ago}</span>
       </div>
 
       {isLoading ? (
         <p className="text-slate-500">Cargando...</p>
       ) : data.length === 0 ? (
-        <p className="text-slate-500">No hay consultas hoy.</p>
+        <p className="text-slate-500">No hay consultas para esta fecha.</p>
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
