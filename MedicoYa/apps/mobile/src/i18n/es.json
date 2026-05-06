@@ -78,6 +78,7 @@
     "medication_frequency": "Frecuencia",
     "instructions_label": "Instrucciones (opcional)",
     "price_label": "Precio en lempiras (opcional)",
-    "submit_rx": "Completar y generar receta"
+    "submit_rx": "Completar y generar receta",
+    "availability_label": "Disponible para consultas"
   }
 }
