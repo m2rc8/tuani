@@ -3,10 +3,10 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { useAuthStore } from '../store/authStore'
 import AuthStack from './AuthStack'
 import PatientTabs from './PatientTabs'
-import DoctorTabs from './DoctorTabs'
 import WaitingScreen from '../screens/patient/WaitingScreen'
 import ConsultationScreen from '../screens/patient/ConsultationScreen'
 import PrescriptionScreen from '../screens/patient/PrescriptionScreen'
+import DoctorRoot from './DoctorStack'
 
 export type PatientStackParamList = {
   PatientTabs: undefined
@@ -37,6 +37,6 @@ export default function RootNavigator() {
   const role = useAuthStore((s) => s.role)
 
   if (!token) return <AuthStack />
-  if (role === 'doctor') return <DoctorTabs />
+  if (role === 'doctor') return <DoctorRoot />
   return <PatientRoot />
 }
