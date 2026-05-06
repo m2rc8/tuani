@@ -38,7 +38,7 @@ export default function HomeScreen({ navigation }: any) {
     fetchDoctors()
     const interval = setInterval(fetchDoctors, 30_000)
     return () => clearInterval(interval)
-  }, [activeConsultationId, status])
+  }, [activeConsultationId, status, fetchDoctors])
 
   const canSubmit = symptoms.trim().length > 0 && (doctorCount ?? 0) > 0 && !submitting
 

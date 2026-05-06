@@ -59,7 +59,7 @@ export default function PatientHistoryScreen({ navigation }: any) {
       contentContainerStyle={styles.list}
       renderItem={({ item }) => {
         const color = STATUS_COLORS[item.status] ?? '#94A3B8'
-        const date = new Date(item.created_at).toLocaleDateString()
+        const date = item.created_at ? new Date(item.created_at).toLocaleDateString() : '—'
         return (
           <TouchableOpacity
             style={styles.card}

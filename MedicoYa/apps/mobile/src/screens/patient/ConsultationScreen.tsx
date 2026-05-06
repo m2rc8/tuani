@@ -43,6 +43,7 @@ export default function ConsultationScreen({ navigation, route }: any) {
   const [prescription, setPrescription] = useState<Prescription | null>(null)
   const [diagnosis, setDiagnosis] = useState<string | null>(null)
   const listRef = useRef<FlatList>(null)
+  const scrollTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const isCompleted = status === 'completed'
 
@@ -62,7 +63,8 @@ export default function ConsultationScreen({ navigation, route }: any) {
   const handleReceiveMessage = useCallback(
     (msg: Message) => {
       appendMessage(msg)
-      setTimeout(() => listRef.current?.scrollToEnd({ animated: true }), 100)
+      if (scrollTimer.current) clearTimeout(scrollTimer.current)
+      scrollTimer.current = setTimeout(() => listRef.current?.scrollToEnd({ animated: true }), 100)
     },
     [appendMessage],
   )
@@ -87,6 +89,7 @@ export default function ConsultationScreen({ navigation, route }: any) {
     return () => {
       socketService.off('receive_message', handleReceiveMessage)
       socketService.off('consultation_updated', handleConsultationUpdated)
+      if (scrollTimer.current) clearTimeout(scrollTimer.current)
     }
   }, [consultationId, handleReceiveMessage, handleConsultationUpdated, baseURL, token])
 

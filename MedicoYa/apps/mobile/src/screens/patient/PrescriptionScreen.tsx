@@ -3,23 +3,17 @@ import { View, Text, ScrollView, StyleSheet, ActivityIndicator } from 'react-nat
 import QRCode from 'react-qr-code'
 import { useTranslation } from 'react-i18next'
 import api from '../../lib/api'
-import { useConsultationStore } from '../../store/consultationStore'
 import type { ConsultationDetail } from '../../lib/types'
 
 export default function PrescriptionScreen({ route }: any) {
   const { t } = useTranslation()
   const { consultationId } = route.params as { consultationId: string }
-  const { clear } = useConsultationStore()
   const [detail, setDetail] = useState<ConsultationDetail | null>(null)
 
   useEffect(() => {
     api.get<ConsultationDetail>(`/api/consultations/${consultationId}`)
       .then(({ data }) => setDetail(data))
       .catch(() => {})
-
-    return () => {
-      clear()
-    }
   }, [consultationId])
 
   if (!detail) {
@@ -33,7 +27,9 @@ export default function PrescriptionScreen({ route }: any) {
   const { diagnosis, prescription } = detail
   if (!prescription) return null
 
-  const validUntil = new Date(prescription.valid_until).toLocaleDateString()
+  const validUntil = prescription.valid_until
+    ? new Date(prescription.valid_until).toLocaleDateString()
+    : '—'
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
