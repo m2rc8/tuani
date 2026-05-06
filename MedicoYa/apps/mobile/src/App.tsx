@@ -1,11 +1,21 @@
 import React, { useEffect, useState } from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
+import * as Notifications from 'expo-notifications'
 import './i18n'
 import i18n from './i18n'
 import { useAuthStore } from './store/authStore'
 import RootNavigator from './navigation/RootNavigator'
+import { registerForPushNotifications } from './lib/notifications'
 import { registerRootComponent } from 'expo'
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge:  false,
+  }),
+})
 
 function App() {
   const [ready, setReady] = useState(false)
@@ -16,6 +26,9 @@ function App() {
       try {
         await hydrate()
         await i18n.changeLanguage(useAuthStore.getState().language)
+        if (useAuthStore.getState().role) {
+          registerForPushNotifications().catch(() => {})
+        }
       } finally {
         setReady(true)
       }
