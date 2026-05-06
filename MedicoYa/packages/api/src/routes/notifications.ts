@@ -4,7 +4,7 @@ import { z } from 'zod'
 import { PrismaClient } from '@prisma/client'
 import { requireAuth } from '../middleware/requireAuth'
 
-const tokenSchema = z.object({ token: z.string().min(1) })
+const tokenSchema = z.object({ token: z.string().min(1).max(200) })
 
 export function createNotificationsRouter(db: PrismaClient): Router {
   const router = Router()
@@ -18,12 +18,16 @@ export function createNotificationsRouter(db: PrismaClient): Router {
         res.status(400).json({ error: 'token is required' })
         return
       }
-      await db.pushToken.upsert({
-        where:  { token: parsed.data.token },
-        create: { id: randomUUID(), user_id: req.user!.sub, token: parsed.data.token },
-        update: { user_id: req.user!.sub, updated_at: new Date() },
-      })
-      res.status(204).send()
+      try {
+        await db.pushToken.upsert({
+          where:  { token: parsed.data.token },
+          create: { id: randomUUID(), user_id: req.user!.sub, token: parsed.data.token },
+          update: { user_id: req.user!.sub, updated_at: new Date() },
+        })
+        res.status(204).send()
+      } catch {
+        res.status(500).json({ error: 'Internal server error' })
+      }
     }
   )
 
