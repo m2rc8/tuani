@@ -15,9 +15,10 @@ model User {
   preferred_language Language  @default(es)
   created_at         DateTime  @default(now())
 
-  doctor   Doctor?
-  patient  Patient?
-  messages Message[]
+  doctor     Doctor?
+  patient    Patient?
+  messages   Message[]
+  pushTokens PushToken[]
 }
 
 enum Role {
@@ -29,6 +30,16 @@ enum Role {
 enum Language {
   es
   en
+}
+
+model PushToken {
+  id         String   @id @default(uuid())
+  user_id    String
+  token      String   @unique
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  user User @relation(fields: [user_id], references: [id])
 }
 
 model Doctor {
