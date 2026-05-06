@@ -2,8 +2,13 @@ import jwt from 'jsonwebtoken'
 import { PrismaClient } from '@prisma/client'
 import type { Server, Socket } from 'socket.io'
 import type { JwtPayload } from '../middleware/requireAuth'
+import { NotificationService, NEW_MESSAGE_MSG } from '../services/NotificationService'
 
-export function registerConsultationHandlers(io: Server, db: PrismaClient): void {
+export function registerConsultationHandlers(
+  io: Server,
+  db: PrismaClient,
+  notificationService?: NotificationService
+): void {
   io.use((socket, next) => {
     const token = socket.handshake.auth?.token
     if (!token) return next(new Error('UNAUTHORIZED'))
@@ -72,6 +77,10 @@ export function registerConsultationHandlers(io: Server, db: PrismaClient): void
             msg_type:   message.msg_type,
             created_at: message.created_at,
           })
+          const recipientId = userId === c.patient_id ? c.doctor_id : c.patient_id
+          if (recipientId) {
+            notificationService?.sendToUser(recipientId, NEW_MESSAGE_MSG).catch(() => {})
+          }
         } catch {
           socket.emit('error', { code: 'SERVER_ERROR', message: 'Unexpected error' })
         }
