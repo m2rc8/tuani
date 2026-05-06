@@ -55,9 +55,14 @@ export class NotificationService {
     const tickets = await this.expo.sendPushNotificationsAsync(messages)
 
     for (let i = 0; i < tickets.length; i++) {
-      const ticket = tickets[i] as any
-      if (ticket.status === 'error' && ticket.details?.error === 'DeviceNotRegistered') {
-        await this.db.pushToken.delete({ where: { id: validTokens[i].id } }).catch(() => {})
+      const ticket = tickets[i]
+      if (
+        ticket.status === 'error' &&
+        (ticket as { status: 'error'; details?: { error?: string } }).details?.error === 'DeviceNotRegistered'
+      ) {
+        await this.db.pushToken.delete({ where: { id: validTokens[i].id } }).catch((err) => {
+          console.error('Failed to delete stale push token:', err)
+        })
       }
     }
   }
