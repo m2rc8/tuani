@@ -1,6 +1,7 @@
 import crypto from 'crypto'
 import { PrismaClient, Consultation, Prescription, ConsultationStatus, PaymentStatus, Role, Prisma } from '@prisma/client'
 import type { Server } from 'socket.io'
+import { NotificationService, NEW_CONSULTATION_MSG, ACCEPTED_MSG, COMPLETED_MSG } from './NotificationService'
 
 export interface Medication {
   name: string
@@ -30,7 +31,8 @@ export class ConsultationError extends Error {
 export class ConsultationService {
   constructor(
     private readonly db: PrismaClient,
-    private io?: Server
+    private io?: Server,
+    private notificationService?: NotificationService
   ) {}
 
   async createConsultation(
@@ -51,6 +53,13 @@ export class ConsultationService {
         created_at: consultation.created_at,
         patient: { user: { phone: patient?.user.phone ?? '' } },
       })
+    }
+    if (this.notificationService) {
+      const doctors = await this.db.doctor.findMany({
+        where:  { available: true, approved_at: { not: null } },
+        select: { id: true },
+      })
+      await this.notificationService.sendToUsers(doctors.map(d => d.id), NEW_CONSULTATION_MSG)
     }
     return consultation
   }
@@ -76,6 +85,7 @@ export class ConsultationService {
       data: { status: ConsultationStatus.active, doctor_id: doctorId },
     })
     this.io?.to(id).emit('consultation_updated', { id, status: ConsultationStatus.active })
+    await this.notificationService?.sendToUser(c.patient_id, ACCEPTED_MSG)
     return updated
   }
 
@@ -145,6 +155,7 @@ export class ConsultationService {
     ])
 
     this.io?.to(id).emit('consultation_updated', { id, status: ConsultationStatus.completed })
+    await this.notificationService?.sendToUser(c.patient_id, COMPLETED_MSG)
     return { consultation, prescription }
   }
 

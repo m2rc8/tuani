@@ -41,7 +41,7 @@ export function createApp(deps?: AppDeps): { app: express.Express } {
 
   const db                  = deps?.db                  ?? defaultPrisma
   const authService         = deps?.authService         ?? new AuthService(otpService, db)
-  const consultationService = deps?.consultationService ?? new ConsultationService(db, deps?.io)
+  const consultationService = deps?.consultationService ?? new ConsultationService(db, deps?.io, deps?.notificationService)
   const prescriptionService = deps?.prescriptionService ?? new PrescriptionService(db)
   const uploadService       = deps?.uploadService       ?? new UploadService()
 
