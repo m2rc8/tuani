@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useEffect, useState, useCallback, useRef } from 'react'
 import {
-  View, Text, TouchableOpacity, StyleSheet, ActivityIndicator, Alert,
+  View, Text, TouchableOpacity, StyleSheet, ActivityIndicator, Alert, AppState, AppStateStatus,
 } from 'react-native'
 import { useTranslation } from 'react-i18next'
 import api from '../../lib/api'
@@ -16,6 +16,7 @@ export default function WaitingScreen({ navigation, route }: any) {
   const baseURL = process.env.EXPO_PUBLIC_API_URL ?? ''
   const { setStatus, clear } = useConsultationStore()
   const [symptomsText, setSymptomsText] = useState<string | null>(null)
+  const appState = useRef<AppStateStatus>(AppState.currentState)
 
   const handleConsultationUpdated = useCallback(
     async (data: { id: string; status: string }) => {
@@ -39,11 +40,32 @@ export default function WaitingScreen({ navigation, route }: any) {
     socketService.on('consultation_updated', handleConsultationUpdated)
 
     api.get<ConsultationDetail>(`/api/consultations/${consultationId}`)
-      .then(({ data }) => setSymptomsText(data.symptoms_text))
+      .then(({ data }) => {
+        setSymptomsText(data.symptoms_text)
+        if (data.status === 'active') {
+          setStatus('active')
+          navigation.replace('ConsultationScreen', { consultationId })
+        }
+      })
       .catch(() => {})
+
+    const sub = AppState.addEventListener('change', (next: AppStateStatus) => {
+      if (appState.current.match(/inactive|background/) && next === 'active') {
+        api.get<ConsultationDetail>(`/api/consultations/${consultationId}`)
+          .then(({ data }) => {
+            if (data.status === 'active') {
+              setStatus('active')
+              navigation.replace('ConsultationScreen', { consultationId })
+            }
+          })
+          .catch(() => {})
+      }
+      appState.current = next
+    })
 
     return () => {
       socketService.off('consultation_updated', handleConsultationUpdated)
+      sub.remove()
     }
   }, [consultationId, handleConsultationUpdated, baseURL, token])
 
