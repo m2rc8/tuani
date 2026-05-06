@@ -44,3 +44,11 @@ export interface AvailableDoctor {
   bio: string | null
   user: { name: string | null; phone: string }
 }
+
+export interface QueueItem {
+  id: string
+  status: ConsultationStatus
+  symptoms_text: string | null
+  created_at: string
+  patient: { user: { phone: string } }
+}
