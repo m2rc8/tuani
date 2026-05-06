@@ -13,4 +13,4 @@ CREATE TABLE "PushToken" (
 CREATE UNIQUE INDEX "PushToken_token_key" ON "PushToken"("token");
 
 -- AddForeignKey
-ALTER TABLE "PushToken" ADD CONSTRAINT "PushToken_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "PushToken" ADD CONSTRAINT "PushToken_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
