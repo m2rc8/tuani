@@ -79,7 +79,9 @@ export function registerConsultationHandlers(
           })
           const recipientId = userId === c.patient_id ? c.doctor_id : c.patient_id
           if (recipientId) {
-            notificationService?.sendToUser(recipientId, NEW_MESSAGE_MSG).catch(() => {})
+            notificationService?.sendToUser(recipientId, NEW_MESSAGE_MSG).catch((err) => {
+              console.error('Failed to send message notification:', err)
+            })
           }
         } catch {
           socket.emit('error', { code: 'SERVER_ERROR', message: 'Unexpected error' })
