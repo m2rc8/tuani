@@ -8,6 +8,20 @@ const availabilitySchema = z.object({ available: z.boolean() })
 export function createDoctorsRouter(db: PrismaClient): Router {
   const router = Router()
 
+  router.get(
+    '/me',
+    requireAuth,
+    requireRole(Role.doctor),
+    async (req: Request, res: Response): Promise<void> => {
+      const doctor = await db.doctor.findUnique({
+        where:   { id: req.user!.sub },
+        include: { user: { select: { name: true, phone: true } } },
+      })
+      if (!doctor) { res.status(404).json({ error: 'Doctor not found' }); return }
+      res.json(doctor)
+    }
+  )
+
   router.get('/available', requireAuth, async (_req: Request, res: Response): Promise<void> => {
     const doctors = await db.doctor.findMany({
       where: {

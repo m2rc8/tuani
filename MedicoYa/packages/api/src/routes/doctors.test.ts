@@ -76,3 +76,43 @@ describe('PUT /api/doctors/availability', () => {
     })
   })
 })
+
+describe('GET /api/doctors/me', () => {
+  it('returns 401 without auth', async () => {
+    const app = makeTestApp()
+    const res = await request(app).get('/api/doctors/me')
+    expect(res.status).toBe(401)
+  })
+
+  it('returns 403 when caller is not a doctor', async () => {
+    const app = makeTestApp()
+    const res = await request(app)
+      .get('/api/doctors/me')
+      .set('Authorization', `Bearer ${makeToken(PAT_ID, Role.patient)}`)
+    expect(res.status).toBe(403)
+  })
+
+  it('returns current doctor profile', async () => {
+    mockDb.doctor.findUnique.mockResolvedValue(mockDoctor)
+    const app = makeTestApp()
+    const res = await request(app)
+      .get('/api/doctors/me')
+      .set('Authorization', `Bearer ${makeToken(DOC_ID, Role.doctor)}`)
+    expect(res.status).toBe(200)
+    expect(res.body.id).toBe(DOC_ID)
+    expect(res.body.available).toBe(true)
+    expect(mockDb.doctor.findUnique).toHaveBeenCalledWith({
+      where:   { id: DOC_ID },
+      include: { user: { select: { name: true, phone: true } } },
+    })
+  })
+
+  it('returns 404 when doctor record not found', async () => {
+    mockDb.doctor.findUnique.mockResolvedValue(null)
+    const app = makeTestApp()
+    const res = await request(app)
+      .get('/api/doctors/me')
+      .set('Authorization', `Bearer ${makeToken(DOC_ID, Role.doctor)}`)
+    expect(res.status).toBe(404)
+  })
+})
