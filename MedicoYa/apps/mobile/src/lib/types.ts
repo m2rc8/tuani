@@ -16,6 +16,13 @@ export interface Prescription {
   valid_until: string
 }
 
+export interface Rating {
+  id:         string
+  stars:      number
+  comment:    string | null
+  created_at: string
+}
+
 export interface ConsultationDetail {
   id: string
   patient_id: string
@@ -28,6 +35,7 @@ export interface ConsultationDetail {
   created_at: string
   completed_at: string | null
   prescription: Prescription | null
+  rating: Rating | null
 }
 
 export interface Message {

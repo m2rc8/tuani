@@ -46,7 +46,12 @@
     "diagnosis": "Diagnosis",
     "medications": "Medications",
     "valid_until": "Valid until",
-    "share": "Share prescription"
+    "share": "Share prescription",
+    "rate_title":   "Rate your consultation",
+    "rate_submit":  "Submit rating",
+    "rate_thanks":  "Thanks for your rating!",
+    "rate_comment": "Comment (optional)",
+    "avg_rating":   "ratings"
   },
   "history": {
     "title": "History",

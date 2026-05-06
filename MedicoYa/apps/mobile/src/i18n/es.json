@@ -46,7 +46,12 @@
     "diagnosis": "Diagnóstico",
     "medications": "Medicamentos",
     "valid_until": "Válida hasta",
-    "share": "Compartir receta"
+    "share": "Compartir receta",
+    "rate_title":   "Califica tu consulta",
+    "rate_submit":  "Enviar calificación",
+    "rate_thanks":  "¡Gracias por tu calificación!",
+    "rate_comment": "Comentario (opcional)",
+    "avg_rating":   "calificaciones"
   },
   "history": {
     "title": "Historial",
