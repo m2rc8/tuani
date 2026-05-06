@@ -17,6 +17,10 @@ export function registerConsultationHandlers(io: Server, db: PrismaClient): void
   })
 
   io.on('connection', (socket: Socket) => {
+    if (socket.data.user?.role === 'doctor') {
+      socket.join('doctors')
+    }
+
     socket.on('join_consultation', async ({ consultation_id }: { consultation_id: string }) => {
       try {
         const c = await db.consultation.findUnique({ where: { id: consultation_id } })
