@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { useTranslation } from 'react-i18next'
 import QueueScreen from '../screens/doctor/QueueScreen'
 import DoctorHistoryScreen from '../screens/doctor/HistoryScreen'
-import ProfileScreen from '../screens/shared/ProfileScreen'
+import DoctorProfileScreen from '../screens/doctor/DoctorProfileScreen'
 
 type DoctorTabsParamList = {
   Queue: undefined
@@ -19,7 +19,7 @@ export default function DoctorTabs() {
     <Tab.Navigator>
       <Tab.Screen name="Queue" component={QueueScreen} options={{ title: t('nav.queue') }} />
       <Tab.Screen name="History" component={DoctorHistoryScreen} options={{ title: t('nav.history') }} />
-      <Tab.Screen name="Profile" component={ProfileScreen} options={{ title: t('nav.profile') }} />
+      <Tab.Screen name="Profile" component={DoctorProfileScreen} options={{ title: t('nav.profile') }} />
     </Tab.Navigator>
   )
 }
