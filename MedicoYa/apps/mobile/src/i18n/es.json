@@ -58,5 +58,26 @@
       "rejected": "Rechazada",
       "cancelled": "Cancelada"
     }
+  },
+  "queue": {
+    "title": "Cola de consultas",
+    "empty": "No hay consultas pendientes",
+    "accept": "Aceptar",
+    "reject": "Rechazar",
+    "waiting_since": "Esperando"
+  },
+  "doctor": {
+    "complete_cta": "Completar",
+    "rx_title": "Completar consulta",
+    "diagnosis_label": "Diagnóstico",
+    "diagnosis_code_label": "Código CIE-10 (opcional)",
+    "add_medication": "Agregar medicamento",
+    "remove_medication": "Eliminar",
+    "medication_name": "Nombre",
+    "medication_dose": "Dosis",
+    "medication_frequency": "Frecuencia",
+    "instructions_label": "Instrucciones (opcional)",
+    "price_label": "Precio en lempiras (opcional)",
+    "submit_rx": "Completar y generar receta"
   }
 }

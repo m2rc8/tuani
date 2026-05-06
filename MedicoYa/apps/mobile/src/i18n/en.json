@@ -58,5 +58,26 @@
       "rejected": "Rejected",
       "cancelled": "Cancelled"
     }
+  },
+  "queue": {
+    "title": "Consultation Queue",
+    "empty": "No pending consultations",
+    "accept": "Accept",
+    "reject": "Reject",
+    "waiting_since": "Waiting"
+  },
+  "doctor": {
+    "complete_cta": "Complete",
+    "rx_title": "Complete consultation",
+    "diagnosis_label": "Diagnosis",
+    "diagnosis_code_label": "ICD-10 code (optional)",
+    "add_medication": "Add medication",
+    "remove_medication": "Remove",
+    "medication_name": "Name",
+    "medication_dose": "Dose",
+    "medication_frequency": "Frequency",
+    "instructions_label": "Instructions (optional)",
+    "price_label": "Price in lempiras (optional)",
+    "submit_rx": "Complete and generate prescription"
   }
 }
