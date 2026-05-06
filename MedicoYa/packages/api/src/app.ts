@@ -29,6 +29,9 @@ export function createApp(deps?: AppDeps): { app: express.Express } {
   const app = express()
 
   app.use('/admin', express.static(path.join(__dirname, '../../../apps/admin/out')))
+  app.get('/admin/*', (_req, res) => {
+    res.sendFile(path.join(__dirname, '../../../apps/admin/out/index.html'))
+  })
 
   app.use(helmet())
   app.use(express.json({ limit: '10kb' }))
