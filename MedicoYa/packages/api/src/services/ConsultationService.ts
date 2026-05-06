@@ -68,8 +68,8 @@ export class ConsultationService {
 
   async getConsultation(id: string, userId: string) {
     const c = await this.db.consultation.findUnique({
-      where: { id },
-      include: { prescription: true },
+      where:   { id },
+      include: { prescription: true, rating: true },
     })
     if (!c) throw new ConsultationError('NOT_FOUND', 'Consultation not found')
     if (c.patient_id !== userId && c.doctor_id !== userId)

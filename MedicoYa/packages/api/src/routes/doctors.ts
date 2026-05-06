@@ -13,12 +13,23 @@ export function createDoctorsRouter(db: PrismaClient): Router {
     requireAuth,
     requireRole(Role.doctor),
     async (req: Request, res: Response): Promise<void> => {
-      const doctor = await db.doctor.findUnique({
-        where:   { id: req.user!.sub },
-        include: { user: { select: { name: true, phone: true } } },
-      })
+      const [doctor, ratingAgg] = await Promise.all([
+        db.doctor.findUnique({
+          where:   { id: req.user!.sub },
+          include: { user: { select: { name: true, phone: true } } },
+        }),
+        db.rating.aggregate({
+          where:  { doctor_id: req.user!.sub },
+          _avg:   { stars: true },
+          _count: { stars: true },
+        }),
+      ])
       if (!doctor) { res.status(404).json({ error: 'Doctor not found' }); return }
-      res.json(doctor)
+      res.json({
+        ...doctor,
+        avg_rating:   ratingAgg._avg.stars,
+        rating_count: ratingAgg._count.stars,
+      })
     }
   )
 

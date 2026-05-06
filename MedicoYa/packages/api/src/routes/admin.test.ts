@@ -22,6 +22,9 @@ const mockDb = {
   consultation: {
     findMany: vi.fn(),
   },
+  rating: {
+    groupBy: vi.fn().mockResolvedValue([]),
+  },
 }
 
 function makeTestApp() {

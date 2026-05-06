@@ -24,11 +24,26 @@ export function createAdminRouter(db: PrismaClient): Router {
     requireRole(Role.admin),
     async (_req: Request, res: Response, next: NextFunction): Promise<void> => {
       try {
-        const doctors = await db.doctor.findMany({
-          where:   { approved_at: { not: null }, rejected_at: null },
-          include: { user: { select: { name: true, phone: true } } },
-        })
-        res.json(doctors)
+        const [doctors, ratings] = await Promise.all([
+          db.doctor.findMany({
+            where:   { approved_at: { not: null }, rejected_at: null },
+            include: { user: { select: { name: true, phone: true } } },
+          }),
+          db.rating.groupBy({
+            by:     ['doctor_id'],
+            _avg:   { stars: true },
+            _count: { stars: true },
+          }),
+        ])
+        const ratingMap = new Map(ratings.map(r => [r.doctor_id, r]))
+        res.json(doctors.map(d => {
+          const r = ratingMap.get(d.id)
+          return {
+            ...d,
+            avg_rating:   r?._avg.stars   ?? null,
+            rating_count: r?._count.stars ?? 0,
+          }
+        }))
       } catch (err) { next(err) }
     }
   )

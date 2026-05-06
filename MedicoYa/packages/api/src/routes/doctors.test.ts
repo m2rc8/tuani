@@ -24,6 +24,9 @@ const mockDb = {
     update:   vi.fn(),
     findUnique: vi.fn(),
   },
+  rating: {
+    aggregate: vi.fn().mockResolvedValue({ _avg: { stars: null }, _count: { stars: 0 } }),
+  },
 }
 
 function makeTestApp() {

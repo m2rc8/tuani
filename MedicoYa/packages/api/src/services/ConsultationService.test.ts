@@ -101,7 +101,7 @@ describe('ConsultationService', () => {
       })
       const result = await svc.getConsultation(CONSULT_ID, PATIENT_ID)
       expect(mockDb.consultation.findUnique).toHaveBeenCalledWith(
-        expect.objectContaining({ include: { prescription: true } })
+        expect.objectContaining({ include: { prescription: true, rating: true } })
       )
       expect(result.prescription).toBeDefined()
       expect((result as any).prescription?.qr_code).toBe('ABCD123456')
