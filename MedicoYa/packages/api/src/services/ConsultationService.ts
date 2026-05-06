@@ -59,7 +59,9 @@ export class ConsultationService {
         where:  { available: true, approved_at: { not: null } },
         select: { id: true },
       })
-      await this.notificationService.sendToUsers(doctors.map(d => d.id), NEW_CONSULTATION_MSG)
+      this.notificationService.sendToUsers(doctors.map(d => d.id), NEW_CONSULTATION_MSG).catch((err) => {
+        console.error('Failed to send new consultation notification:', err)
+      })
     }
     return consultation
   }
@@ -85,7 +87,9 @@ export class ConsultationService {
       data: { status: ConsultationStatus.active, doctor_id: doctorId },
     })
     this.io?.to(id).emit('consultation_updated', { id, status: ConsultationStatus.active })
-    await this.notificationService?.sendToUser(c.patient_id, ACCEPTED_MSG)
+    this.notificationService?.sendToUser(c.patient_id, ACCEPTED_MSG).catch((err) => {
+      console.error('Failed to send accepted notification:', err)
+    })
     return updated
   }
 
@@ -155,7 +159,9 @@ export class ConsultationService {
     ])
 
     this.io?.to(id).emit('consultation_updated', { id, status: ConsultationStatus.completed })
-    await this.notificationService?.sendToUser(c.patient_id, COMPLETED_MSG)
+    this.notificationService?.sendToUser(c.patient_id, COMPLETED_MSG).catch((err) => {
+      console.error('Failed to send completed notification:', err)
+    })
     return { consultation, prescription }
   }
 
