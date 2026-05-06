@@ -38,6 +38,15 @@ describe('POST /api/notifications/token', () => {
     expect(res.status).toBe(400)
   })
 
+  it('returns 400 with invalid Expo token format', async () => {
+    const app = makeTestApp()
+    const res = await request(app)
+      .post('/api/notifications/token')
+      .set('Authorization', `Bearer ${makeToken(USER_ID, Role.patient)}`)
+      .send({ token: 'not-an-expo-token' })
+    expect(res.status).toBe(400)
+  })
+
   it('returns 204 and upserts token for authenticated user', async () => {
     const app = makeTestApp()
     const res = await request(app)
