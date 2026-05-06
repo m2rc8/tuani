@@ -53,6 +53,7 @@ model Doctor {
   rejected_at  DateTime?
 
   consultations Consultation[]
+  ratings      Rating[]
 }
 
 model Patient {
@@ -64,6 +65,7 @@ model Patient {
   registration_mode RegistrationMode @default(self)
 
   consultations Consultation[]
+  ratings      Rating[]
 }
 
 enum RegistrationMode {
@@ -107,6 +109,7 @@ model Consultation {
   doctor       Doctor?       @relation(fields: [doctor_id], references: [id])
   messages     Message[]
   prescription Prescription?
+  rating       Rating?
 }
 
 model Message {
@@ -131,4 +134,18 @@ model Prescription {
   created_at      DateTime @default(now())
 
   consultation Consultation @relation(fields: [consultation_id], references: [id])
+}
+
+model Rating {
+  id              String   @id @default(uuid())
+  consultation_id String   @unique
+  doctor_id       String
+  patient_id      String
+  stars           Int
+  comment         String?
+  created_at      DateTime @default(now())
+
+  consultation Consultation @relation(fields: [consultation_id], references: [id], onDelete: Cascade)
+  doctor       Doctor       @relation(fields: [doctor_id], references: [id], onDelete: Cascade)
+  patient      Patient      @relation(fields: [patient_id], references: [id], onDelete: Cascade)
 }
