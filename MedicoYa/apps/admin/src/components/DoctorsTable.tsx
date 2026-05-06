@@ -6,7 +6,7 @@ import { apiFetch } from '../lib/api'
 interface DoctorUser { name: string | null; phone: string }
 interface Doctor {
   id: string; cedula: string | null; available: boolean
-  approved_at: string | null; user: DoctorUser
+  approved_at: string | null; cmh_verified: boolean; user: DoctorUser
 }
 
 export default function DoctorsTable() {
@@ -67,8 +67,11 @@ export default function DoctorsTable() {
               <div key={doc.id} className="bg-slate-900 rounded-lg p-4 flex items-center justify-between gap-4">
                 <div>
                   <p className="font-medium">{doc.user.name ?? 'Sin nombre'}</p>
-                  <p className="text-slate-400 text-sm">
+                  <p className="text-slate-400 text-sm flex items-center gap-2">
                     Cédula: {doc.cedula ?? '—'} · {doc.user.phone}
+                    <span className={`text-xs px-1.5 py-0.5 rounded ${doc.cmh_verified ? 'bg-green-900 text-green-300' : 'bg-yellow-900 text-yellow-300'}`}>
+                      CMH {doc.cmh_verified ? '✓' : '✗'}
+                    </span>
                   </p>
                 </div>
                 <div className="flex gap-2 shrink-0">
@@ -104,6 +107,11 @@ export default function DoctorsTable() {
               <div key={doc.id} className="bg-slate-900 rounded-lg p-4 flex items-center justify-between gap-4">
                 <div>
                   <p className="font-medium">{doc.user.name ?? 'Sin nombre'}</p>
+                  {doc.approved_at && (
+                    <p className="text-slate-500 text-xs">
+                      Aprobado: {new Date(doc.approved_at).toLocaleDateString('es-HN')}
+                    </p>
+                  )}
                   <p className="text-slate-400 text-sm">
                     Cédula: {doc.cedula ?? '—'} · {doc.user.phone}
                   </p>

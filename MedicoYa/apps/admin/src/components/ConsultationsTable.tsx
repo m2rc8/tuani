@@ -15,11 +15,11 @@ interface Consultation {
 }
 
 const STATUS_BADGE: Record<string, string> = {
-  pending:   'bg-blue-900   text-blue-300',
-  active:    'bg-yellow-900 text-yellow-300',
+  pending:   'bg-yellow-900 text-yellow-300',
+  active:    'bg-blue-900   text-blue-300',
   completed: 'bg-green-900  text-green-300',
   rejected:  'bg-red-900    text-red-300',
-  cancelled: 'bg-red-900    text-red-300',
+  cancelled: 'bg-slate-700  text-slate-400',
 }
 
 export default function ConsultationsTable() {
