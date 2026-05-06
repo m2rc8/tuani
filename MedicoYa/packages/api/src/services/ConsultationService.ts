@@ -37,9 +37,22 @@ export class ConsultationService {
     patientId: string,
     data: { symptoms_text?: string; symptom_photo?: string }
   ): Promise<Consultation> {
-    return this.db.consultation.create({
+    const consultation = await this.db.consultation.create({
       data: { patient_id: patientId, symptoms_text: data.symptoms_text, symptom_photo: data.symptom_photo },
     })
+    if (this.io) {
+      const patient = await this.db.patient.findUnique({
+        where: { id: patientId },
+        include: { user: { select: { phone: true } } },
+      })
+      this.io.to('doctors').emit('new_consultation', {
+        id: consultation.id,
+        symptoms_text: consultation.symptoms_text,
+        created_at: consultation.created_at,
+        patient: { user: { phone: patient?.user.phone ?? '' } },
+      })
+    }
+    return consultation
   }
 
   async getConsultation(id: string, userId: string) {
@@ -152,6 +165,14 @@ export class ConsultationService {
       where,
       orderBy: { created_at: 'desc' },
       take: 20,
+    })
+  }
+
+  async getPendingQueue() {
+    return this.db.consultation.findMany({
+      where: { status: ConsultationStatus.pending },
+      include: { patient: { include: { user: { select: { phone: true } } } } },
+      orderBy: { created_at: 'asc' },
     })
   }
 }
