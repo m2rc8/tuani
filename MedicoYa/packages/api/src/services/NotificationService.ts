@@ -47,6 +47,8 @@ export class NotificationService {
     const validTokens = tokens.filter(t => Expo.isExpoPushToken(t.token))
     if (validTokens.length === 0) return
 
+    const tokenIdByValue = new Map(validTokens.map(t => [t.token, t.id]))
+
     const messages: ExpoPushMessage[] = validTokens.map(t => {
       const lang = t.user.preferred_language === 'en' ? 'en' : 'es'
       return { to: t.token, title: msg[lang].title, body: msg[lang].body, sound: 'default' as const }
@@ -60,9 +62,13 @@ export class NotificationService {
         ticket.status === 'error' &&
         (ticket as { status: 'error'; details?: { error?: string } }).details?.error === 'DeviceNotRegistered'
       ) {
-        await this.db.pushToken.delete({ where: { id: validTokens[i].id } }).catch((err) => {
-          console.error('Failed to delete stale push token:', err)
-        })
+        const tokenStr = messages[i].to as string
+        const tokenId  = tokenIdByValue.get(tokenStr)
+        if (tokenId) {
+          await this.db.pushToken.delete({ where: { id: tokenId } }).catch((err) => {
+            console.error('Failed to delete stale push token:', err)
+          })
+        }
       }
     }
   }
