@@ -5,6 +5,7 @@ import * as Notifications from 'expo-notifications'
 import './i18n'
 import i18n from './i18n'
 import { useAuthStore } from './store/authStore'
+import { useBrigadeStore } from './store/brigadeStore'
 import RootNavigator from './navigation/RootNavigator'
 import { registerForPushNotifications } from './lib/notifications'
 import { registerRootComponent } from 'expo'
@@ -29,6 +30,7 @@ function App() {
         if (useAuthStore.getState().role) {
           registerForPushNotifications().catch(() => {})
         }
+        await useBrigadeStore.getState().hydrate()
       } finally {
         setReady(true)
       }
