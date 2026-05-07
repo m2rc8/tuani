@@ -60,3 +60,22 @@ export interface QueueItem {
   created_at: string
   patient: { user: { phone: string } }
 }
+
+export interface BrigadeInfo {
+  id: string
+  name: string
+  community: string
+  status: 'active' | 'closed'
+}
+
+export interface OfflineConsultation {
+  local_id: string
+  patient_phone: string
+  patient_name: string
+  symptoms_text?: string
+  diagnosis?: string
+  medications: { name: string; dose: string; frequency: string }[]
+  created_at: string
+  synced: boolean
+  sync_error?: string
+}
