@@ -7,7 +7,7 @@ import { requireAuth, requireRole } from '../middleware/requireAuth'
 const ratingSchema = z.object({
   consultation_id: z.string().uuid(),
   stars:           z.number().int().min(1).max(5),
-  comment:         z.string().max(300).optional(),
+  comment:         z.string().max(300).optional().transform(v => v || undefined),
 })
 
 export function createRatingsRouter(db: PrismaClient): Router {

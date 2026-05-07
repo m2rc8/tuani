@@ -104,6 +104,8 @@ describe('GET /api/doctors/me', () => {
     expect(res.status).toBe(200)
     expect(res.body.id).toBe(DOC_ID)
     expect(res.body.available).toBe(true)
+    expect(res.body.avg_rating).toBeNull()
+    expect(res.body.rating_count).toBe(0)
     expect(mockDb.doctor.findUnique).toHaveBeenCalledWith({
       where:   { id: DOC_ID },
       include: { user: { select: { name: true, phone: true } } },
