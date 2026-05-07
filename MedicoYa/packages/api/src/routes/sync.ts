@@ -41,8 +41,12 @@ export function createSyncRouter(db: PrismaClient): Router {
       })
       if (!membership) { res.status(403).json({ error: 'Forbidden' }); return }
 
-      const result = await service.syncConsultations(req.user!.sub, brigade_id, consultations)
-      res.json(result)
+      try {
+        const result = await service.syncConsultations(req.user!.sub, brigade_id, consultations)
+        res.json(result)
+      } catch {
+        res.status(500).json({ error: 'Internal server error' })
+      }
     }
   )
 
