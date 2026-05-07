@@ -38,7 +38,7 @@ export default function BrigadeQueueScreen({ navigation }: any) {
       setLastSyncedAt(new Date().toISOString())
       setSyncState('idle')
     } catch {
-      setSyncState('error')
+      setSyncState('idle')
       Alert.alert(t('common.error_generic'))
     }
   }, [syncState, activeBrigade, pending, markSynced, markRejected, setSyncState, setLastSyncedAt, t])
@@ -56,6 +56,8 @@ export default function BrigadeQueueScreen({ navigation }: any) {
     await clearActiveBrigade()
     navigation.goBack()
   }, [clearActiveBrigade, navigation])
+
+  if (!activeBrigade) { navigation.goBack(); return null }
 
   return (
     <View style={styles.container}>

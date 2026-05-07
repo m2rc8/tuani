@@ -120,4 +120,17 @@ describe('BrigadeQueueScreen', () => {
     fireEvent.press(getByTestId('new-consultation-btn'))
     expect(navigation.navigate).toHaveBeenCalledWith('BrigadeConsultationScreen', {})
   })
+
+  it('navigates back if no activeBrigade', () => {
+    useBrigadeStore.setState({
+      activeBrigade: null,
+      brigades: [],
+      patientCache: [],
+      offlineQueue: [],
+      syncState: 'idle',
+      lastSyncedAt: null,
+    })
+    render(<BrigadeQueueScreen navigation={navigation} route={{} as any} />)
+    expect(navigation.goBack).toHaveBeenCalled()
+  })
 })
