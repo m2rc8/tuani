@@ -19,17 +19,29 @@ model User {
   patient    Patient?
   messages   Message[]
   pushTokens PushToken[]
+  brigades   Brigade[]
 }
 
 enum Role {
   patient
   doctor
   admin
+  coordinator
 }
 
 enum Language {
   es
   en
+}
+
+enum ConsultationMode {
+  telemedicine
+  brigade
+}
+
+enum BrigadeStatus {
+  active
+  closed
 }
 
 model PushToken {
@@ -52,8 +64,9 @@ model Doctor {
   approved_at  DateTime?
   rejected_at  DateTime?
 
-  consultations Consultation[]
-  ratings      Rating[]
+  consultations      Consultation[]
+  ratings            Rating[]
+  brigadeMemberships BrigadeDoctor[]
 }
 
 model Patient {
@@ -104,12 +117,17 @@ model Consultation {
   payment_status PaymentStatus      @default(pending)
   created_at     DateTime           @default(now())
   completed_at   DateTime?
+  mode           ConsultationMode   @default(telemedicine)
+  brigade_id     String?
+  local_id       String?
+  synced_at      DateTime?
 
   patient      Patient       @relation(fields: [patient_id], references: [id])
   doctor       Doctor?       @relation(fields: [doctor_id], references: [id])
   messages     Message[]
   prescription Prescription?
   rating       Rating?
+  brigade      Brigade?      @relation(fields: [brigade_id], references: [id])
 }
 
 model Message {
@@ -148,4 +166,33 @@ model Rating {
   consultation Consultation @relation(fields: [consultation_id], references: [id], onDelete: Cascade)
   doctor       Doctor       @relation(fields: [doctor_id], references: [id], onDelete: Cascade)
   patient      Patient      @relation(fields: [patient_id], references: [id], onDelete: Cascade)
+}
+
+model Brigade {
+  id           String        @id @default(uuid())
+  name         String
+  organizer_id String
+  community    String
+  municipality String?
+  department   String?
+  start_date   DateTime
+  end_date     DateTime
+  join_code    String        @unique
+  status       BrigadeStatus @default(active)
+  created_at   DateTime      @default(now())
+
+  organizer     User            @relation(fields: [organizer_id], references: [id])
+  doctors       BrigadeDoctor[]
+  consultations Consultation[]
+}
+
+model BrigadeDoctor {
+  brigade_id String
+  doctor_id  String
+  joined_at  DateTime @default(now())
+
+  brigade Brigade @relation(fields: [brigade_id], references: [id], onDelete: Cascade)
+  doctor  Doctor  @relation(fields: [doctor_id], references: [id], onDelete: Cascade)
+
+  @@id([brigade_id, doctor_id])
 }
