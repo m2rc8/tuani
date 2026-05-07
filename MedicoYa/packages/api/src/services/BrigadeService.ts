@@ -166,7 +166,7 @@ export class BrigadeService {
                 consultation_id: consultation.id,
                 qr_code:         crypto.randomUUID(),
                 medications:     item.medications,
-                valid_until:     new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+                valid_until:     new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30-day validity
               },
             })
           }
