@@ -35,6 +35,34 @@ export function createBrigadesRouter(db: PrismaClient): Router {
   )
 
   router.get(
+    '/',
+    requireAuth,
+    requireRole(Role.doctor),
+    async (req: Request, res: Response): Promise<void> => {
+      try {
+        const brigades = await service.getMyBrigades(req.user!.sub)
+        res.json(brigades)
+      } catch {
+        res.status(500).json({ error: 'Internal server error' })
+      }
+    }
+  )
+
+  router.get(
+    '/by-code/:code',
+    requireAuth,
+    async (req: Request, res: Response): Promise<void> => {
+      try {
+        const brigade = await service.getBrigadeByCode(req.params.code)
+        if (!brigade) { res.status(404).json({ error: 'Brigade not found' }); return }
+        res.json(brigade)
+      } catch {
+        res.status(500).json({ error: 'Internal server error' })
+      }
+    }
+  )
+
+  router.get(
     '/:id',
     requireAuth,
     async (req: Request, res: Response): Promise<void> => {

@@ -34,10 +34,12 @@ const mockDb = {
   brigade: {
     create:     vi.fn(),
     findUnique: vi.fn(),
+    findFirst:  vi.fn(),
   },
   brigadeDoctor: {
     findUnique: vi.fn(),
     create:     vi.fn(),
+    findMany:   vi.fn(),
   },
   consultation: {
     count:    vi.fn(),
@@ -201,5 +203,63 @@ describe('GET /api/brigades/:id/report', () => {
     expect(res.body.by_registration_mode).toEqual({ self: 3, brigade_doctor: 5 })
     expect(res.body.top_diagnoses).toHaveLength(1)
     expect(res.body.top_diagnoses[0]).toEqual({ diagnosis: 'Hypertension', count: 5 })
+  })
+})
+
+// --- GET / (list mine) ---
+
+describe('GET /api/brigades', () => {
+  it('returns 401 without auth', async () => {
+    const res = await request(makeTestApp()).get('/api/brigades')
+    expect(res.status).toBe(401)
+  })
+
+  it('returns brigade list for doctor', async () => {
+    mockDb.brigadeDoctor.findMany.mockResolvedValue([
+      {
+        brigade_id: BRIGADE_ID,
+        doctor_id:  DOC_ID,
+        joined_at:  new Date('2026-05-06'),
+        brigade:    { id: BRIGADE_ID, name: 'Brigada Norte', community: 'Comunidad X', status: 'active' },
+      },
+    ])
+    const res = await request(makeTestApp())
+      .get('/api/brigades')
+      .set('Authorization', `Bearer ${makeToken(DOC_ID, Role.doctor)}`)
+    expect(res.status).toBe(200)
+    expect(res.body).toHaveLength(1)
+    expect(res.body[0].id).toBe(BRIGADE_ID)
+    expect(res.body[0].name).toBe('Brigada Norte')
+  })
+})
+
+// --- GET /by-code/:code ---
+
+describe('GET /api/brigades/by-code/:code', () => {
+  it('returns 401 without auth', async () => {
+    const res = await request(makeTestApp()).get('/api/brigades/by-code/ABC123')
+    expect(res.status).toBe(401)
+  })
+
+  it('returns 200 with brigade info when code exists', async () => {
+    mockDb.brigade.findFirst.mockResolvedValue({
+      id: BRIGADE_ID, name: 'Brigada Norte', community: 'Comunidad X',
+      municipality: null, department: null, status: 'active',
+      start_date: new Date('2026-05-10'), end_date: new Date('2026-05-12'),
+    })
+    const res = await request(makeTestApp())
+      .get('/api/brigades/by-code/ABC123')
+      .set('Authorization', `Bearer ${makeToken(DOC_ID, Role.doctor)}`)
+    expect(res.status).toBe(200)
+    expect(res.body.id).toBe(BRIGADE_ID)
+    expect(res.body.name).toBe('Brigada Norte')
+  })
+
+  it('returns 404 when code does not exist', async () => {
+    mockDb.brigade.findFirst.mockResolvedValue(null)
+    const res = await request(makeTestApp())
+      .get('/api/brigades/by-code/XXXXXX')
+      .set('Authorization', `Bearer ${makeToken(DOC_ID, Role.doctor)}`)
+    expect(res.status).toBe(404)
   })
 })

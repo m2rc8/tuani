@@ -179,6 +179,25 @@ export class BrigadeService {
     return { accepted, rejected }
   }
 
+  async getMyBrigades(doctorId: string) {
+    const rows = await this.db.brigadeDoctor.findMany({
+      where:   { doctor_id: doctorId },
+      include: { brigade: { select: { id: true, name: true, community: true, status: true } } },
+      orderBy: { joined_at: 'desc' },
+    })
+    return rows.map(r => ({ ...r.brigade, joined_at: r.joined_at }))
+  }
+
+  async getBrigadeByCode(code: string) {
+    return this.db.brigade.findFirst({
+      where:  { join_code: code.toUpperCase() },
+      select: {
+        id: true, name: true, community: true, municipality: true,
+        department: true, start_date: true, end_date: true, status: true,
+      },
+    })
+  }
+
   async getBrigadeSeed(brigadeId: string) {
     const brigade = await this.db.brigade.findUnique({
       where:   { id: brigadeId },
