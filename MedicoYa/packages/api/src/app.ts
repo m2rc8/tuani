@@ -18,6 +18,8 @@ import { createPrescriptionsRouter } from './routes/prescriptions'
 import { createNotificationsRouter } from './routes/notifications'
 import { createRatingsRouter }       from './routes/ratings'
 import { createFhirRouter }         from './routes/fhir'
+import { createBrigadesRouter }     from './routes/brigades'
+import { createSyncRouter }         from './routes/sync'
 
 interface AppDeps {
   authService?:         AuthService
@@ -54,6 +56,8 @@ export function createApp(deps?: AppDeps): { app: express.Express } {
   app.use('/api/notifications', createNotificationsRouter(db))
   app.use('/api/ratings',       createRatingsRouter(db))
   app.use('/fhir/R4',           createFhirRouter(db))
+  app.use('/api/brigades',      createBrigadesRouter(db))
+  app.use('/api/sync',          createSyncRouter(db))
   app.get('/health', (_req, res) => res.json({ ok: true }))
 
   return { app }
