@@ -67,56 +67,86 @@ export default function QueueScreen({ navigation }: any) {
     }
   }
 
+  const banner = (
+    <TouchableOpacity
+      style={styles.brigadeBanner}
+      onPress={() => navigation.navigate('BrigadeHomeScreen')}
+      testID="brigade-banner"
+    >
+      <Text style={styles.brigadeBannerText}>{t('brigade.join_banner')}</Text>
+    </TouchableOpacity>
+  )
+
   if (loading) {
-    return <View style={styles.center}><ActivityIndicator size="large" color="#3B82F6" /></View>
+    return (
+      <View style={styles.flex}>
+        {banner}
+        <View style={styles.center}><ActivityIndicator size="large" color="#3B82F6" /></View>
+      </View>
+    )
   }
 
   if (items.length === 0) {
-    return <View style={styles.center}><Text style={styles.emptyText}>{t('queue.empty')}</Text></View>
+    return (
+      <View style={styles.flex}>
+        {banner}
+        <View style={styles.center}><Text style={styles.emptyText}>{t('queue.empty')}</Text></View>
+      </View>
+    )
   }
 
   return (
-    <FlatList
-      data={items}
-      keyExtractor={(i) => i.id}
-      contentContainerStyle={styles.list}
-      renderItem={({ item }) => {
-        const phone = item.patient.user.phone
-        const masked = phone.slice(-4).padStart(phone.length, '•')
-        return (
-          <View style={styles.card} testID={`queue-item-${item.id}`}>
-            <Text style={styles.phone}>{masked}</Text>
-            {item.symptoms_text && (
-              <Text style={styles.symptoms} numberOfLines={3}>{item.symptoms_text}</Text>
-            )}
-            <Text style={styles.time}>{t('queue.waiting_since')}: {timeAgo(item.created_at)}</Text>
-            <View style={styles.actions}>
-              <TouchableOpacity
-                style={styles.acceptBtn}
-                onPress={() => handleAccept(item)}
-                testID={`accept-${item.id}`}
-              >
-                <Text style={styles.acceptText}>{t('queue.accept')}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.rejectBtn}
-                onPress={() => handleReject(item)}
-                testID={`reject-${item.id}`}
-              >
-                <Text style={styles.rejectText}>{t('queue.reject')}</Text>
-              </TouchableOpacity>
+    <View style={styles.flex}>
+      {banner}
+      <FlatList
+        data={items}
+        keyExtractor={(i) => i.id}
+        contentContainerStyle={styles.list}
+        renderItem={({ item }) => {
+          const phone = item.patient.user.phone
+          const masked = phone.slice(-4).padStart(phone.length, '•')
+          return (
+            <View style={styles.card} testID={`queue-item-${item.id}`}>
+              <Text style={styles.phone}>{masked}</Text>
+              {item.symptoms_text && (
+                <Text style={styles.symptoms} numberOfLines={3}>{item.symptoms_text}</Text>
+              )}
+              <Text style={styles.time}>{t('queue.waiting_since')}: {timeAgo(item.created_at)}</Text>
+              <View style={styles.actions}>
+                <TouchableOpacity
+                  style={styles.acceptBtn}
+                  onPress={() => handleAccept(item)}
+                  testID={`accept-${item.id}`}
+                >
+                  <Text style={styles.acceptText}>{t('queue.accept')}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.rejectBtn}
+                  onPress={() => handleReject(item)}
+                  testID={`reject-${item.id}`}
+                >
+                  <Text style={styles.rejectText}>{t('queue.reject')}</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
-        )
-      }}
-    />
+          )
+        }}
+      />
+    </View>
   )
 }
 
 const styles = StyleSheet.create({
+  flex: { flex: 1 },
   center: { flex: 1, alignItems: 'center', justifyContent: 'center' },
   emptyText: { fontSize: 16, color: '#94A3B8' },
   list: { padding: 16 },
+  brigadeBanner: {
+    backgroundColor: '#EF4444',
+    padding: 12,
+    alignItems: 'center',
+  },
+  brigadeBannerText: { color: '#fff', fontWeight: '700', fontSize: 14 },
   card: {
     backgroundColor: '#fff', borderRadius: 12, padding: 16,
     marginBottom: 12, borderWidth: 1, borderColor: '#E2E8F0',
