@@ -181,7 +181,7 @@ model Brigade {
   status       BrigadeStatus @default(active)
   created_at   DateTime      @default(now())
 
-  organizer     User            @relation(fields: [organizer_id], references: [id])
+  organizer     User            @relation(fields: [organizer_id], references: [id], onDelete: Restrict)
   doctors       BrigadeDoctor[]
   consultations Consultation[]
 }
