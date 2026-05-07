@@ -190,7 +190,7 @@ export class BrigadeService {
 
   async getBrigadeByCode(code: string) {
     return this.db.brigade.findFirst({
-      where:  { join_code: code.toUpperCase() },
+      where:  { join_code: code.trim().toUpperCase() },
       select: {
         id: true, name: true, community: true, municipality: true,
         department: true, start_date: true, end_date: true, status: true,
