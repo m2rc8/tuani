@@ -36,12 +36,12 @@ export function createSyncRouter(db: PrismaClient): Router {
 
       const { brigade_id, consultations } = parsed.data
 
-      const membership = await db.brigadeDoctor.findUnique({
-        where: { brigade_id_doctor_id: { brigade_id, doctor_id: req.user!.sub } },
-      })
-      if (!membership) { res.status(403).json({ error: 'Forbidden' }); return }
-
       try {
+        const membership = await db.brigadeDoctor.findUnique({
+          where: { brigade_id_doctor_id: { brigade_id, doctor_id: req.user!.sub } },
+        })
+        if (!membership) { res.status(403).json({ error: 'Forbidden' }); return }
+
         const result = await service.syncConsultations(req.user!.sub, brigade_id, consultations)
         res.json(result)
       } catch {
