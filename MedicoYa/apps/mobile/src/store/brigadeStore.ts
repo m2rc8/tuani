@@ -27,7 +27,7 @@ interface BrigadeState {
   markSynced: (local_ids: string[]) => Promise<void>
   markRejected: (items: { local_id: string; reason: string }[]) => Promise<void>
   setSyncState: (state: 'idle' | 'syncing' | 'error') => void
-  setLastSyncedAt: (at: string) => void
+  setLastSyncedAt: (at: string) => Promise<void>
   hydrate: () => Promise<void>
 }
 
@@ -57,17 +57,17 @@ export const useBrigadeStore = create<BrigadeState>((set, get) => ({
 
   setBrigades: (brigades) => {
     const { activeBrigade, patientCache, offlineQueue, lastSyncedAt } = get()
-    persist({ activeBrigade, brigades, patientCache, offlineQueue, lastSyncedAt }).catch(() => {})
     set({ brigades })
+    persist({ activeBrigade, patientCache, offlineQueue, brigades, lastSyncedAt }).catch(() => {})
   },
 
   addConsultation: (c) => {
     const local_id = Math.random().toString(36).slice(2) + Date.now().toString(36)
     const item: OfflineConsultation = { ...c, local_id, synced: false }
-    const newQueue = [item, ...get().offlineQueue]
+    const { offlineQueue, activeBrigade, patientCache, brigades, lastSyncedAt } = get()
+    const newQueue = [item, ...offlineQueue]
     set({ offlineQueue: newQueue })
-    const { activeBrigade, brigades, patientCache, lastSyncedAt } = get()
-    persist({ activeBrigade, brigades, patientCache, offlineQueue: newQueue, lastSyncedAt }).catch(() => {})
+    persist({ activeBrigade, patientCache, offlineQueue: newQueue, brigades, lastSyncedAt }).catch(() => {})
     return local_id
   },
 
@@ -93,16 +93,20 @@ export const useBrigadeStore = create<BrigadeState>((set, get) => ({
 
   setSyncState: (syncState) => set({ syncState }),
 
-  setLastSyncedAt: (lastSyncedAt) => {
-    const { activeBrigade, brigades, patientCache, offlineQueue } = get()
-    persist({ activeBrigade, brigades, patientCache, offlineQueue, lastSyncedAt }).catch(() => {})
-    set({ lastSyncedAt })
+  setLastSyncedAt: async (at) => {
+    const { activeBrigade, patientCache, offlineQueue, brigades } = get()
+    await persist({ activeBrigade, patientCache, offlineQueue, brigades, lastSyncedAt: at })
+    set({ lastSyncedAt: at })
   },
 
   hydrate: async () => {
     const raw = await AsyncStorage.getItem(STORAGE_KEY)
     if (!raw) return
-    const { activeBrigade, brigades, patientCache, offlineQueue, lastSyncedAt }: PersistedState = JSON.parse(raw)
-    set({ activeBrigade, brigades, patientCache, offlineQueue, lastSyncedAt })
+    try {
+      const { activeBrigade, patientCache, offlineQueue, brigades, lastSyncedAt }: PersistedState = JSON.parse(raw)
+      set({ activeBrigade, patientCache, offlineQueue, brigades, lastSyncedAt })
+    } catch {
+      // corrupt storage — start fresh
+    }
   },
 }))

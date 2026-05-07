@@ -53,8 +53,9 @@ describe('clearActiveBrigade', () => {
 })
 
 describe('addConsultation', () => {
-  it('adds item to offlineQueue and returns local_id', () => {
+  it('adds item to offlineQueue and returns local_id', async () => {
     const local_id = useBrigadeStore.getState().addConsultation(baseItem)
+    await Promise.resolve() // flush microtask so persist() fires
     expect(typeof local_id).toBe('string')
     expect(local_id.length).toBeGreaterThan(0)
     const queue = useBrigadeStore.getState().offlineQueue
@@ -62,6 +63,10 @@ describe('addConsultation', () => {
     expect(queue[0].local_id).toBe(local_id)
     expect(queue[0].synced).toBe(false)
     expect(queue[0].patient_name).toBe('María López')
+    const raw = await AsyncStorage.getItem(STORAGE_KEY)
+    expect(raw).not.toBeNull()
+    const parsed = JSON.parse(raw!)
+    expect(parsed.offlineQueue).toHaveLength(1)
   })
 
   it('prepends new item to existing queue', () => {
@@ -106,11 +111,15 @@ describe('hydrate', () => {
       activeBrigade: brigade,
       patientCache: patients,
       offlineQueue: [{ ...baseItem, local_id: 'x1', synced: false }],
+      brigades: [brigade],
+      lastSyncedAt: '2026-05-06T10:00:00Z',
     }
     await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(stored))
     await useBrigadeStore.getState().hydrate()
     expect(useBrigadeStore.getState().activeBrigade?.id).toBe('b1')
     expect(useBrigadeStore.getState().offlineQueue).toHaveLength(1)
+    expect(useBrigadeStore.getState().brigades).toHaveLength(1)
+    expect(useBrigadeStore.getState().lastSyncedAt).toBe('2026-05-06T10:00:00Z')
   })
 
   it('does nothing when storage is empty', async () => {
