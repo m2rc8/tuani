@@ -13,12 +13,18 @@ export default function DoctorProfileScreen() {
   const setLanguage = useAuthStore((s) => s.setLanguage)
   const logout      = useAuthStore((s) => s.logout)
 
-  const [available, setAvailable] = useState(false)
-  const [loading, setLoading]     = useState(true)
+  const [available,    setAvailable]    = useState(false)
+  const [avgRating,    setAvgRating]    = useState<number | null>(null)
+  const [ratingCount,  setRatingCount]  = useState(0)
+  const [loading,      setLoading]      = useState(true)
 
   useEffect(() => {
-    api.get<{ available: boolean }>('/api/doctors/me')
-      .then(({ data }) => setAvailable(data.available))
+    api.get<{ available: boolean; avg_rating: number | null; rating_count: number }>('/api/doctors/me')
+      .then(({ data }) => {
+        setAvailable(data.available)
+        setAvgRating(data.avg_rating)
+        setRatingCount(data.rating_count)
+      })
       .catch(() => {})
       .finally(() => setLoading(false))
   }, [])
@@ -41,16 +47,26 @@ export default function DoctorProfileScreen() {
       {loading ? (
         <ActivityIndicator color="#3B82F6" style={styles.loader} />
       ) : (
-        <View style={styles.row}>
-          <Text style={styles.label}>{t('doctor.availability_label')}</Text>
-          <Switch
-            testID="availability-switch"
-            value={available}
-            onValueChange={handleToggle}
-            trackColor={{ false: '#CBD5E1', true: '#3B82F6' }}
-            thumbColor="#fff"
-          />
-        </View>
+        <>
+          <View style={styles.row}>
+            <Text style={styles.label}>{t('doctor.availability_label')}</Text>
+            <Switch
+              testID="availability-switch"
+              value={available}
+              onValueChange={handleToggle}
+              trackColor={{ false: '#CBD5E1', true: '#3B82F6' }}
+              thumbColor="#fff"
+            />
+          </View>
+
+          {ratingCount > 0 && (
+            <Text style={styles.ratingText} testID="avg-rating">
+              {'★ '}
+              {avgRating !== null ? avgRating.toFixed(1) : '—'}
+              {` (${ratingCount} ${t('consultation.avg_rating')})`}
+            </Text>
+          )}
+        </>
       )}
 
       <Text style={styles.sectionLabel}>{t('profile.language')}</Text>
@@ -82,8 +98,9 @@ const styles = StyleSheet.create({
   container:    { flex: 1, padding: 24 },
   title:        { fontSize: 24, fontWeight: 'bold', marginBottom: 24 },
   loader:       { marginBottom: 24 },
-  row:          { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 },
+  row:          { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 },
   label:        { fontSize: 16, color: '#1E293B' },
+  ratingText:   { fontSize: 14, color: '#F59E0B', fontWeight: '600', marginBottom: 24 },
   sectionLabel: { fontSize: 16, marginBottom: 8 },
   langRow:      { flexDirection: 'row', gap: 8, marginBottom: 32 },
   langBtn: {

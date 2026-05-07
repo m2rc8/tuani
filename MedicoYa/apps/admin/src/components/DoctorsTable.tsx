@@ -7,6 +7,8 @@ interface DoctorUser { name: string | null; phone: string }
 interface Doctor {
   id: string; cedula: string | null; available: boolean
   approved_at: string | null; cmh_verified: boolean; user: DoctorUser
+  avg_rating:   number | null
+  rating_count: number
 }
 
 export default function DoctorsTable() {
@@ -116,11 +118,18 @@ export default function DoctorsTable() {
                     Cédula: {doc.cedula ?? '—'} · {doc.user.phone}
                   </p>
                 </div>
-                <span className={`text-xs px-2 py-1 rounded ${
-                  doc.available ? 'bg-green-900 text-green-300' : 'bg-slate-700 text-slate-400'
-                }`}>
-                  {doc.available ? 'Disponible' : 'No disponible'}
-                </span>
+                <div className="flex flex-col items-end gap-1">
+                  <span className={`text-xs px-2 py-1 rounded ${
+                    doc.available ? 'bg-green-900 text-green-300' : 'bg-slate-700 text-slate-400'
+                  }`}>
+                    {doc.available ? 'Disponible' : 'No disponible'}
+                  </span>
+                  <span className="text-yellow-400 text-sm font-medium">
+                    {doc.avg_rating !== null
+                      ? `★ ${doc.avg_rating.toFixed(1)} (${doc.rating_count})`
+                      : '—'}
+                  </span>
+                </div>
               </div>
             ))}
           </div>
