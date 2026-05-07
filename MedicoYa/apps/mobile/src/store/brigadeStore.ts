@@ -6,8 +6,10 @@ const STORAGE_KEY = 'brigade_store'
 
 interface PersistedState {
   activeBrigade: BrigadeInfo | null
+  brigades: BrigadeInfo[]
   patientCache: { phone: string; name: string }[]
   offlineQueue: OfflineConsultation[]
+  lastSyncedAt: string | null
 }
 
 interface BrigadeState {
@@ -42,57 +44,65 @@ export const useBrigadeStore = create<BrigadeState>((set, get) => ({
   lastSyncedAt: null,
 
   setActiveBrigade: async (brigade, patients) => {
-    const { offlineQueue } = get()
-    await persist({ activeBrigade: brigade, patientCache: patients, offlineQueue })
+    const { brigades, offlineQueue, lastSyncedAt } = get()
+    await persist({ activeBrigade: brigade, brigades, patientCache: patients, offlineQueue, lastSyncedAt })
     set({ activeBrigade: brigade, patientCache: patients })
   },
 
   clearActiveBrigade: async () => {
-    const { offlineQueue } = get()
-    await persist({ activeBrigade: null, patientCache: [], offlineQueue })
+    const { brigades, offlineQueue, lastSyncedAt } = get()
+    await persist({ activeBrigade: null, brigades, patientCache: [], offlineQueue, lastSyncedAt })
     set({ activeBrigade: null, patientCache: [] })
   },
 
-  setBrigades: (brigades) => set({ brigades }),
+  setBrigades: (brigades) => {
+    const { activeBrigade, patientCache, offlineQueue, lastSyncedAt } = get()
+    persist({ activeBrigade, brigades, patientCache, offlineQueue, lastSyncedAt }).catch(() => {})
+    set({ brigades })
+  },
 
   addConsultation: (c) => {
     const local_id = Math.random().toString(36).slice(2) + Date.now().toString(36)
     const item: OfflineConsultation = { ...c, local_id, synced: false }
     const newQueue = [item, ...get().offlineQueue]
     set({ offlineQueue: newQueue })
-    const { activeBrigade, patientCache } = get()
-    persist({ activeBrigade, patientCache, offlineQueue: newQueue }).catch(() => {})
+    const { activeBrigade, brigades, patientCache, lastSyncedAt } = get()
+    persist({ activeBrigade, brigades, patientCache, offlineQueue: newQueue, lastSyncedAt }).catch(() => {})
     return local_id
   },
 
   markSynced: async (local_ids) => {
     const idSet = new Set(local_ids)
-    const { activeBrigade, patientCache } = get()
+    const { activeBrigade, brigades, patientCache, lastSyncedAt } = get()
     const newQueue = get().offlineQueue.map(c =>
       idSet.has(c.local_id) ? { ...c, synced: true, sync_error: undefined } : c
     )
-    await persist({ activeBrigade, patientCache, offlineQueue: newQueue })
+    await persist({ activeBrigade, brigades, patientCache, offlineQueue: newQueue, lastSyncedAt })
     set({ offlineQueue: newQueue })
   },
 
   markRejected: async (items) => {
     const errMap = new Map(items.map(i => [i.local_id, i.reason]))
-    const { activeBrigade, patientCache } = get()
+    const { activeBrigade, brigades, patientCache, lastSyncedAt } = get()
     const newQueue = get().offlineQueue.map(c =>
       errMap.has(c.local_id) ? { ...c, sync_error: errMap.get(c.local_id) } : c
     )
-    await persist({ activeBrigade, patientCache, offlineQueue: newQueue })
+    await persist({ activeBrigade, brigades, patientCache, offlineQueue: newQueue, lastSyncedAt })
     set({ offlineQueue: newQueue })
   },
 
   setSyncState: (syncState) => set({ syncState }),
 
-  setLastSyncedAt: (lastSyncedAt) => set({ lastSyncedAt }),
+  setLastSyncedAt: (lastSyncedAt) => {
+    const { activeBrigade, brigades, patientCache, offlineQueue } = get()
+    persist({ activeBrigade, brigades, patientCache, offlineQueue, lastSyncedAt }).catch(() => {})
+    set({ lastSyncedAt })
+  },
 
   hydrate: async () => {
     const raw = await AsyncStorage.getItem(STORAGE_KEY)
     if (!raw) return
-    const { activeBrigade, patientCache, offlineQueue }: PersistedState = JSON.parse(raw)
-    set({ activeBrigade, patientCache, offlineQueue })
+    const { activeBrigade, brigades, patientCache, offlineQueue, lastSyncedAt }: PersistedState = JSON.parse(raw)
+    set({ activeBrigade, brigades, patientCache, offlineQueue, lastSyncedAt })
   },
 }))
