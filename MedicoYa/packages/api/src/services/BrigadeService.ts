@@ -208,6 +208,18 @@ export class BrigadeService {
       },
     })
     if (!brigade) return null
+
+    const consultationPatients = await this.db.consultation.findMany({
+      where:   { brigade_id: brigadeId },
+      select:  { patient: { select: { user: { select: { phone: true, name: true } } } } },
+      orderBy: { synced_at: 'desc' },
+      take:    500,
+    })
+    const seen = new Set<string>()
+    const patients = consultationPatients
+      .map(c => ({ phone: c.patient.user.phone, name: c.patient.user.name ?? '' }))
+      .filter(p => { if (seen.has(p.phone)) return false; seen.add(p.phone); return true })
+
     return {
       brigade: {
         id:           brigade.id,
@@ -219,7 +231,8 @@ export class BrigadeService {
         end_date:     brigade.end_date,
         status:       brigade.status,
       },
-      doctors: brigade.doctors.map(bd => ({ id: bd.doctor_id, name: bd.doctor.user.name })),
+      doctors:  brigade.doctors.map(bd => ({ id: bd.doctor_id, name: bd.doctor.user.name })),
+      patients,
     }
   }
 }

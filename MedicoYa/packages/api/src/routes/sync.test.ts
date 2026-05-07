@@ -37,7 +37,8 @@ const mockDb = {
     upsert: vi.fn(),
   },
   consultation: {
-    create: vi.fn(),
+    create:   vi.fn(),
+    findMany: vi.fn(),
   },
   prescription: {
     create: vi.fn(),
@@ -162,7 +163,7 @@ describe('POST /api/sync/consultations', () => {
 // --- GET /brigade/:id ---
 
 describe('GET /api/sync/brigade/:id', () => {
-  it('returns 200 with brigade + doctor list for member', async () => {
+  it('returns 200 with brigade, doctor list, and patients for member', async () => {
     const brigadeId = 'brigade-uuid-1'
     mockDb.brigadeDoctor.findUnique.mockResolvedValue({ brigade_id: brigadeId, doctor_id: DOC_ID })
     mockDb.brigade.findUnique.mockResolvedValue({
@@ -176,6 +177,9 @@ describe('GET /api/sync/brigade/:id', () => {
       status:       'active',
       doctors: [{ doctor_id: DOC_ID, doctor: { user: { name: 'Dr. Juan' } } }],
     })
+    mockDb.consultation.findMany.mockResolvedValue([
+      { patient: { user: { phone: '+50499111111', name: 'María' } } },
+    ])
     const res = await request(makeTestApp())
       .get(`/api/sync/brigade/${brigadeId}`)
       .set('Authorization', `Bearer ${makeToken(DOC_ID, Role.doctor)}`)
@@ -183,6 +187,8 @@ describe('GET /api/sync/brigade/:id', () => {
     expect(res.body.brigade.name).toBe('Brigada Norte')
     expect(res.body.doctors).toHaveLength(1)
     expect(res.body.doctors[0].id).toBe(DOC_ID)
-    expect(res.body.doctors[0].name).toBe('Dr. Juan')
+    expect(res.body.patients).toHaveLength(1)
+    expect(res.body.patients[0].phone).toBe('+50499111111')
+    expect(res.body.patients[0].name).toBe('María')
   })
 })
