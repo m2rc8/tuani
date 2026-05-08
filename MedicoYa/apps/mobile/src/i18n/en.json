@@ -13,7 +13,12 @@
   "profile": {
     "title": "Profile",
     "language": "Language",
-    "logout": "Sign out"
+    "logout": "Sign out",
+    "name": "Full name",
+    "dob": "Date of birth (YYYY-MM-DD)",
+    "allergies": "Known allergies",
+    "save": "Save",
+    "saved": "Saved ✓"
   },
   "nav": {
     "home": "Home",
@@ -23,13 +28,17 @@
   },
   "common": {
     "coming_soon": "Coming soon",
-    "error_generic": "Something went wrong"
+    "error_generic": "Something went wrong",
+    "cancel": "Cancel"
   },
   "consultation": {
     "start_cta": "Consult now",
     "symptoms_placeholder": "What symptoms do you have? (max 500 characters)",
     "chars_remaining": "{{count}} characters remaining",
     "add_photo": "Add photo",
+    "photo_camera": "Camera",
+    "photo_library": "Gallery",
+    "remove_photo": "Remove photo",
     "doctors_available_one": "{{count}} doctor available",
     "doctors_available_other": "{{count}} doctors available",
     "no_doctors": "No doctors available",
@@ -85,5 +94,38 @@
     "price_label": "Price in lempiras (optional)",
     "submit_rx": "Complete and generate prescription",
     "availability_label": "Available for consultations"
+  },
+  "brigade": {
+    "title": "Brigades",
+    "join_banner": "Join a brigade →",
+    "my_brigades": "My brigades",
+    "enter": "Enter",
+    "join_section": "Join a brigade",
+    "join_code_placeholder": "Code (e.g. ABC123)",
+    "search": "Search brigade",
+    "preview_title": "Join this brigade?",
+    "confirm_join": "Join",
+    "cancel": "Cancel",
+    "new_consultation": "+ New consultation",
+    "sync": "↑ Sync",
+    "pending_count": "{{count}} unsynced",
+    "synced_count": "{{count}} synced",
+    "draft": "draft",
+    "synced": "synced",
+    "save_offline": "Save (offline)",
+    "will_sync": "Will sync automatically when connected",
+    "leave": "← Leave brigade",
+    "patient_phone": "Phone",
+    "patient_name": "Name",
+    "symptoms": "Symptoms",
+    "diagnosis": "Diagnosis",
+    "medications": "Medications",
+    "add_medication": "+ Add medication",
+    "remove_medication": "Remove",
+    "med_name": "Name",
+    "med_dose": "Dose",
+    "med_frequency": "Frequency",
+    "error_required": "Phone and name are required",
+    "error_code_not_found": "Brigade code not found"
   }
 }

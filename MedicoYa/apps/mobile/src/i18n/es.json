@@ -13,7 +13,12 @@
   "profile": {
     "title": "Perfil",
     "language": "Idioma",
-    "logout": "Cerrar sesión"
+    "logout": "Cerrar sesión",
+    "name": "Nombre completo",
+    "dob": "Fecha de nacimiento (AAAA-MM-DD)",
+    "allergies": "Alergias conocidas",
+    "save": "Guardar",
+    "saved": "Guardado ✓"
   },
   "nav": {
     "home": "Inicio",
@@ -23,13 +28,17 @@
   },
   "common": {
     "coming_soon": "Próximamente",
-    "error_generic": "Algo salió mal"
+    "error_generic": "Algo salió mal",
+    "cancel": "Cancelar"
   },
   "consultation": {
     "start_cta": "Consultar ahora",
     "symptoms_placeholder": "¿Qué síntomas tienes? (máx. 500 caracteres)",
     "chars_remaining": "{{count}} caracteres restantes",
     "add_photo": "Agregar foto",
+    "photo_camera": "Cámara",
+    "photo_library": "Galería",
+    "remove_photo": "Quitar foto",
     "doctors_available_one": "{{count}} médico disponible",
     "doctors_available_other": "{{count}} médicos disponibles",
     "no_doctors": "Sin médicos disponibles",
