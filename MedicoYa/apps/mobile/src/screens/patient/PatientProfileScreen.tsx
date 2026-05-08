@@ -35,7 +35,9 @@ export default function PatientProfileScreen() {
         setDob(data.dob ? data.dob.slice(0, 10) : '')
         setAllergies(data.allergies ?? '')
       })
-      .catch(() => {})
+      .catch(() => {
+        setProfile({ name: null, phone: '', dob: null, allergies: null })
+      })
   }, [])
 
   const handleSave = async () => {
