@@ -1,8 +1,10 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { apiFetch } from '../../lib/api'
+import { getRole } from '../../lib/auth'
 
 interface Brigade {
   id: string
@@ -13,6 +15,11 @@ interface Brigade {
 }
 
 export default function BrigadesPage() {
+  const router = useRouter()
+  useEffect(() => {
+    if (getRole() !== 'coordinator') router.replace('/doctors')
+  }, [router])
+
   const qc = useQueryClient()
   const [name,      setName]      = useState('')
   const [community, setCommunity] = useState('')
@@ -45,6 +52,10 @@ export default function BrigadesPage() {
     e.preventDefault()
     if (!name.trim() || !community.trim() || !startDate || !endDate) {
       setFormError('Todos los campos son requeridos.')
+      return
+    }
+    if (new Date(endDate) <= new Date(startDate)) {
+      setFormError('La fecha de fin debe ser posterior al inicio.')
       return
     }
     setFormError('')
