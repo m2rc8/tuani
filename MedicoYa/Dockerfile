@@ -14,4 +14,4 @@ RUN npm run build:api
 
 EXPOSE 3000
 
-CMD ["sh", "-c", "npm --workspace packages/api exec prisma migrate deploy && npm run start"]
+CMD ["npm", "run", "start"]
