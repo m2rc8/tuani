@@ -46,16 +46,20 @@ export default function HomeScreen({ navigation }: any) {
   }, [activeConsultationId, status, fetchDoctors])
 
   const pickPhoto = async (source: 'camera' | 'library') => {
-    const result = source === 'camera'
-      ? await ImagePicker.launchCameraAsync({ mediaTypes: 'Images' })
-      : await ImagePicker.launchImageLibraryAsync({ mediaTypes: 'Images' })
-    if (!result.canceled) {
-      const compressed = await ImageManipulator.manipulateAsync(
-        result.assets[0].uri,
-        [{ resize: { width: 1080 } }],
-        { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG }
-      )
-      setPhoto({ uri: compressed.uri })
+    try {
+      const result = source === 'camera'
+        ? await ImagePicker.launchCameraAsync({ mediaTypes: 'Images' })
+        : await ImagePicker.launchImageLibraryAsync({ mediaTypes: 'Images' })
+      if (!result.canceled) {
+        const compressed = await ImageManipulator.manipulateAsync(
+          result.assets[0].uri,
+          [{ resize: { width: 1080 } }],
+          { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG }
+        )
+        setPhoto({ uri: compressed.uri })
+      }
+    } catch {
+      Alert.alert(t('common.error_generic'))
     }
   }
 
