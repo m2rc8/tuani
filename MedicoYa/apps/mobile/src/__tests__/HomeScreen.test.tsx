@@ -14,16 +14,30 @@ jest.mock('react-i18next', () => ({
   useTranslation: () => ({ t: (k: string, opts?: any) => opts ? `${k}:${JSON.stringify(opts)}` : k }),
 }))
 
+jest.mock('expo-image-picker', () => ({
+  launchCameraAsync:       jest.fn(),
+  launchImageLibraryAsync: jest.fn(),
+}))
+
+jest.mock('expo-image-manipulator', () => ({
+  manipulateAsync: jest.fn(),
+  SaveFormat: { JPEG: 'jpeg' },
+}))
+
 import api from '../lib/api'
 import { useConsultationStore } from '../store/consultationStore'
+import * as ImagePicker from 'expo-image-picker'
+import * as ImageManipulator from 'expo-image-manipulator'
 import HomeScreen from '../screens/patient/HomeScreen'
 
-const mockApi = api as jest.Mocked<typeof api>
+const mockApi                  = api as jest.Mocked<typeof api>
 const mockUseConsultationStore = useConsultationStore as jest.MockedFunction<typeof useConsultationStore>
+const mockImagePicker          = ImagePicker as jest.Mocked<typeof ImagePicker>
+const mockManipulator          = ImageManipulator as jest.Mocked<typeof ImageManipulator>
 
 const mockNavigate = jest.fn()
-const navigation = { navigate: mockNavigate } as any
-const route = {} as any
+const navigation   = { navigate: mockNavigate } as any
+const route        = {} as any
 
 const defaultStore = {
   activeConsultationId: null,
@@ -40,6 +54,7 @@ beforeEach(() => {
   jest.clearAllMocks()
   mockUseConsultationStore.mockReturnValue(defaultStore as any)
   mockApi.get.mockResolvedValue({ data: [] })
+  mockManipulator.manipulateAsync.mockResolvedValue({ uri: 'file://compressed.jpg' } as any)
 })
 
 describe('HomeScreen', () => {
@@ -104,5 +119,18 @@ describe('HomeScreen', () => {
     await waitFor(() => {
       expect(mockNavigate).toHaveBeenCalledWith('ConsultationScreen', { consultationId: 'c99' })
     })
+  })
+
+  it('shows attach-photo-btn by default', async () => {
+    const { getByTestId } = render(<HomeScreen navigation={navigation} route={route} />)
+    await waitFor(() => {})
+    expect(getByTestId('attach-photo-btn')).toBeTruthy()
+  })
+
+  it('remove-photo-btn absent initially (no photo selected)', async () => {
+    const { queryByTestId } = render(<HomeScreen navigation={navigation} route={route} />)
+    await waitFor(() => {})
+    expect(queryByTestId('remove-photo-btn')).toBeNull()
+    expect(queryByTestId('photo-thumbnail')).toBeNull()
   })
 })
