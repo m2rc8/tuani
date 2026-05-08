@@ -25,6 +25,7 @@ export default function BrigadeDetailPage() {
   const { data: dashboard, isLoading: loadingDash } = useQuery<BrigadeDashboard>({
     queryKey: ['brigade', id, 'dashboard'],
     queryFn:  () => apiFetch(`/api/brigades/${id}/dashboard`),
+    enabled:  tab === 'dashboard',
   })
 
   const { data: report, isLoading: loadingReport } = useQuery<BrigadeReport>({
