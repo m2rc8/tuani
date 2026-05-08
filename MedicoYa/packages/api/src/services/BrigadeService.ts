@@ -198,6 +198,14 @@ export class BrigadeService {
     })
   }
 
+  async getMyBrigadesCoordinator(organizerId: string) {
+    return this.db.brigade.findMany({
+      where:   { organizer_id: organizerId },
+      select:  { id: true, name: true, community: true, status: true, join_code: true },
+      orderBy: { start_date: 'desc' },
+    })
+  }
+
   async getBrigadeSeed(brigadeId: string) {
     const brigade = await this.db.brigade.findUnique({
       where:   { id: brigadeId },

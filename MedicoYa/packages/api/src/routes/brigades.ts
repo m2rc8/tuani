@@ -63,6 +63,20 @@ export function createBrigadesRouter(db: PrismaClient): Router {
   )
 
   router.get(
+    '/mine',
+    requireAuth,
+    requireRole(Role.coordinator),
+    async (req: Request, res: Response): Promise<void> => {
+      try {
+        const brigades = await service.getMyBrigadesCoordinator(req.user!.sub)
+        res.json(brigades)
+      } catch {
+        res.status(500).json({ error: 'Internal server error' })
+      }
+    }
+  )
+
+  router.get(
     '/:id',
     requireAuth,
     async (req: Request, res: Response): Promise<void> => {

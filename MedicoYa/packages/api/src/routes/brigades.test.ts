@@ -35,6 +35,7 @@ const mockDb = {
     create:     vi.fn(),
     findUnique: vi.fn(),
     findFirst:  vi.fn(),
+    findMany:   vi.fn(),
   },
   brigadeDoctor: {
     findUnique: vi.fn(),
@@ -261,5 +262,34 @@ describe('GET /api/brigades/by-code/:code', () => {
       .get('/api/brigades/by-code/XXXXXX')
       .set('Authorization', `Bearer ${makeToken(DOC_ID, Role.doctor)}`)
     expect(res.status).toBe(404)
+  })
+})
+
+// --- GET /mine (coordinator) ---
+
+describe('GET /api/brigades/mine', () => {
+  it('returns 401 without auth', async () => {
+    const res = await request(makeTestApp()).get('/api/brigades/mine')
+    expect(res.status).toBe(401)
+  })
+
+  it('returns 403 for doctor role', async () => {
+    const res = await request(makeTestApp())
+      .get('/api/brigades/mine')
+      .set('Authorization', `Bearer ${makeToken(DOC_ID, Role.doctor)}`)
+    expect(res.status).toBe(403)
+  })
+
+  it('returns coordinator\'s own brigades — 200 + array with join_code', async () => {
+    mockDb.brigade.findMany.mockResolvedValue([
+      { id: BRIGADE_ID, name: 'Brigada Norte', community: 'Comunidad X', status: 'active', join_code: 'ABC123' },
+    ])
+    const res = await request(makeTestApp())
+      .get('/api/brigades/mine')
+      .set('Authorization', `Bearer ${makeToken(COORD_ID, Role.coordinator)}`)
+    expect(res.status).toBe(200)
+    expect(res.body).toHaveLength(1)
+    expect(res.body[0].id).toBe(BRIGADE_ID)
+    expect(res.body[0].join_code).toBe('ABC123')
   })
 })
