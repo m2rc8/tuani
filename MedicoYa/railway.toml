@@ -1,7 +1,5 @@
 [build]
-builder = "nixpacks"
-installCommand = "npm install --legacy-peer-deps"
-buildCommand = "npm run build:api"
+builder = "dockerfile"
 
 [deploy]
 startCommand = "npm --workspace packages/api exec prisma migrate deploy && npm run start"
