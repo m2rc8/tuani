@@ -15,7 +15,7 @@ export function getRole(): string | null {
   return localStorage.getItem(ROLE_KEY)
 }
 
-export function setRole(role: string): void {
+export function setRole(role: 'admin' | 'coordinator'): void {
   localStorage.setItem(ROLE_KEY, role)
 }
 

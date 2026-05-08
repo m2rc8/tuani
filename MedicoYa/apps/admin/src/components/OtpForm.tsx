@@ -47,7 +47,7 @@ export default function OtpForm() {
         return
       }
       setToken(body.token)
-      setRole(role)
+      setRole(role as 'admin' | 'coordinator')
       router.replace(role === 'coordinator' ? '/brigades' : '/doctors')
     } finally {
       setLoading(false)
