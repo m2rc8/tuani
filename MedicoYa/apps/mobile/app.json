@@ -11,6 +11,16 @@
     },
     "android": {
       "package": "com.medicoya.app"
-    }
+    },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "cameraPermission": "MédicoYa needs camera access to attach symptom photos.",
+          "microphonePermission": false,
+          "photosPermission": "MédicoYa needs photo library access to attach symptom photos."
+        }
+      ]
+    ]
   }
 }
