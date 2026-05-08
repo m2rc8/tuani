@@ -7,3 +7,4 @@ apps/admin/.next/
 apps/admin/out/
 apps/admin/.env.local
 apps/mobile/.env
+package-lock.json
