@@ -38,7 +38,7 @@ export default function BrigadesPage() {
       setName(''); setCommunity(''); setStartDate(''); setEndDate('')
       setFormError('')
     },
-    onError: (err: Error) => setFormError(err.message),
+    onError: (err: unknown) => setFormError(err instanceof Error ? err.message : 'Error desconocido'),
   })
 
   function handleCreate(e: React.FormEvent) {
