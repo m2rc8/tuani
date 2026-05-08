@@ -62,6 +62,7 @@ describe('GET /api/patients/me', () => {
       .get('/api/patients/me')
       .set('Authorization', `Bearer ${makeToken(PAT_ID, Role.patient)}`)
     expect(res.status).toBe(404)
+    expect(res.body).toHaveProperty('error')
   })
 })
 
@@ -77,6 +78,7 @@ describe('PUT /api/patients/me', () => {
       .set('Authorization', `Bearer ${makeToken(PAT_ID, Role.patient)}`)
       .send({ dob: 'not-a-date' })
     expect(res.status).toBe(400)
+    expect(res.body).toHaveProperty('error')
   })
 
   it('returns 200 with updated profile', async () => {
