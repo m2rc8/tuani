@@ -41,11 +41,12 @@ export class PatientService {
   }
 
   async updateProfile(userId: string, data: UpdateProfileData): Promise<PatientProfile> {
+    await this.getProfile(userId)  // existence check + 404 if missing
+
     await this.db.$transaction([
-      this.db.user.update({
-        where: { id: userId },
-        data:  { name: data.name },
-      }),
+      ...(data.name !== undefined
+        ? [this.db.user.update({ where: { id: userId }, data: { name: data.name } })]
+        : []),
       this.db.patient.update({
         where: { id: userId },
         data: {
