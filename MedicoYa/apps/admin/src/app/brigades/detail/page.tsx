@@ -1,6 +1,7 @@
 'use client'
+import { Suspense } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { useParams, useSearchParams, useRouter } from 'next/navigation'
+import { useSearchParams, useRouter } from 'next/navigation'
 import { apiFetch } from '../../../lib/api'
 
 interface BrigadeDashboard {
@@ -17,25 +18,33 @@ interface BrigadeReport {
 }
 
 export default function BrigadeDetailPage() {
-  const { id }       = useParams<{ id: string }>()
+  return (
+    <Suspense fallback={<p className="text-slate-500 text-sm">Cargando...</p>}>
+      <BrigadeDetail />
+    </Suspense>
+  )
+}
+
+function BrigadeDetail() {
   const searchParams = useSearchParams()
   const router       = useRouter()
+  const id           = searchParams.get('id') ?? ''
   const tab          = searchParams.get('tab') ?? 'dashboard'
 
   const { data: dashboard, isLoading: loadingDash } = useQuery<BrigadeDashboard>({
     queryKey: ['brigade', id, 'dashboard'],
     queryFn:  () => apiFetch(`/api/brigades/${id}/dashboard`),
-    enabled:  tab === 'dashboard',
+    enabled:  !!id && tab === 'dashboard',
   })
 
   const { data: report, isLoading: loadingReport } = useQuery<BrigadeReport>({
     queryKey: ['brigade', id, 'report'],
     queryFn:  () => apiFetch(`/api/brigades/${id}/report`),
-    enabled:  tab === 'report',
+    enabled:  !!id && tab === 'report',
   })
 
   function setTab(t: 'dashboard' | 'report') {
-    router.push(`/brigades/${id}?tab=${t}`)
+    router.push(`/brigades/detail?id=${id}&tab=${t}`)
   }
 
   return (
@@ -48,7 +57,7 @@ export default function BrigadeDetailPage() {
           <button
             key={t}
             onClick={() => setTab(t)}
-            className={`px-4 py-2 text-sm font-medium transition-colors capitalize ${
+            className={`px-4 py-2 text-sm font-medium transition-colors ${
               tab === t
                 ? 'text-sky-400 border-b-2 border-sky-400'
                 : 'text-slate-400 hover:text-white'
@@ -65,9 +74,9 @@ export default function BrigadeDetailPage() {
           <p className="text-slate-500 text-sm">Cargando...</p>
         ) : dashboard ? (
           <div className="grid grid-cols-2 gap-4 max-w-sm">
-            <StatCard label="Total consultas"    value={dashboard.total}          color="text-white" />
-            <StatCard label="Atendidas"          value={dashboard.attended}       color="text-green-400" />
-            <StatCard label="En espera"          value={dashboard.waiting}        color="text-yellow-400" />
+            <StatCard label="Total consultas"     value={dashboard.total}          color="text-white" />
+            <StatCard label="Atendidas"           value={dashboard.attended}       color="text-green-400" />
+            <StatCard label="En espera"           value={dashboard.waiting}        color="text-yellow-400" />
             <StatCard label="Médicos activos hoy" value={dashboard.active_doctors} color="text-sky-400" />
           </div>
         ) : null
@@ -93,7 +102,7 @@ export default function BrigadeDetailPage() {
               ) : (
                 <div className="flex flex-col gap-2">
                   {report.top_diagnoses.map((d, i) => (
-                    <div key={i} className="flex justify-between text-sm">
+                    <div key={d.diagnosis ?? i} className="flex justify-between text-sm">
                       <span className="text-slate-400">{d.diagnosis}</span>
                       <span className="text-white font-medium">{d.count}</span>
                     </div>
