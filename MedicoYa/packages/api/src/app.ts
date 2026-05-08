@@ -20,6 +20,8 @@ import { createRatingsRouter }       from './routes/ratings'
 import { createFhirRouter }         from './routes/fhir'
 import { createBrigadesRouter }     from './routes/brigades'
 import { createSyncRouter }         from './routes/sync'
+import { PatientService } from './services/PatientService'
+import { createPatientsRouter } from './routes/patients'
 
 interface AppDeps {
   authService?:         AuthService
@@ -27,6 +29,7 @@ interface AppDeps {
   prescriptionService?: PrescriptionService
   uploadService?:       UploadService
   notificationService?: NotificationService
+  patientService?:      PatientService
   db?:                  PrismaClient
   io?:                  Server
 }
@@ -47,9 +50,11 @@ export function createApp(deps?: AppDeps): { app: express.Express } {
   const consultationService = deps?.consultationService ?? new ConsultationService(db, deps?.io, deps?.notificationService)
   const prescriptionService = deps?.prescriptionService ?? new PrescriptionService(db)
   const uploadService       = deps?.uploadService       ?? new UploadService()
+  const patientService      = deps?.patientService      ?? new PatientService(db)
 
   app.use('/api/auth',          createAuthRouter(authService))
   app.use('/api/doctors',       createDoctorsRouter(db))
+  app.use('/api/patients',      createPatientsRouter(patientService))
   app.use('/api/admin',         createAdminRouter(db))
   app.use('/api/consultations', createConsultationsRouter(consultationService, uploadService))
   app.use('/api/prescriptions', createPrescriptionsRouter(prescriptionService))
