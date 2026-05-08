@@ -291,5 +291,8 @@ describe('GET /api/brigades/mine', () => {
     expect(res.body).toHaveLength(1)
     expect(res.body[0].id).toBe(BRIGADE_ID)
     expect(res.body[0].join_code).toBe('ABC123')
+    expect(mockDb.brigade.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({ where: { organizer_id: COORD_ID } })
+    )
   })
 })

@@ -1,6 +1,6 @@
 import crypto from 'crypto'
 import {
-  PrismaClient, Brigade,
+  PrismaClient, Brigade, BrigadeStatus,
   ConsultationMode, ConsultationStatus, RegistrationMode, Role,
 } from '@prisma/client'
 
@@ -198,7 +198,13 @@ export class BrigadeService {
     })
   }
 
-  async getMyBrigadesCoordinator(organizerId: string) {
+  async getMyBrigadesCoordinator(organizerId: string): Promise<{
+    id: string
+    name: string
+    community: string
+    status: BrigadeStatus
+    join_code: string
+  }[]> {
     return this.db.brigade.findMany({
       where:   { organizer_id: organizerId },
       select:  { id: true, name: true, community: true, status: true, join_code: true },
