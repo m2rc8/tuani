@@ -1,7 +1,7 @@
 'use client'
 import { useEffect } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
-import { getToken } from '../lib/auth'
+import { getToken, getRole } from '../lib/auth'
 import Providers from '../providers'
 import Sidebar from '../components/Sidebar'
 import './globals.css'
@@ -13,7 +13,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   useEffect(() => {
     const token = getToken()
     if (!token && pathname !== '/') router.replace('/')
-    if (token  && pathname === '/') router.replace('/doctors')
+    if (token && pathname === '/') {
+      const role = getRole()
+      router.replace(role === 'coordinator' ? '/brigades' : '/doctors')
+    }
   }, [pathname, router])
 
   const isLogin = pathname === '/'

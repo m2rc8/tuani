@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { setToken } from '../lib/auth'
+import { setToken, setRole } from '../lib/auth'
 
 const BASE = process.env.NEXT_PUBLIC_API_URL ?? ''
 
@@ -41,12 +41,14 @@ export default function OtpForm() {
       })
       const body = await res.json()
       if (!res.ok) { setError(body.error ?? 'Código inválido'); return }
-      if (body.user?.role !== 'admin') {
-        setError('Acceso denegado. Solo administradores.')
+      const role = body.user?.role
+      if (role !== 'admin' && role !== 'coordinator') {
+        setError('Acceso denegado.')
         return
       }
       setToken(body.token)
-      router.replace('/doctors')
+      setRole(role)
+      router.replace(role === 'coordinator' ? '/brigades' : '/doctors')
     } finally {
       setLoading(false)
     }
