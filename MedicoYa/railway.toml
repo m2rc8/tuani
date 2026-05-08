@@ -2,7 +2,8 @@
 builder = "dockerfile"
 
 [deploy]
-startCommand = "npm --workspace packages/api exec prisma migrate deploy && npm run start"
+preDeployCommand = "npm --workspace packages/api exec prisma migrate deploy"
+startCommand = "npm run start"
 healthcheckPath = "/health"
 healthcheckTimeout = 30
 restartPolicyType = "on_failure"
