@@ -4,7 +4,10 @@
     "slug": "medicoya",
     "version": "1.0.0",
     "orientation": "portrait",
-    "platforms": ["ios", "android"],
+    "platforms": [
+      "ios",
+      "android"
+    ],
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.medicoya.app"
@@ -21,6 +24,12 @@
           "photosPermission": "MédicoYa needs photo library access to attach symptom photos."
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "2a450b80-317e-42a0-8ce0-55635b496dc7"
+      }
+    },
+    "owner": "m2rc8"
   }
 }

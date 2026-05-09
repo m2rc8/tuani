@@ -15,6 +15,7 @@ if (!i18n.isInitialized) {
       es: { translation: es },
       en: { translation: en },
     },
+    compatibilityJSON: 'v3',
     interpolation: { escapeValue: false },
     initImmediate: false,
   })

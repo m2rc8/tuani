@@ -8,17 +8,16 @@ import { useAuthStore } from './store/authStore'
 import { useBrigadeStore } from './store/brigadeStore'
 import RootNavigator from './navigation/RootNavigator'
 import { registerForPushNotifications } from './lib/notifications'
-import { registerRootComponent } from 'expo'
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
     shouldPlaySound: true,
-    shouldSetBadge:  false,
+    shouldSetBadge: false,
   }),
 })
 
-function App() {
+export default function App() {
   const [ready, setReady] = useState(false)
   const hydrate = useAuthStore((s) => s.hydrate)
 
@@ -48,6 +47,3 @@ function App() {
     </SafeAreaProvider>
   )
 }
-
-registerRootComponent(App)
-export default App
