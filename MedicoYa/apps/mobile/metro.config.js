@@ -25,4 +25,17 @@ config.resolver.resolveRequest = (context, moduleName, platform) => {
   return context.resolveRequest(context, moduleName, platform)
 }
 
+// react-native-qrcode-svg ships ESM — must be transformed by Babel
+const defaultTransformIgnore = config.transformer?.transformIgnorePatterns?.[0] ??
+  'node_modules/(?!(react-native|@react-native|expo|@expo|@unimodules|react-navigation|@react-navigation)/)'
+config.transformer = {
+  ...config.transformer,
+  transformIgnorePatterns: [
+    defaultTransformIgnore.replace(
+      'node_modules/(?!(',
+      'node_modules/(?!(react-native-qrcode-svg|react-native-svg|'
+    ),
+  ],
+}
+
 module.exports = config
