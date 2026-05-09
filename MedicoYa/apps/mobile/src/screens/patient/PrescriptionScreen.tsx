@@ -3,7 +3,6 @@ import {
   View, Text, ScrollView, StyleSheet, ActivityIndicator,
   TouchableOpacity, TextInput,
 } from 'react-native'
-import QRCode from 'react-qr-code'
 import { useTranslation } from 'react-i18next'
 import api from '../../lib/api'
 import type { ConsultationDetail } from '../../lib/types'
@@ -83,7 +82,8 @@ export default function PrescriptionScreen({ route }: any) {
       )}
 
       <View style={styles.qrContainer}>
-        <QRCode value={`MEDICOYA:${prescription.qr_code}`} size={180} />
+        <Text style={styles.qrLabel}>Código QR</Text>
+        <Text style={styles.qrValue} selectable>{prescription.qr_code}</Text>
       </View>
 
       <Text style={styles.validUntil}>
@@ -148,6 +148,8 @@ const styles = StyleSheet.create({
     alignItems: 'center', padding: 20,
     backgroundColor: '#F8FAFC', borderRadius: 12, marginVertical: 20,
   },
+  qrLabel:       { fontSize: 12, color: '#94A3B8', marginBottom: 8 },
+  qrValue:       { fontSize: 13, color: '#334155', fontFamily: 'monospace', textAlign: 'center' },
   validUntil:    { fontSize: 13, color: '#94A3B8', textAlign: 'center' },
   ratingSection: { marginTop: 32, borderTopWidth: 1, borderTopColor: '#E2E8F0', paddingTop: 24 },
   ratingTitle:   { fontSize: 16, fontWeight: '600', color: '#1E293B', marginBottom: 12 },
