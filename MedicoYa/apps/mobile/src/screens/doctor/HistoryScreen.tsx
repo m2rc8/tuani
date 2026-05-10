@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useTranslation } from 'react-i18next'
 import api from '../../lib/api'
 import type { ConsultationStatus } from '../../lib/types'
@@ -19,6 +20,7 @@ const STATUS_COLORS: Record<ConsultationStatus, string> = {
 
 export default function DoctorHistoryScreen({ navigation }: any) {
   const { t } = useTranslation()
+  const insets = useSafeAreaInsets()
   const [items, setItems] = useState<ConsultationListItem[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -38,18 +40,18 @@ export default function DoctorHistoryScreen({ navigation }: any) {
   }
 
   if (loading) {
-    return <View style={styles.center}><ActivityIndicator size="large" color="#3B82F6" /></View>
+    return <View style={[styles.center, { paddingTop: insets.top }]}><ActivityIndicator size="large" color="#3B82F6" /></View>
   }
 
   if (items.length === 0) {
-    return <View style={styles.center}><Text style={styles.emptyText}>{t('history.empty')}</Text></View>
+    return <View style={[styles.center, { paddingTop: insets.top }]}><Text style={styles.emptyText}>{t('history.empty')}</Text></View>
   }
 
   return (
     <FlatList
       data={items}
       keyExtractor={(i) => i.id}
-      contentContainerStyle={styles.list}
+      contentContainerStyle={[styles.list, { paddingTop: insets.top + 16 }]}
       renderItem={({ item }) => {
         const color = STATUS_COLORS[item.status] ?? '#94A3B8'
         const date = item.created_at ? new Date(item.created_at).toLocaleDateString() : '—'

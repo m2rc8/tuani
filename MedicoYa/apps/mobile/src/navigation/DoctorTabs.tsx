@@ -16,7 +16,7 @@ const Tab = createBottomTabNavigator<DoctorTabsParamList>()
 export default function DoctorTabs() {
   const { t } = useTranslation()
   return (
-    <Tab.Navigator>
+    <Tab.Navigator screenOptions={{ headerShown: false }}>
       <Tab.Screen name="Queue" component={QueueScreen} options={{ title: t('nav.queue') }} />
       <Tab.Screen name="History" component={DoctorHistoryScreen} options={{ title: t('nav.history') }} />
       <Tab.Screen name="Profile" component={DoctorProfileScreen} options={{ title: t('nav.profile') }} />

@@ -3,6 +3,7 @@ import {
   View, Text, TextInput, TouchableOpacity, StyleSheet,
   ScrollView, ActivityIndicator, Alert,
 } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useTranslation } from 'react-i18next'
 import api from '../../lib/api'
 import { useAuthStore } from '../../store/authStore'
@@ -16,6 +17,7 @@ interface PatientProfile {
 
 export default function PatientProfileScreen() {
   const { t } = useTranslation()
+  const insets = useSafeAreaInsets()
   const language    = useAuthStore((s) => s.language)
   const setLanguage = useAuthStore((s) => s.setLanguage)
   const logout      = useAuthStore((s) => s.logout)
@@ -68,7 +70,7 @@ export default function PatientProfileScreen() {
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView contentContainerStyle={[styles.container, { paddingTop: insets.top + 24 }]}>
       <Text style={styles.title}>{t('profile.title')}</Text>
 
       <Text style={styles.label}>{t('profile.name')}</Text>

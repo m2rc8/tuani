@@ -16,7 +16,7 @@ const Tab = createBottomTabNavigator<PatientTabsParamList>()
 export default function PatientTabs() {
   const { t } = useTranslation()
   return (
-    <Tab.Navigator>
+    <Tab.Navigator screenOptions={{ headerShown: false }}>
       <Tab.Screen name="Home" component={HomeScreen} options={{ title: t('nav.home') }} />
       <Tab.Screen name="History" component={PatientHistoryScreen} options={{ title: t('nav.history') }} />
       <Tab.Screen name="Profile" component={PatientProfileScreen} options={{ title: t('nav.profile') }} />

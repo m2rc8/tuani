@@ -7,6 +7,7 @@ import * as ImagePicker from 'expo-image-picker'
 import * as ImageManipulator from 'expo-image-manipulator'
 import { useTranslation } from 'react-i18next'
 import api from '../../lib/api'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useConsultationStore } from '../../store/consultationStore'
 import type { AvailableDoctor } from '../../lib/types'
 
@@ -16,6 +17,7 @@ interface PickedPhoto { uri: string }
 
 export default function HomeScreen({ navigation }: any) {
   const { t } = useTranslation()
+  const insets = useSafeAreaInsets()
   const { activeConsultationId, status, setActive } = useConsultationStore()
   const [symptoms,    setSymptoms]    = useState('')
   const [photo,       setPhoto]       = useState<PickedPhoto | null>(null)
@@ -104,7 +106,7 @@ export default function HomeScreen({ navigation }: any) {
       : t('consultation.doctors_available', { count: doctorCount })
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { paddingTop: insets.top + 24 }]}>
       <Text style={styles.title}>{t('nav.home')}</Text>
 
       {doctorBadge && (

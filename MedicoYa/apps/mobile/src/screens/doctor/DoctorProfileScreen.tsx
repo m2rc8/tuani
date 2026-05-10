@@ -3,12 +3,14 @@ import {
   View, Text, Switch, TouchableOpacity,
   StyleSheet, Alert, ActivityIndicator,
 } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useTranslation } from 'react-i18next'
 import api from '../../lib/api'
 import { useAuthStore } from '../../store/authStore'
 
 export default function DoctorProfileScreen() {
   const { t } = useTranslation()
+  const insets = useSafeAreaInsets()
   const language    = useAuthStore((s) => s.language)
   const setLanguage = useAuthStore((s) => s.setLanguage)
   const logout      = useAuthStore((s) => s.logout)
@@ -41,7 +43,7 @@ export default function DoctorProfileScreen() {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { paddingTop: insets.top + 24 }]}>
       <Text style={styles.title}>{t('profile.title')}</Text>
 
       {loading ? (

@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react'
 import {
   View, Text, FlatList, TouchableOpacity, StyleSheet, ActivityIndicator, Alert,
 } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useTranslation } from 'react-i18next'
 import api from '../../lib/api'
 import { socketService } from '../../lib/socket'
@@ -17,6 +18,7 @@ function timeAgo(isoString: string): string {
 
 export default function QueueScreen({ navigation }: any) {
   const { t } = useTranslation()
+  const insets = useSafeAreaInsets()
   const token = useAuthStore((s: any) => s.token)
   const baseURL = process.env.EXPO_PUBLIC_API_URL ?? ''
   const [items,    setItems]    = useState<QueueItem[]>([])
@@ -89,7 +91,7 @@ export default function QueueScreen({ navigation }: any) {
 
   if (loading) {
     return (
-      <View style={styles.flex}>
+      <View style={[styles.flex, { paddingTop: insets.top }]}>
         {banner}
         <View style={styles.center}><ActivityIndicator size="large" color="#3B82F6" /></View>
       </View>
@@ -98,7 +100,7 @@ export default function QueueScreen({ navigation }: any) {
 
   if (approved === false) {
     return (
-      <View style={styles.flex}>
+      <View style={[styles.flex, { paddingTop: insets.top }]}>
         <View style={styles.center}>
           <Text style={styles.pendingIcon}>⏳</Text>
           <Text style={styles.pendingTitle}>{t('doctor.pending_title')}</Text>
@@ -110,7 +112,7 @@ export default function QueueScreen({ navigation }: any) {
 
   if (items.length === 0) {
     return (
-      <View style={styles.flex}>
+      <View style={[styles.flex, { paddingTop: insets.top }]}>
         {banner}
         <View style={styles.center}><Text style={styles.emptyText}>{t('queue.empty')}</Text></View>
       </View>
@@ -118,7 +120,7 @@ export default function QueueScreen({ navigation }: any) {
   }
 
   return (
-    <View style={styles.flex}>
+    <View style={[styles.flex, { paddingTop: insets.top }]}>
       {banner}
       <FlatList
         data={items}
