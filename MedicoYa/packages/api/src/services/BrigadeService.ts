@@ -28,6 +28,7 @@ export interface SyncItem {
   patient_name:   string
   symptoms_text?: string
   diagnosis?:     string
+  referral_to?:   string
   medications?:   { name: string; dose: string; frequency: string }[]
   created_at:     string
 }
@@ -206,6 +207,7 @@ export class BrigadeService {
               status:        ConsultationStatus.completed,
               symptoms_text: item.symptoms_text,
               diagnosis:     item.diagnosis,
+              referral_to:   item.referral_to,
               synced_at:     new Date(),
               created_at:    new Date(item.created_at),
             },

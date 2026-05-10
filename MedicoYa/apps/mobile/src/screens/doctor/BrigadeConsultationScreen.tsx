@@ -25,6 +25,7 @@ export default function BrigadeConsultationScreen({ navigation, route }: any) {
   const [name, setName]       = useState('')
   const [symptoms, setSymptoms]   = useState('')
   const [diagnosis, setDiagnosis] = useState('')
+  const [referralTo, setReferralTo] = useState('')
   const [meds, setMeds] = useState<MedRow[]>([])
 
   useEffect(() => {
@@ -36,6 +37,7 @@ export default function BrigadeConsultationScreen({ navigation, route }: any) {
         setName(existing.patient_name)
         setSymptoms(existing.symptoms_text ?? '')
         setDiagnosis(existing.diagnosis ?? '')
+        setReferralTo(existing.referral_to ?? '')
         setMeds(existing.medications)
       }
     }
@@ -58,11 +60,12 @@ export default function BrigadeConsultationScreen({ navigation, route }: any) {
       patient_name:  name.trim(),
       symptoms_text: symptoms.trim() || undefined,
       diagnosis:     diagnosis.trim() || undefined,
+      referral_to:   referralTo.trim() || undefined,
       medications:   meds.filter(m => m.name && m.dose && m.frequency),
       created_at:    new Date().toISOString(),
     })
     navigation.goBack()
-  }, [phone, dob, name, symptoms, diagnosis, meds, addConsultation, navigation, t])
+  }, [phone, dob, name, symptoms, diagnosis, referralTo, meds, addConsultation, navigation, t])
 
   const addMed = useCallback(() => {
     setMeds(prev => [...prev, { name: '', dose: '', frequency: '' }])
@@ -125,6 +128,15 @@ export default function BrigadeConsultationScreen({ navigation, route }: any) {
         value={diagnosis}
         onChangeText={setDiagnosis}
         testID="diagnosis-input"
+      />
+
+      <Text style={styles.label}>{t('doctor.referral_label')}</Text>
+      <TextInput
+        style={styles.input}
+        value={referralTo}
+        onChangeText={setReferralTo}
+        placeholder={t('doctor.referral_placeholder')}
+        testID="referral-input"
       />
 
       <Text style={styles.label}>{t('brigade.medications')}</Text>

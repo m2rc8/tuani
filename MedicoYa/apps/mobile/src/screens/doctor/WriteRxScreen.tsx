@@ -23,6 +23,7 @@ export default function WriteRxScreen({ navigation, route }: any) {
   const [medications, setMedications] = useState<MedicationRow[]>([{ name: '', dose: '', frequency: '' }])
   const [instructions, setInstructions] = useState('')
   const [priceLps, setPriceLps] = useState('')
+  const [referralTo, setReferralTo] = useState('')
   const [submitting, setSubmitting] = useState(false)
 
   const canSubmit = diagnosis.trim().length > 0 && medications.some((m) => m.name.trim().length > 0) && !submitting
@@ -50,6 +51,7 @@ export default function WriteRxScreen({ navigation, route }: any) {
       if (diagnosisCode.trim()) payload.diagnosis_code = diagnosisCode.trim()
       if (instructions.trim()) payload.instructions = instructions.trim()
       if (priceLps.trim()) payload.price_lps = parseFloat(priceLps)
+      if (referralTo.trim()) payload.referral_to = referralTo.trim()
 
       await api.put(`/api/consultations/${consultationId}/complete`, payload)
       navigation.goBack()
@@ -140,6 +142,15 @@ export default function WriteRxScreen({ navigation, route }: any) {
           onChangeText={setPriceLps}
           keyboardType="numeric"
           testID="price-input"
+        />
+
+        <Text style={styles.label}>{t('doctor.referral_label')}</Text>
+        <TextInput
+          style={styles.input}
+          value={referralTo}
+          onChangeText={setReferralTo}
+          placeholder={t('doctor.referral_placeholder')}
+          testID="referral-input"
         />
 
         <TouchableOpacity

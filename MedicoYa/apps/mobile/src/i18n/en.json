@@ -57,6 +57,7 @@
     "chat_placeholder": "Type a message...",
     "send": "Send",
     "done": "End consultation",
+    "referred_to": "Referred to",
     "consultation_completed": "Consultation completed",
     "prescription_ready": "Your prescription is ready",
     "view_prescription": "View full prescription →",
@@ -116,6 +117,8 @@
     "confirm_payment": "Confirm payment received (Tigo Money) ✓",
     "confirm_payment_amount": "Confirm payment of L. {{amount}} received ✓",
     "payment_confirmed": "Payment confirmed ✓",
+    "referral_label": "Refer to specialist (optional)",
+    "referral_placeholder": "E.g.: Cardiologist, Dermatologist, Orthopedist...",
     "pending_title": "Account under review",
     "pending_body": "Your application is being reviewed by the MedicoYa team. We'll notify you once approved."
   },

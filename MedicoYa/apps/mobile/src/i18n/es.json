@@ -57,6 +57,7 @@
     "chat_placeholder": "Escribe un mensaje...",
     "send": "Enviar",
     "done": "Finalizar consulta",
+    "referred_to": "Referido a",
     "consultation_completed": "Consulta completada",
     "prescription_ready": "Tu receta está lista",
     "view_prescription": "Ver receta completa →",
@@ -116,6 +117,8 @@
     "confirm_payment": "Confirmar pago recibido (Tigo Money) ✓",
     "confirm_payment_amount": "Confirmar pago de L. {{amount}} recibido ✓",
     "payment_confirmed": "Pago confirmado ✓",
+    "referral_label": "Referir a especialista (opcional)",
+    "referral_placeholder": "Ej: Cardiólogo, Dermatólogo, Ortopedista...",
     "pending_title": "Cuenta en revisión",
     "pending_body": "Tu solicitud está siendo revisada por el equipo de MedicoYa. Te notificaremos cuando sea aprobada."
   },

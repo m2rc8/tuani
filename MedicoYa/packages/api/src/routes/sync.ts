@@ -14,6 +14,7 @@ const syncSchema = z.object({
     patient_name:  z.string().min(1),
     symptoms_text: z.string().optional(),
     diagnosis:     z.string().optional(),
+    referral_to:   z.string().max(200).optional(),
     medications:   z.array(z.object({
       name:      z.string(),
       dose:      z.string(),

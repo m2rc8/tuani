@@ -112,6 +112,21 @@ export function createDentalRouter(db: PrismaClient): Router {
     }
   )
 
+  // Update referral
+  router.patch(
+    '/records/:id/referral',
+    requireAuth,
+    async (req: Request, res: Response): Promise<void> => {
+      const parsed = z.object({ referral_to: z.string().max(200).nullable() }).safeParse(req.body)
+      if (!parsed.success) { res.status(400).json({ error: 'Invalid request' }); return }
+      try {
+        const record = await service.updateReferral(req.params.id, parsed.data.referral_to)
+        if (!record) { res.status(404).json({ error: 'Record not found' }); return }
+        res.json(record)
+      } catch { res.status(500).json({ error: 'Internal server error' }) }
+    }
+  )
+
   // Create minor (under-18) patient for dental — no phone/OTP required
   router.post(
     '/patients/minor',

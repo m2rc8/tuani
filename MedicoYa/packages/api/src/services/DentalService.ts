@@ -110,6 +110,14 @@ export class DentalService {
     })
   }
 
+  async updateReferral(recordId: string, referralTo: string | null) {
+    await this.db.dentalRecord.update({
+      where: { id: recordId },
+      data:  { referral_to: referralTo },
+    })
+    return this.getRecord(recordId)
+  }
+
   async getBrigadeDentalReport(brigadeId: string) {
     const records = await this.db.dentalRecord.findMany({
       where:   { brigade_id: brigadeId },

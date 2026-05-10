@@ -79,6 +79,7 @@ export interface OfflineConsultation {
   patient_name: string
   symptoms_text?: string
   diagnosis?: string
+  referral_to?: string
   medications: { name: string; dose: string; frequency: string }[]
   created_at: string
   synced: boolean

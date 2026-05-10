@@ -37,6 +37,9 @@ export default function DentalRecordScreen({ navigation: _navigation, route }: a
   const [selectedFdi, setSelectedFdi] = useState<number | null>(null)
   const [surfaces,    setSurfaces]    = useState<SurfaceMap | null>(null)
   const [dirtyTeeth,  setDirtyTeeth]  = useState<Record<number, SurfaceMap>>({})
+  // Referral
+  const [referralTo,   setReferralTo]   = useState<string>('')
+  const [savingRef,    setSavingRef]    = useState(false)
   // Treatment form
   const [procedure,    setProcedure]    = useState('')
   const [txNotes,      setTxNotes]      = useState('')
@@ -45,7 +48,7 @@ export default function DentalRecordScreen({ navigation: _navigation, route }: a
 
   useEffect(() => {
     api.post<DentalRecord>('/api/dental/records', { patient_id: patientId, brigade_id: brigadeId })
-      .then(({ data }) => setRecord(data))
+      .then(({ data }) => { setRecord(data); setReferralTo((data as any).referral_to ?? '') })
       .catch(() => Alert.alert(t('common.error_generic')))
       .finally(() => setLoading(false))
   }, [patientId, brigadeId, t])
@@ -84,6 +87,22 @@ export default function DentalRecordScreen({ navigation: _navigation, route }: a
       Alert.alert(t('common.error_generic'))
     } finally {
       setSaving(false)
+    }
+  }
+
+  const handleSaveReferral = async () => {
+    if (!record) return
+    setSavingRef(true)
+    try {
+      const { data } = await api.patch<DentalRecord>(`/api/dental/records/${record.id}/referral`, {
+        referral_to: referralTo.trim() || null,
+      })
+      setRecord(data)
+      Alert.alert('Referencia guardada')
+    } catch {
+      Alert.alert(t('common.error_generic'))
+    } finally {
+      setSavingRef(false)
     }
   }
 
@@ -156,6 +175,25 @@ export default function DentalRecordScreen({ navigation: _navigation, route }: a
               : <Text style={styles.saveBtnText}>Guardar odontograma</Text>}
           </TouchableOpacity>
         )}
+
+        {/* Referral */}
+        <Text style={styles.sectionTitle}>Referencia a especialista</Text>
+        <TextInput
+          style={styles.input}
+          value={referralTo}
+          onChangeText={setReferralTo}
+          placeholder="Ej: Ortodoncista, Cirujano maxilofacial..."
+          placeholderTextColor={colors.text.muted}
+        />
+        <TouchableOpacity
+          style={[styles.saveBtn, savingRef && styles.saveBtnDisabled]}
+          onPress={handleSaveReferral}
+          disabled={savingRef}
+        >
+          {savingRef
+            ? <ActivityIndicator color={colors.text.inverse} />
+            : <Text style={styles.saveBtnText}>Guardar referencia</Text>}
+        </TouchableOpacity>
 
         {/* Treatments */}
         <Text style={styles.sectionTitle}>Tratamientos ({treatments.length})</Text>

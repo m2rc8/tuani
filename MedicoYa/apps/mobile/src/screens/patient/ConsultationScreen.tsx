@@ -17,10 +17,11 @@ const { colors, spacing, radius, typography } = tokens
 interface PrescriptionCardProps {
   prescription: Prescription
   diagnosis: string | null
+  referralTo?: string | null
   onView: () => void
 }
 
-function PrescriptionCard({ prescription, diagnosis, onView }: PrescriptionCardProps) {
+function PrescriptionCard({ prescription, diagnosis, referralTo, onView }: PrescriptionCardProps) {
   const { t } = useTranslation()
   return (
     <View style={styles.prescriptionCard} testID="prescription-card">
@@ -29,6 +30,11 @@ function PrescriptionCard({ prescription, diagnosis, onView }: PrescriptionCardP
       <Text style={styles.prescriptionMeds}>
         {prescription.medications.length} {t('consultation.medications').toLowerCase()}
       </Text>
+      {referralTo && (
+        <Text style={styles.prescriptionReferral}>
+          {t('consultation.referred_to')}: {referralTo}
+        </Text>
+      )}
       <TouchableOpacity style={styles.viewBtn} onPress={onView} testID="view-prescription-btn">
         <Text style={styles.viewBtnText}>{t('consultation.view_prescription')}</Text>
       </TouchableOpacity>
@@ -113,6 +119,7 @@ export default function ConsultationScreen({ navigation, route }: any) {
   const [inputText, setInputText] = useState('')
   const [prescription, setPrescription] = useState<Prescription | null>(null)
   const [diagnosis, setDiagnosis] = useState<string | null>(null)
+  const [referralTo, setReferralTo] = useState<string | null>(null)
   const [rated, setRated] = useState(false)
   const listRef = useRef<FlatList>(null)
   const scrollTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -127,6 +134,7 @@ export default function ConsultationScreen({ navigation, route }: any) {
         const { data: detail } = await api.get<ConsultationDetail>(`/api/consultations/${consultationId}`)
         setPrescription(detail.prescription)
         setDiagnosis(detail.diagnosis)
+        setReferralTo((detail as any).referral_to ?? null)
       }
     },
     [consultationId, setStatus],
@@ -186,6 +194,7 @@ export default function ConsultationScreen({ navigation, route }: any) {
           setStatus('completed')
           setPrescription(data.prescription)
           setDiagnosis(data.diagnosis)
+          setReferralTo((data as any).referral_to ?? null)
           if (data.rating) setRated(true)
         }
       })
@@ -246,6 +255,7 @@ export default function ConsultationScreen({ navigation, route }: any) {
               <PrescriptionCard
                 prescription={prescription}
                 diagnosis={diagnosis}
+                referralTo={referralTo}
                 onView={() => navigation.navigate('PrescriptionScreen', { consultationId })}
               />
               {!rated && (
@@ -317,7 +327,8 @@ const styles = StyleSheet.create({
   },
   prescriptionTitle: { fontSize: typography.size.md, fontFamily: 'DMSansSemibold', color: colors.text.brand, marginBottom: spacing[1] },
   prescriptionDiagnosis: { fontSize: typography.size.base, fontFamily: 'DMSansSemibold', color: colors.text.primary, marginBottom: spacing[1] },
-  prescriptionMeds: { fontSize: typography.size.md, color: colors.text.secondary, marginBottom: spacing[3], fontFamily: 'DMSans' },
+  prescriptionMeds: { fontSize: typography.size.md, color: colors.text.secondary, marginBottom: spacing[1], fontFamily: 'DMSans' },
+  prescriptionReferral: { fontSize: typography.size.md, color: colors.status.amber, fontFamily: 'DMSansSemibold', marginBottom: spacing[3] },
   viewBtn: { backgroundColor: colors.brand.green400, borderRadius: radius.full, padding: spacing[3], alignItems: 'center' },
   viewBtnText: { color: colors.text.inverse, fontFamily: 'DMSansSemibold', fontSize: typography.size.md },
   videoBtn: {

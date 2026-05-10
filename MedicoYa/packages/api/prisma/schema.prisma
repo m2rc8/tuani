@@ -125,6 +125,7 @@ model Consultation {
   brigade_id     String?
   local_id       String?
   synced_at      DateTime?
+  referral_to    String?
 
   patient      Patient       @relation(fields: [patient_id], references: [id])
   doctor       Doctor?       @relation(fields: [doctor_id], references: [id])
@@ -211,6 +212,7 @@ model DentalRecord {
   record_date   DateTime @default(now())
   cpod_index    Decimal? @db.Decimal(4, 2)
   hygiene_notes String?
+  referral_to   String?
   created_at    DateTime @default(now())
 
   patient    Patient           @relation(fields: [patient_id], references: [id])

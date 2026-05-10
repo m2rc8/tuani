@@ -27,6 +27,7 @@ const completeSchema = z.object({
   })),
   instructions: z.string().optional(),
   price_lps:    z.number().optional(),
+  referral_to:  z.string().max(200).optional(),
 })
 
 function handleConsultationError(err: unknown, res: Response): boolean {

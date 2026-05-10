@@ -16,6 +16,7 @@ interface CompleteData {
   medications: Medication[]
   instructions?: string
   price_lps?: number
+  referral_to?: string
 }
 
 export class ConsultationError extends Error {
@@ -144,6 +145,7 @@ export class ConsultationService {
           diagnosis: data.diagnosis,
           diagnosis_code: data.diagnosis_code,
           price_lps: data.price_lps,
+          referral_to: data.referral_to,
           completed_at: new Date(),
         },
       }),
