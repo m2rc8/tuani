@@ -6,6 +6,7 @@ import {
 import { useTranslation } from 'react-i18next'
 import { useBrigadeStore } from '../../store/brigadeStore'
 import { tokens } from '../../theme/tokens'
+import DatePickerField from '../../components/DatePickerField'
 
 const { colors, spacing, radius, typography } = tokens
 
@@ -100,16 +101,12 @@ export default function BrigadeConsultationScreen({ navigation, route }: any) {
       />
 
       {!phone.trim() && (
-        <>
-          <Text style={styles.label}>{t('brigade.patient_dob')}</Text>
-          <TextInput
-            style={styles.input}
-            value={dob}
-            onChangeText={setDob}
-            placeholder="YYYY-MM-DD"
-            testID="dob-input"
-          />
-        </>
+        <DatePickerField
+          label={t('brigade.patient_dob')}
+          value={dob}
+          onChange={setDob}
+          maxDate={new Date()}
+        />
       )}
 
       <Text style={styles.label}>{t('brigade.symptoms')}</Text>

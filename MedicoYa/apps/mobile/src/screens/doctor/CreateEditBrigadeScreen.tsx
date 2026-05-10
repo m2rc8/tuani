@@ -6,6 +6,7 @@ import {
 import { useTranslation } from 'react-i18next'
 import api from '../../lib/api'
 import { tokens } from '../../theme/tokens'
+import DatePickerField from '../../components/DatePickerField'
 
 const { colors, spacing, radius, typography } = tokens
 
@@ -38,8 +39,9 @@ export default function CreateEditBrigadeScreen({ navigation, route }: Props) {
   const [community, setCommunity] = useState(initialData?.community ?? '')
   const [municipality, setMunicipality] = useState(initialData?.municipality ?? '')
   const [department, setDepartment] = useState(initialData?.department ?? '')
-  const [startDate, setStartDate] = useState(initialData?.start_date ?? '')
-  const [endDate, setEndDate] = useState(initialData?.end_date ?? '')
+  const toDateOnly = (v?: string) => v ? v.slice(0, 10) : ''
+  const [startDate, setStartDate] = useState(toDateOnly(initialData?.start_date))
+  const [endDate, setEndDate] = useState(toDateOnly(initialData?.end_date))
   const [brigadeType, setBrigadeType] = useState<'medical' | 'dental'>(
     (initialData?.brigade_type as 'medical' | 'dental') ?? 'medical'
   )
@@ -121,26 +123,17 @@ export default function CreateEditBrigadeScreen({ navigation, route }: Props) {
         testID="field-department"
       />
 
-      <Text style={styles.fieldLabel}>{t('brigade.field_start_date')}</Text>
-      <TextInput
-        style={styles.input}
+      <DatePickerField
+        label={t('brigade.field_start_date')}
         value={startDate}
-        onChangeText={setStartDate}
-        placeholder="YYYY-MM-DDTHH:mm:ssZ"
-        placeholderTextColor={colors.text.secondary}
-        autoCapitalize="none"
-        testID="field-start-date"
+        onChange={setStartDate}
       />
 
-      <Text style={styles.fieldLabel}>{t('brigade.field_end_date')}</Text>
-      <TextInput
-        style={styles.input}
+      <DatePickerField
+        label={t('brigade.field_end_date')}
         value={endDate}
-        onChangeText={setEndDate}
-        placeholder="YYYY-MM-DDTHH:mm:ssZ"
-        placeholderTextColor={colors.text.secondary}
-        autoCapitalize="none"
-        testID="field-end-date"
+        onChange={setEndDate}
+        minDate={startDate ? new Date(startDate) : undefined}
       />
 
       <Text style={styles.fieldLabel}>{t('brigade.field_type')}</Text>
