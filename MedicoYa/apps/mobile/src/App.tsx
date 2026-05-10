@@ -1,11 +1,4 @@
 import * as Sentry from '@sentry/react-native'
-
-Sentry.init({
-  dsn: process.env.EXPO_PUBLIC_SENTRY_DSN,
-  environment: process.env.EXPO_PUBLIC_ENV ?? 'development',
-  tracesSampleRate: 0.2,
-})
-
 import React, { useEffect, useState } from 'react'
 import { View, ActivityIndicator, StyleSheet } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native'
@@ -20,6 +13,12 @@ import { useBrigadeStore } from './store/brigadeStore'
 import RootNavigator from './navigation/RootNavigator'
 import { registerForPushNotifications } from './lib/notifications'
 import { tokens } from './theme/tokens'
+
+Sentry.init({
+  dsn: process.env.EXPO_PUBLIC_SENTRY_DSN,
+  environment: process.env.EXPO_PUBLIC_ENV ?? 'development',
+  tracesSampleRate: 0.2,
+})
 
 const { colors } = tokens
 
