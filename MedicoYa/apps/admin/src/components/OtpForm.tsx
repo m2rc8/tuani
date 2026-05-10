@@ -49,7 +49,7 @@ export default function OtpForm() {
       setToken(body.token)
       setRole(role as 'admin' | 'coordinator' | 'doctor')
       if (role === 'coordinator') router.replace('/brigades')
-      else if (role === 'doctor') router.replace('/my-consultations')
+      else if (role === 'doctor') router.replace('/doctor/queue')
       else router.replace('/doctors')
     } finally {
       setLoading(false)
