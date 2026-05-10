@@ -12,14 +12,12 @@ config.resolver.nodeModulesPaths = [
   path.resolve(monorepoRoot, 'node_modules'),
 ]
 
-// Force single React 19 instance — prevents dual-React crash with monorepo root React 18
-const reactPath = path.resolve(projectRoot, 'node_modules', 'react')
+// Force single instance of packages that register native views — prevents duplicate registration crash
+const DEDUPE = ['react', 'react-native-svg']
 config.resolver.resolveRequest = (context, moduleName, platform) => {
-  if (moduleName === 'react' ||
-      moduleName === 'react/jsx-runtime' ||
-      moduleName === 'react/jsx-dev-runtime' ||
-      moduleName === 'react/compiler-runtime') {
-    const filePath = require.resolve(moduleName, { paths: [reactPath + '/..'] })
+  const base = moduleName.split('/')[0]
+  if (DEDUPE.includes(base) || DEDUPE.some(p => moduleName === p || moduleName.startsWith(p + '/'))) {
+    const filePath = require.resolve(moduleName, { paths: [path.resolve(projectRoot, 'node_modules')] })
     return { filePath, type: 'sourceFile' }
   }
   return context.resolveRequest(context, moduleName, platform)
