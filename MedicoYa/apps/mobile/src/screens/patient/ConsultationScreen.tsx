@@ -10,6 +10,9 @@ import { socketService } from '../../lib/socket'
 import { useAuthStore } from '../../store/authStore'
 import { useConsultationStore } from '../../store/consultationStore'
 import type { ConsultationDetail, Message, Prescription } from '../../lib/types'
+import { tokens } from '../../theme/tokens'
+
+const { colors, spacing, radius, typography } = tokens
 
 interface PrescriptionCardProps {
   prescription: Prescription
@@ -171,33 +174,33 @@ export default function ConsultationScreen({ navigation, route }: any) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#fff' },
-  messageList: { padding: 16, paddingBottom: 8 },
-  bubble: { maxWidth: '80%', borderRadius: 12, padding: 10, marginBottom: 8 },
-  bubbleMine: { backgroundColor: '#EFF6FF', alignSelf: 'flex-end' },
-  bubbleTheirs: { backgroundColor: '#F1F5F9', alignSelf: 'flex-start' },
-  bubbleTextMine: { color: '#1D4ED8', fontSize: 15 },
-  bubbleTextTheirs: { color: '#334155', fontSize: 15 },
+  container: { flex: 1, backgroundColor: colors.ui.white },
+  messageList: { padding: spacing[4], paddingBottom: spacing[2] },
+  bubble: { maxWidth: '80%', borderRadius: radius.md, padding: spacing[3], marginBottom: spacing[2] },
+  bubbleMine: { backgroundColor: colors.brand.green50, alignSelf: 'flex-end' },
+  bubbleTheirs: { backgroundColor: colors.ui.slate200, alignSelf: 'flex-start' },
+  bubbleTextMine: { color: colors.brand.green600, fontSize: typography.size.base, fontFamily: 'DMSans' },
+  bubbleTextTheirs: { color: colors.ui.slate900, fontSize: typography.size.base, fontFamily: 'DMSans' },
   prescriptionCard: {
-    backgroundColor: '#F0FDF4', borderWidth: 1, borderColor: '#86EFAC',
-    borderRadius: 12, padding: 16, marginTop: 8,
+    backgroundColor: colors.brand.green50, borderWidth: 1, borderColor: colors.brand.green400,
+    borderRadius: radius.md, padding: spacing[4], marginTop: spacing[2],
   },
-  prescriptionTitle: { fontSize: 14, fontWeight: '700', color: '#166534', marginBottom: 4 },
-  prescriptionDiagnosis: { fontSize: 15, fontWeight: '600', color: '#1E293B', marginBottom: 4 },
-  prescriptionMeds: { fontSize: 13, color: '#64748B', marginBottom: 12 },
-  viewBtn: { backgroundColor: '#22C55E', borderRadius: 8, padding: 10, alignItems: 'center' },
-  viewBtnText: { color: '#fff', fontWeight: '700', fontSize: 14 },
+  prescriptionTitle: { fontSize: typography.size.md, fontFamily: 'DMSansSemibold', color: colors.brand.green600, marginBottom: spacing[1] },
+  prescriptionDiagnosis: { fontSize: typography.size.base, fontFamily: 'DMSansSemibold', color: colors.ui.slate900, marginBottom: spacing[1] },
+  prescriptionMeds: { fontSize: typography.size.md, color: colors.ui.slate600, marginBottom: spacing[3], fontFamily: 'DMSans' },
+  viewBtn: { backgroundColor: colors.brand.green400, borderRadius: radius.sm, padding: spacing[3], alignItems: 'center' },
+  viewBtnText: { color: colors.ui.white, fontFamily: 'DMSansSemibold', fontSize: typography.size.md },
   inputRow: {
-    flexDirection: 'row', padding: 12, borderTopWidth: 1,
-    borderTopColor: '#E2E8F0', gap: 8, alignItems: 'center',
+    flexDirection: 'row', padding: spacing[3], borderTopWidth: 1,
+    borderTopColor: colors.ui.slate200, gap: spacing[2], alignItems: 'center',
   },
   input: {
-    flex: 1, borderWidth: 1, borderColor: '#CBD5E1', borderRadius: 10,
-    padding: 10, fontSize: 15,
+    flex: 1, borderWidth: 1, borderColor: colors.ui.slate200, borderRadius: radius.md,
+    padding: spacing[3], fontSize: typography.size.base, fontFamily: 'DMSans',
   },
-  inputDisabled: { backgroundColor: '#F1F5F9', color: '#94A3B8' },
-  sendBtn: { backgroundColor: '#3B82F6', borderRadius: 10, padding: 10 },
-  sendBtnDisabled: { backgroundColor: '#93C5FD' },
-  sendBtnText: { color: '#fff', fontWeight: '700' },
-  msgImage: { width: 200, height: 150, borderRadius: 8 },
+  inputDisabled: { backgroundColor: colors.ui.slate200, color: colors.ui.slate600 },
+  sendBtn: { backgroundColor: colors.brand.green400, borderRadius: radius.md, padding: spacing[3] },
+  sendBtnDisabled: { backgroundColor: colors.brand.green400, opacity: 0.5 },
+  sendBtnText: { color: colors.ui.white, fontFamily: 'DMSansSemibold' },
+  msgImage: { width: 200, height: 150, borderRadius: radius.sm },
 })

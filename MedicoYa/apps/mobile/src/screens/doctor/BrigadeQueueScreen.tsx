@@ -6,6 +6,9 @@ import { useTranslation } from 'react-i18next'
 import NetInfo from '@react-native-community/netinfo'
 import api from '../../lib/api'
 import { useBrigadeStore } from '../../store/brigadeStore'
+import { tokens } from '../../theme/tokens'
+
+const { colors, spacing, radius, typography } = tokens
 
 export default function BrigadeQueueScreen({ navigation }: any) {
   const { t } = useTranslation()
@@ -70,12 +73,12 @@ export default function BrigadeQueueScreen({ navigation }: any) {
 
       <View style={styles.statsRow}>
         <View style={styles.statBadge} testID="pending-count">
-          <Text style={[styles.statText, { color: '#F59E0B' }]}>
+          <Text style={[styles.statText, { color: colors.status.amber }]}>
             {t('brigade.pending_count', { count: pending.length })}
           </Text>
         </View>
         <View style={styles.statBadge} testID="synced-count">
-          <Text style={[styles.statText, { color: '#10B981' }]}>
+          <Text style={[styles.statText, { color: colors.brand.green400 }]}>
             {t('brigade.synced_count', { count: synced.length })}
           </Text>
         </View>
@@ -120,31 +123,31 @@ export default function BrigadeQueueScreen({ navigation }: any) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F8FAFC' },
+  container: { flex: 1, backgroundColor: colors.brand.green50 },
   header: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    padding: 16, backgroundColor: '#fff', borderBottomWidth: 1, borderBottomColor: '#E2E8F0',
+    padding: spacing[4], backgroundColor: colors.ui.white, borderBottomWidth: 1, borderBottomColor: colors.ui.slate200,
   },
-  brigadeName: { fontSize: 16, fontWeight: '700', color: '#1E293B', flex: 1 },
-  syncBtn: { backgroundColor: '#3B82F6', borderRadius: 8, paddingHorizontal: 12, paddingVertical: 6 },
-  syncBtnText: { color: '#fff', fontWeight: '700', fontSize: 13 },
-  statsRow: { flexDirection: 'row', gap: 8, padding: 12 },
-  statBadge: { backgroundColor: '#fff', borderRadius: 8, paddingHorizontal: 10, paddingVertical: 6, borderWidth: 1, borderColor: '#E2E8F0' },
-  statText: { fontSize: 12, fontWeight: '600' },
-  list: { padding: 12 },
+  brigadeName: { fontSize: typography.size.base, fontFamily: 'DMSansSemibold', color: colors.ui.slate900, flex: 1 },
+  syncBtn: { backgroundColor: colors.brand.green400, borderRadius: radius.sm, paddingHorizontal: spacing[3], paddingVertical: spacing[2] },
+  syncBtnText: { color: colors.ui.white, fontFamily: 'DMSansSemibold', fontSize: typography.size.md },
+  statsRow: { flexDirection: 'row', gap: spacing[2], padding: spacing[3] },
+  statBadge: { backgroundColor: colors.ui.white, borderRadius: radius.sm, paddingHorizontal: spacing[3], paddingVertical: spacing[2], borderWidth: 1, borderColor: colors.ui.slate200 },
+  statText: { fontSize: typography.size.sm, fontFamily: 'DMSansSemibold' },
+  list: { padding: spacing[3] },
   card: {
-    backgroundColor: '#fff', borderRadius: 10, padding: 14,
-    marginBottom: 8, borderWidth: 1, borderColor: '#E2E8F0',
+    backgroundColor: colors.ui.white, borderRadius: radius.md, padding: spacing[4],
+    marginBottom: spacing[2], borderWidth: 1, borderColor: colors.ui.slate200,
   },
-  cardRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 },
-  patientName: { fontSize: 15, fontWeight: '600', color: '#1E293B' },
-  badge: { fontSize: 11, fontWeight: '600', paddingHorizontal: 8, paddingVertical: 2, borderRadius: 10 },
-  badgePending: { backgroundColor: '#FEF3C7', color: '#D97706' },
-  badgeSynced:  { backgroundColor: '#D1FAE5', color: '#059669' },
-  phone: { fontSize: 12, color: '#94A3B8' },
-  errorText: { fontSize: 11, color: '#EF4444', marginTop: 4 },
-  footer: { padding: 16, gap: 8 },
-  newBtn: { backgroundColor: '#EF4444', borderRadius: 10, padding: 14, alignItems: 'center' },
-  newBtnText: { color: '#fff', fontWeight: '700' },
-  leaveText: { color: '#94A3B8', fontSize: 13, textAlign: 'center' },
+  cardRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: spacing[1] },
+  patientName: { fontSize: typography.size.base, fontFamily: 'DMSansSemibold', color: colors.ui.slate900 },
+  badge: { fontSize: typography.size.xs, fontFamily: 'DMSansSemibold', paddingHorizontal: spacing[2], paddingVertical: 2, borderRadius: radius.full },
+  badgePending: { backgroundColor: colors.status.amber + '20', color: colors.status.amber },
+  badgeSynced:  { backgroundColor: colors.brand.green50, color: colors.brand.green400 },
+  phone: { fontSize: typography.size.sm, color: colors.ui.slate600, fontFamily: 'DMSans' },
+  errorText: { fontSize: typography.size.xs, color: colors.status.red, marginTop: spacing[1], fontFamily: 'DMSans' },
+  footer: { padding: spacing[4], gap: spacing[2] },
+  newBtn: { backgroundColor: colors.brand.green400, borderRadius: radius.md, padding: spacing[4], alignItems: 'center' },
+  newBtnText: { color: colors.ui.white, fontFamily: 'DMSansSemibold' },
+  leaveText: { color: colors.ui.slate600, fontSize: typography.size.md, textAlign: 'center', fontFamily: 'DMSans' },
 })

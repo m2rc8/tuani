@@ -7,6 +7,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useTranslation } from 'react-i18next'
 import api from '../../lib/api'
 import { useAuthStore } from '../../store/authStore'
+import { tokens } from '../../theme/tokens'
+
+const { colors, spacing, radius, typography } = tokens
 
 export default function DoctorProfileScreen() {
   const { t } = useTranslation()
@@ -43,11 +46,11 @@ export default function DoctorProfileScreen() {
   }
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top + 24 }]}>
+    <View style={[styles.container, { paddingTop: insets.top + spacing[6] }]}>
       <Text style={styles.title}>{t('profile.title')}</Text>
 
       {loading ? (
-        <ActivityIndicator color="#3B82F6" style={styles.loader} />
+        <ActivityIndicator color={colors.brand.green400} style={styles.loader} />
       ) : (
         <>
           <View style={styles.row}>
@@ -56,8 +59,8 @@ export default function DoctorProfileScreen() {
               testID="availability-switch"
               value={available}
               onValueChange={handleToggle}
-              trackColor={{ false: '#CBD5E1', true: '#3B82F6' }}
-              thumbColor="#fff"
+              trackColor={{ false: colors.ui.slate200, true: colors.brand.green400 }}
+              thumbColor={colors.ui.white}
             />
           </View>
 
@@ -97,24 +100,24 @@ export default function DoctorProfileScreen() {
 }
 
 const styles = StyleSheet.create({
-  container:    { flex: 1, padding: 24 },
-  title:        { fontSize: 24, fontWeight: 'bold', marginBottom: 24 },
-  loader:       { marginBottom: 24 },
-  row:          { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 },
-  label:        { fontSize: 16, color: '#1E293B' },
-  ratingText:   { fontSize: 14, color: '#F59E0B', fontWeight: '600', marginBottom: 24 },
-  sectionLabel: { fontSize: 16, marginBottom: 8 },
-  langRow:      { flexDirection: 'row', gap: 8, marginBottom: 32 },
+  container:    { flex: 1, padding: spacing[6] },
+  title:        { fontSize: typography.size.xl, fontFamily: 'DMSerifDisplay', marginBottom: spacing[6] },
+  loader:       { marginBottom: spacing[6] },
+  row:          { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: spacing[3] },
+  label:        { fontSize: typography.size.base, color: colors.ui.slate900, fontFamily: 'DMSans' },
+  ratingText:   { fontSize: typography.size.md, color: colors.status.amber, fontFamily: 'DMSansSemibold', marginBottom: spacing[6] },
+  sectionLabel: { fontSize: typography.size.base, marginBottom: spacing[2], fontFamily: 'DMSans' },
+  langRow:      { flexDirection: 'row', gap: spacing[2], marginBottom: spacing[8] },
   langBtn: {
-    paddingVertical: 8, paddingHorizontal: 16,
-    borderWidth: 1, borderColor: '#CBD5E1', borderRadius: 6,
+    paddingVertical: spacing[2], paddingHorizontal: spacing[4],
+    borderWidth: 1, borderColor: colors.ui.slate200, borderRadius: radius.sm,
   },
-  langBtnActive:  { borderColor: '#3B82F6', backgroundColor: '#EFF6FF' },
-  langText:       { color: '#64748B', fontWeight: '500' },
-  langTextActive: { color: '#3B82F6', fontWeight: '600' },
+  langBtnActive:  { borderColor: colors.brand.green400, backgroundColor: colors.brand.green50 },
+  langText:       { color: colors.ui.slate600, fontFamily: 'DMSansMedium' },
+  langTextActive: { color: colors.brand.green400, fontFamily: 'DMSansSemibold' },
   logoutBtn: {
-    marginTop: 'auto', padding: 14, backgroundColor: '#EF4444',
-    borderRadius: 8, alignItems: 'center',
+    marginTop: 'auto', padding: spacing[4], backgroundColor: colors.status.red,
+    borderRadius: radius.sm, alignItems: 'center',
   },
-  logoutText: { color: '#fff', fontWeight: '600', fontSize: 16 },
+  logoutText: { color: colors.ui.white, fontFamily: 'DMSansSemibold', fontSize: typography.size.base },
 })

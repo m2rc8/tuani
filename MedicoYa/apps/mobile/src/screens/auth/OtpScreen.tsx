@@ -8,6 +8,9 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack'
 import type { AuthStackParamList } from '../../navigation/AuthStack'
 import api from '../../lib/api'
 import { useAuthStore } from '../../store/authStore'
+import { tokens } from '../../theme/tokens'
+
+const { colors, spacing, radius, typography } = tokens
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'Otp'>
 
@@ -57,7 +60,7 @@ export default function OtpScreen({ navigation, route }: Props) {
         testID="verify-btn"
       >
         {loading
-          ? <ActivityIndicator color="#fff" />
+          ? <ActivityIndicator color={colors.ui.white} />
           : <Text style={styles.btnText}>{t('auth.verify')}</Text>}
       </TouchableOpacity>
       <TouchableOpacity onPress={() => navigation.goBack()} testID="back-btn">
@@ -68,19 +71,19 @@ export default function OtpScreen({ navigation, route }: Props) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 24, justifyContent: 'center' },
-  label: { fontSize: 16, marginBottom: 4 },
+  container: { flex: 1, padding: spacing[6], justifyContent: 'center' },
+  label: { fontSize: typography.size.base, marginBottom: spacing[1], fontFamily: 'DMSans' },
   input: {
-    borderWidth: 1, borderColor: '#CBD5E1', borderRadius: 8,
-    padding: 12, fontSize: 28, textAlign: 'center', letterSpacing: 8,
-    marginBottom: 8,
+    borderWidth: 1, borderColor: colors.ui.slate200, borderRadius: radius.sm,
+    padding: spacing[3], fontSize: 28, textAlign: 'center', letterSpacing: 8,
+    marginBottom: spacing[2], fontFamily: 'DMSans',
   },
   btn: {
-    backgroundColor: '#3B82F6', padding: 14,
-    borderRadius: 8, alignItems: 'center', marginTop: 8,
+    backgroundColor: colors.brand.green400, padding: spacing[4],
+    borderRadius: radius.sm, alignItems: 'center', marginTop: spacing[2],
   },
   btnDisabled: { opacity: 0.5 },
-  btnText: { color: '#fff', fontWeight: '600', fontSize: 16 },
-  error: { color: '#EF4444', marginBottom: 4 },
-  back: { color: '#3B82F6', textAlign: 'center', marginTop: 16, fontSize: 14 },
+  btnText: { color: colors.ui.white, fontFamily: 'DMSansSemibold', fontSize: typography.size.base },
+  error: { color: colors.status.red, marginBottom: spacing[1], fontFamily: 'DMSans' },
+  back: { color: colors.brand.green400, textAlign: 'center', marginTop: spacing[4], fontSize: typography.size.md, fontFamily: 'DMSans' },
 })

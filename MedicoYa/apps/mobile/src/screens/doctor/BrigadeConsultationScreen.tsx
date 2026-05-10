@@ -5,6 +5,9 @@ import {
 } from 'react-native'
 import { useTranslation } from 'react-i18next'
 import { useBrigadeStore } from '../../store/brigadeStore'
+import { tokens } from '../../theme/tokens'
+
+const { colors, spacing, radius, typography } = tokens
 
 interface MedRow {
   name: string
@@ -147,21 +150,22 @@ export default function BrigadeConsultationScreen({ navigation, route }: any) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F8FAFC' },
-  content: { padding: 16 },
-  label: { fontSize: 12, color: '#64748B', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 4, marginTop: 12 },
+  container: { flex: 1, backgroundColor: colors.brand.green50 },
+  content: { padding: spacing[4] },
+  label: { fontSize: typography.size.sm, color: colors.ui.slate600, textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: spacing[1], marginTop: spacing[3], fontFamily: 'DMSansSemibold' },
   input: {
-    borderWidth: 1, borderColor: '#CBD5E1', borderRadius: 8, padding: 12,
-    fontSize: 15, backgroundColor: '#fff', marginBottom: 4,
+    borderWidth: 1, borderColor: colors.ui.slate200, borderRadius: radius.sm, padding: spacing[3],
+    fontSize: typography.size.base, backgroundColor: colors.ui.white, marginBottom: spacing[1],
+    fontFamily: 'DMSans',
   },
   multiline: { minHeight: 80, textAlignVertical: 'top' },
-  medRow: { marginBottom: 8 },
-  medInput: { marginBottom: 4 },
-  removeBtn: { alignSelf: 'flex-start', marginBottom: 4 },
-  removeBtnText: { color: '#EF4444', fontSize: 12 },
-  addMedBtn: { marginTop: 4, marginBottom: 16 },
-  addMedText: { color: '#3B82F6', fontWeight: '600' },
-  saveBtn: { backgroundColor: '#EF4444', borderRadius: 10, padding: 14, alignItems: 'center', marginTop: 8 },
-  saveBtnText: { color: '#fff', fontWeight: '700', fontSize: 16 },
-  willSync: { fontSize: 12, color: '#94A3B8', textAlign: 'center', marginTop: 8 },
+  medRow: { marginBottom: spacing[2] },
+  medInput: { marginBottom: spacing[1] },
+  removeBtn: { alignSelf: 'flex-start', marginBottom: spacing[1] },
+  removeBtnText: { color: colors.status.red, fontSize: typography.size.sm, fontFamily: 'DMSans' },
+  addMedBtn: { marginTop: spacing[1], marginBottom: spacing[4] },
+  addMedText: { color: colors.brand.green400, fontFamily: 'DMSansSemibold' },
+  saveBtn: { backgroundColor: colors.brand.green400, borderRadius: radius.md, padding: spacing[4], alignItems: 'center', marginTop: spacing[2] },
+  saveBtnText: { color: colors.ui.white, fontFamily: 'DMSansSemibold', fontSize: typography.size.base },
+  willSync: { fontSize: typography.size.sm, color: colors.ui.slate600, textAlign: 'center', marginTop: spacing[2], fontFamily: 'DMSans' },
 })

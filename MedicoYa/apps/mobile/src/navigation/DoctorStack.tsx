@@ -7,6 +7,9 @@ import PrescriptionScreen from '../screens/patient/PrescriptionScreen'
 import BrigadeHomeScreen from '../screens/doctor/BrigadeHomeScreen'
 import BrigadeQueueScreen from '../screens/doctor/BrigadeQueueScreen'
 import BrigadeConsultationScreen from '../screens/doctor/BrigadeConsultationScreen'
+import { tokens } from '../theme/tokens'
+
+const { colors, typography } = tokens
 
 export type DoctorStackParamList = {
   DoctorTabs: undefined
@@ -27,32 +30,67 @@ export default function DoctorRoot() {
       <Stack.Screen
         name="DoctorConsultationScreen"
         component={DoctorConsultationScreen}
-        options={{ headerShown: true, title: 'En consulta' }}
+        options={{
+          headerShown: true,
+          title: 'En consulta',
+          headerStyle: { backgroundColor: colors.ui.white },
+          headerTintColor: colors.brand.green400,
+          headerTitleStyle: { fontFamily: 'DMSansSemibold', fontSize: typography.size.base },
+        }}
       />
       <Stack.Screen
         name="WriteRxScreen"
         component={WriteRxScreen}
-        options={{ headerShown: true, title: 'Completar consulta' }}
+        options={{
+          headerShown: true,
+          title: 'Completar consulta',
+          headerStyle: { backgroundColor: colors.ui.white },
+          headerTintColor: colors.brand.green400,
+          headerTitleStyle: { fontFamily: 'DMSansSemibold', fontSize: typography.size.base },
+        }}
       />
       <Stack.Screen
         name="PrescriptionScreen"
         component={PrescriptionScreen}
-        options={{ headerShown: true }}
+        options={{
+          headerShown: true,
+          headerStyle: { backgroundColor: colors.ui.white },
+          headerTintColor: colors.brand.green400,
+          headerTitleStyle: { fontFamily: 'DMSansSemibold', fontSize: typography.size.base },
+        }}
       />
       <Stack.Screen
         name="BrigadeHomeScreen"
         component={BrigadeHomeScreen}
-        options={{ headerShown: true, title: 'Brigadas' }}
+        options={{
+          headerShown: true,
+          title: 'Brigadas',
+          headerStyle: { backgroundColor: colors.ui.white },
+          headerTintColor: colors.brand.green400,
+          headerTitleStyle: { fontFamily: 'DMSansSemibold', fontSize: typography.size.base },
+        }}
       />
       <Stack.Screen
         name="BrigadeQueueScreen"
         component={BrigadeQueueScreen}
-        options={{ headerShown: true, title: 'Brigada' }}
+        options={{
+          headerShown: true,
+          title: 'Brigada',
+          headerStyle: { backgroundColor: colors.ui.white },
+          headerTintColor: colors.brand.green400,
+          headerTitleStyle: { fontFamily: 'DMSansSemibold', fontSize: typography.size.base },
+        }}
       />
       <Stack.Screen
         name="BrigadeConsultationScreen"
         component={BrigadeConsultationScreen}
-        options={{ headerShown: true, title: 'Nueva consulta' }}
+        options={{
+          headerShown: true,
+          title: 'Nueva consulta',
+          headerStyle: { backgroundColor: colors.ui.white },
+          headerTintColor: colors.brand.green400,
+          headerTitleStyle: { fontFamily: 'DMSansSemibold', fontSize: typography.size.base },
+        }}
       />
     </Stack.Navigator>
   )

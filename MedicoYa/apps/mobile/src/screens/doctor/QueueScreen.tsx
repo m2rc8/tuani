@@ -8,6 +8,9 @@ import api from '../../lib/api'
 import { socketService } from '../../lib/socket'
 import { useAuthStore } from '../../store/authStore'
 import type { QueueItem } from '../../lib/types'
+import { tokens } from '../../theme/tokens'
+
+const { colors, spacing, radius, typography } = tokens
 
 function timeAgo(isoString: string): string {
   const mins = Math.floor((Date.now() - new Date(isoString).getTime()) / 60_000)
@@ -93,7 +96,7 @@ export default function QueueScreen({ navigation }: any) {
     return (
       <View style={[styles.flex, { paddingTop: insets.top }]}>
         {banner}
-        <View style={styles.center}><ActivityIndicator size="large" color="#3B82F6" /></View>
+        <View style={styles.center}><ActivityIndicator size="large" color={colors.brand.green400} /></View>
       </View>
     )
   }
@@ -163,33 +166,33 @@ export default function QueueScreen({ navigation }: any) {
 const styles = StyleSheet.create({
   flex: { flex: 1 },
   center: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-  emptyText:    { fontSize: 16, color: '#94A3B8' },
-  pendingIcon:  { fontSize: 48, marginBottom: 16 },
-  pendingTitle: { fontSize: 18, fontWeight: '700', color: '#1E293B', marginBottom: 8 },
-  pendingBody:  { fontSize: 14, color: '#64748B', textAlign: 'center', paddingHorizontal: 32 },
-  list: { padding: 16 },
+  emptyText:    { fontSize: typography.size.base, color: colors.ui.slate600, fontFamily: 'DMSans' },
+  pendingIcon:  { fontSize: 48, marginBottom: spacing[4] },
+  pendingTitle: { fontSize: typography.size.lg, fontFamily: 'DMSansSemibold', color: colors.ui.slate900, marginBottom: spacing[2] },
+  pendingBody:  { fontSize: typography.size.md, color: colors.ui.slate600, textAlign: 'center', paddingHorizontal: spacing[8], fontFamily: 'DMSans' },
+  list: { padding: spacing[4] },
   brigadeBanner: {
-    backgroundColor: '#EF4444',
-    padding: 12,
+    backgroundColor: colors.status.red,
+    padding: spacing[3],
     alignItems: 'center',
   },
-  brigadeBannerText: { color: '#fff', fontWeight: '700', fontSize: 14 },
+  brigadeBannerText: { color: colors.ui.white, fontFamily: 'DMSansSemibold', fontSize: typography.size.md },
   card: {
-    backgroundColor: '#fff', borderRadius: 12, padding: 16,
-    marginBottom: 12, borderWidth: 1, borderColor: '#E2E8F0',
+    backgroundColor: colors.ui.white, borderRadius: radius.md, padding: spacing[4],
+    marginBottom: spacing[3], borderWidth: 1, borderColor: colors.ui.slate200,
   },
-  phone: { fontSize: 13, color: '#64748B', marginBottom: 6 },
-  symptoms: { fontSize: 15, color: '#1E293B', marginBottom: 8 },
-  time: { fontSize: 12, color: '#94A3B8', marginBottom: 12 },
-  actions: { flexDirection: 'row', gap: 10 },
+  phone: { fontSize: typography.size.md, color: colors.ui.slate600, marginBottom: spacing[2], fontFamily: 'DMSans' },
+  symptoms: { fontSize: typography.size.base, color: colors.ui.slate900, marginBottom: spacing[2], fontFamily: 'DMSans' },
+  time: { fontSize: typography.size.sm, color: colors.ui.slate600, marginBottom: spacing[3], fontFamily: 'DMSans' },
+  actions: { flexDirection: 'row', gap: spacing[3] },
   acceptBtn: {
-    flex: 1, backgroundColor: '#3B82F6', borderRadius: 8,
-    padding: 10, alignItems: 'center',
+    flex: 1, backgroundColor: colors.brand.green400, borderRadius: radius.sm,
+    padding: spacing[3], alignItems: 'center',
   },
-  acceptText: { color: '#fff', fontWeight: '700' },
+  acceptText: { color: colors.ui.white, fontFamily: 'DMSansSemibold' },
   rejectBtn: {
-    flex: 1, borderWidth: 1, borderColor: '#EF4444',
-    borderRadius: 8, padding: 10, alignItems: 'center',
+    flex: 1, borderWidth: 1, borderColor: colors.status.red,
+    borderRadius: radius.sm, padding: spacing[3], alignItems: 'center',
   },
-  rejectText: { color: '#EF4444', fontWeight: '600' },
+  rejectText: { color: colors.status.red, fontFamily: 'DMSansSemibold' },
 })

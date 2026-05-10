@@ -10,6 +10,9 @@ import api from '../../lib/api'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useConsultationStore } from '../../store/consultationStore'
 import type { AvailableDoctor } from '../../lib/types'
+import { tokens } from '../../theme/tokens'
+
+const { colors, spacing, radius, typography } = tokens
 
 const MAX_CHARS = 500
 
@@ -106,7 +109,7 @@ export default function HomeScreen({ navigation }: any) {
       : t('consultation.doctors_available', { count: doctorCount })
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top + 24 }]}>
+    <View style={[styles.container, { paddingTop: insets.top + spacing[6] }]}>
       <Text style={styles.title}>{t('nav.home')}</Text>
 
       {doctorBadge && (
@@ -155,7 +158,7 @@ export default function HomeScreen({ navigation }: any) {
         accessibilityState={{ disabled: !canSubmit }}
       >
         {submitting
-          ? <ActivityIndicator color="#fff" />
+          ? <ActivityIndicator color={colors.ui.white} />
           : <Text style={styles.btnText}>{t('consultation.start_cta')}</Text>}
       </TouchableOpacity>
     </View>
@@ -163,31 +166,32 @@ export default function HomeScreen({ navigation }: any) {
 }
 
 const styles = StyleSheet.create({
-  container:     { flex: 1, padding: 24, backgroundColor: '#fff' },
-  title:         { fontSize: 24, fontWeight: '700', marginBottom: 16 },
+  container:     { flex: 1, padding: spacing[6], backgroundColor: colors.ui.white },
+  title:         { fontSize: typography.size.xl, fontFamily: 'DMSerifDisplay', marginBottom: spacing[4] },
   badge:         {
-    backgroundColor: '#DCFCE7', borderRadius: 8, padding: 10, marginBottom: 16, alignItems: 'center',
+    backgroundColor: colors.brand.green50, borderRadius: radius.sm, padding: spacing[3], marginBottom: spacing[4], alignItems: 'center',
   },
-  badgeWarn:     { backgroundColor: '#FEF9C3' },
-  badgeText:     { fontSize: 14, color: '#166534', fontWeight: '600' },
-  badgeTextWarn: { color: '#854D0E' },
+  badgeWarn:     { backgroundColor: colors.status.amber + '20' },
+  badgeText:     { fontSize: typography.size.md, color: colors.brand.green600, fontFamily: 'DMSansSemibold' },
+  badgeTextWarn: { color: colors.status.amber },
   input:         {
-    borderWidth: 1, borderColor: '#CBD5E1', borderRadius: 10,
-    padding: 12, fontSize: 15, minHeight: 140, marginBottom: 6,
+    borderWidth: 1, borderColor: colors.ui.slate200, borderRadius: radius.md,
+    padding: spacing[3], fontSize: typography.size.base, minHeight: 140, marginBottom: spacing[2],
+    fontFamily: 'DMSans',
   },
-  counter:       { fontSize: 12, color: '#94A3B8', marginBottom: 12, textAlign: 'right' },
+  counter:       { fontSize: typography.size.sm, color: colors.ui.slate600, marginBottom: spacing[3], textAlign: 'right', fontFamily: 'DMSans' },
   photoBtn:      {
-    borderWidth: 1, borderColor: '#CBD5E1', borderRadius: 8,
-    padding: 10, alignItems: 'center', marginBottom: 12,
+    borderWidth: 1, borderColor: colors.ui.slate200, borderRadius: radius.sm,
+    padding: spacing[3], alignItems: 'center', marginBottom: spacing[3],
   },
-  photoBtnText:  { color: '#64748B', fontSize: 14 },
-  photoRow:      { flexDirection: 'row', alignItems: 'center', marginBottom: 12, gap: 12 },
-  thumbnail:     { width: 60, height: 60, borderRadius: 8 },
-  removePhoto:   { color: '#EF4444', fontSize: 14 },
+  photoBtnText:  { color: colors.ui.slate600, fontSize: typography.size.md, fontFamily: 'DMSans' },
+  photoRow:      { flexDirection: 'row', alignItems: 'center', marginBottom: spacing[3], gap: spacing[3] },
+  thumbnail:     { width: 60, height: 60, borderRadius: radius.sm },
+  removePhoto:   { color: colors.status.red, fontSize: typography.size.md, fontFamily: 'DMSans' },
   btn:           {
-    backgroundColor: '#3B82F6', borderRadius: 10,
-    padding: 16, alignItems: 'center',
+    backgroundColor: colors.brand.green400, borderRadius: radius.md,
+    padding: spacing[4], alignItems: 'center',
   },
-  btnDisabled:   { backgroundColor: '#93C5FD' },
-  btnText:       { color: '#fff', fontSize: 16, fontWeight: '700' },
+  btnDisabled:   { backgroundColor: colors.brand.green400, opacity: 0.5 },
+  btnText:       { color: colors.ui.white, fontSize: typography.size.base, fontFamily: 'DMSansSemibold' },
 })

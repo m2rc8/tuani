@@ -5,6 +5,9 @@ import {
 } from 'react-native'
 import { useTranslation } from 'react-i18next'
 import api from '../../lib/api'
+import { tokens } from '../../theme/tokens'
+
+const { colors, spacing, radius, typography } = tokens
 
 interface MedicationRow {
   name: string
@@ -147,7 +150,7 @@ export default function WriteRxScreen({ navigation, route }: any) {
           accessibilityState={{ disabled: !canSubmit }}
         >
           {submitting
-            ? <ActivityIndicator color="#fff" />
+            ? <ActivityIndicator color={colors.ui.white} />
             : <Text style={styles.submitBtnText}>{t('doctor.submit_rx')}</Text>}
         </TouchableOpacity>
       </ScrollView>
@@ -156,25 +159,26 @@ export default function WriteRxScreen({ navigation, route }: any) {
 }
 
 const styles = StyleSheet.create({
-  container: { padding: 24, backgroundColor: '#fff', flexGrow: 1 },
+  container: { padding: spacing[6], backgroundColor: colors.ui.white, flexGrow: 1 },
   label: {
-    fontSize: 11, color: '#94A3B8', textTransform: 'uppercase',
-    fontWeight: '600', marginBottom: 6, marginTop: 16, letterSpacing: 0.5,
+    fontSize: typography.size.xs, color: colors.ui.slate600, textTransform: 'uppercase',
+    fontFamily: 'DMSansSemibold', marginBottom: spacing[2], marginTop: spacing[4], letterSpacing: 0.5,
   },
   input: {
-    borderWidth: 1, borderColor: '#CBD5E1', borderRadius: 10,
-    padding: 12, fontSize: 15, marginBottom: 4,
+    borderWidth: 1, borderColor: colors.ui.slate200, borderRadius: radius.md,
+    padding: spacing[3], fontSize: typography.size.base, marginBottom: spacing[1],
+    fontFamily: 'DMSans',
   },
   multiline: { minHeight: 80 },
-  medRow: { marginBottom: 8 },
-  medInput: { marginBottom: 4 },
-  removeText: { color: '#EF4444', fontSize: 13, textAlign: 'right', marginBottom: 8 },
-  addMedBtn: { marginTop: 4, marginBottom: 8 },
-  addMedText: { color: '#3B82F6', fontSize: 14, fontWeight: '600' },
+  medRow: { marginBottom: spacing[2] },
+  medInput: { marginBottom: spacing[1] },
+  removeText: { color: colors.status.red, fontSize: typography.size.md, textAlign: 'right', marginBottom: spacing[2], fontFamily: 'DMSans' },
+  addMedBtn: { marginTop: spacing[1], marginBottom: spacing[2] },
+  addMedText: { color: colors.brand.green400, fontSize: typography.size.md, fontFamily: 'DMSansSemibold' },
   submitBtn: {
-    backgroundColor: '#3B82F6', borderRadius: 10,
-    padding: 16, alignItems: 'center', marginTop: 24,
+    backgroundColor: colors.brand.green400, borderRadius: radius.md,
+    padding: spacing[4], alignItems: 'center', marginTop: spacing[6],
   },
-  submitBtnDisabled: { backgroundColor: '#93C5FD' },
-  submitBtnText: { color: '#fff', fontSize: 16, fontWeight: '700' },
+  submitBtnDisabled: { backgroundColor: colors.brand.green400, opacity: 0.5 },
+  submitBtnText: { color: colors.ui.white, fontSize: typography.size.base, fontFamily: 'DMSansSemibold' },
 })

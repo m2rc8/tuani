@@ -6,6 +6,9 @@ import {
 import { useTranslation } from 'react-i18next'
 import api from '../../lib/api'
 import { useAuthStore } from '../../store/authStore'
+import { tokens } from '../../theme/tokens'
+
+const { colors, spacing, radius, typography } = tokens
 
 export default function DoctorRegisterScreen({ navigation }: any) {
   const { t } = useTranslation()
@@ -84,7 +87,7 @@ export default function DoctorRegisterScreen({ navigation }: any) {
               testID="dr-send-btn"
             >
               {loading
-                ? <ActivityIndicator color="#fff" />
+                ? <ActivityIndicator color={colors.ui.white} />
                 : <Text style={styles.btnText}>{t('auth.send_code')}</Text>}
             </TouchableOpacity>
           </>
@@ -142,7 +145,7 @@ export default function DoctorRegisterScreen({ navigation }: any) {
               testID="dr-submit-btn"
             >
               {loading
-                ? <ActivityIndicator color="#fff" />
+                ? <ActivityIndicator color={colors.ui.white} />
                 : <Text style={styles.btnText}>{t('auth.doctor_submit')}</Text>}
             </TouchableOpacity>
           </>
@@ -157,21 +160,23 @@ export default function DoctorRegisterScreen({ navigation }: any) {
 }
 
 const styles = StyleSheet.create({
-  container:  { flexGrow: 1, padding: 24, justifyContent: 'center' },
-  title:      { fontSize: 22, fontWeight: '700', marginBottom: 24, color: '#1E293B' },
-  label:      { fontSize: 15, marginBottom: 4, color: '#334155' },
+  container:  { flexGrow: 1, padding: spacing[6], justifyContent: 'center' },
+  title:      { fontSize: typography.size.lg, fontFamily: 'DMSansSemibold', marginBottom: spacing[6], color: colors.ui.slate900 },
+  label:      { fontSize: typography.size.base, marginBottom: spacing[1], color: colors.ui.slate900, fontFamily: 'DMSans' },
   input:      {
-    borderWidth: 1, borderColor: '#CBD5E1', borderRadius: 8,
-    padding: 12, fontSize: 16, marginBottom: 16,
+    borderWidth: 1, borderColor: colors.ui.slate200, borderRadius: radius.sm,
+    padding: spacing[3], fontSize: typography.size.base, marginBottom: spacing[4],
+    fontFamily: 'DMSans',
   },
   codeInput:  {
-    borderWidth: 1, borderColor: '#CBD5E1', borderRadius: 8,
-    padding: 12, fontSize: 28, textAlign: 'center', letterSpacing: 8, marginBottom: 16,
+    borderWidth: 1, borderColor: colors.ui.slate200, borderRadius: radius.sm,
+    padding: spacing[3], fontSize: 28, textAlign: 'center', letterSpacing: 8, marginBottom: spacing[4],
+    fontFamily: 'DMSans',
   },
-  btn:        { backgroundColor: '#3B82F6', padding: 14, borderRadius: 8, alignItems: 'center', marginTop: 4 },
+  btn:        { backgroundColor: colors.brand.green400, padding: spacing[4], borderRadius: radius.sm, alignItems: 'center', marginTop: spacing[1] },
   btnDisabled:{ opacity: 0.5 },
-  btnText:    { color: '#fff', fontWeight: '600', fontSize: 16 },
-  error:      { color: '#EF4444', marginBottom: 8 },
-  link:       { color: '#3B82F6', textAlign: 'center', marginTop: 16, fontSize: 14 },
-  backRow:    { marginTop: 8 },
+  btnText:    { color: colors.ui.white, fontFamily: 'DMSansSemibold', fontSize: typography.size.base },
+  error:      { color: colors.status.red, marginBottom: spacing[2], fontFamily: 'DMSans' },
+  link:       { color: colors.brand.green400, textAlign: 'center', marginTop: spacing[4], fontSize: typography.size.md, fontFamily: 'DMSans' },
+  backRow:    { marginTop: spacing[2] },
 })

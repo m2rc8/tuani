@@ -7,6 +7,9 @@ import QRCode from 'react-native-qrcode-svg'
 import { useTranslation } from 'react-i18next'
 import api from '../../lib/api'
 import type { ConsultationDetail } from '../../lib/types'
+import { tokens } from '../../theme/tokens'
+
+const { colors, spacing, radius, typography } = tokens
 
 export default function PrescriptionScreen({ route }: any) {
   const { t } = useTranslation()
@@ -27,7 +30,7 @@ export default function PrescriptionScreen({ route }: any) {
   if (!detail) {
     return (
       <View style={styles.loading}>
-        <ActivityIndicator size="large" color="#3B82F6" />
+        <ActivityIndicator size="large" color={colors.brand.green400} />
       </View>
     )
   }
@@ -135,31 +138,32 @@ export default function PrescriptionScreen({ route }: any) {
 
 const styles = StyleSheet.create({
   loading:       { flex: 1, alignItems: 'center', justifyContent: 'center' },
-  container:     { padding: 24, backgroundColor: '#fff', flexGrow: 1 },
-  heading:       { fontSize: 22, fontWeight: '700', marginBottom: 24 },
-  section:       { marginBottom: 20 },
+  container:     { padding: spacing[6], backgroundColor: colors.ui.white, flexGrow: 1 },
+  heading:       { fontSize: typography.size.lg, fontFamily: 'DMSerifDisplay', marginBottom: spacing[6] },
+  section:       { marginBottom: spacing[6] },
   label:         {
-    fontSize: 11, color: '#94A3B8', textTransform: 'uppercase',
-    fontWeight: '600', marginBottom: 6, letterSpacing: 0.5,
+    fontSize: typography.size.xs, color: colors.ui.slate600, textTransform: 'uppercase',
+    fontFamily: 'DMSansSemibold', marginBottom: spacing[2], letterSpacing: 0.5,
   },
-  value:         { fontSize: 17, color: '#1E293B', fontWeight: '600' },
-  medication:    { fontSize: 15, color: '#334155', marginBottom: 4 },
+  value:         { fontSize: 17, color: colors.ui.slate900, fontFamily: 'DMSansSemibold' },
+  medication:    { fontSize: typography.size.base, color: colors.ui.slate900, marginBottom: spacing[1], fontFamily: 'DMSans' },
   qrContainer:   {
-    alignItems: 'center', padding: 20,
-    backgroundColor: '#F8FAFC', borderRadius: 12, marginVertical: 20,
+    alignItems: 'center', padding: spacing[6],
+    backgroundColor: colors.brand.green50, borderRadius: radius.md, marginVertical: spacing[6],
   },
-  validUntil:    { fontSize: 13, color: '#94A3B8', textAlign: 'center' },
-  ratingSection: { marginTop: 32, borderTopWidth: 1, borderTopColor: '#E2E8F0', paddingTop: 24 },
-  ratingTitle:   { fontSize: 16, fontWeight: '600', color: '#1E293B', marginBottom: 12 },
-  starsRow:      { flexDirection: 'row', marginBottom: 16 },
-  star:          { fontSize: 32, color: '#CBD5E1', marginRight: 8 },
-  starActive:    { color: '#F59E0B' },
+  validUntil:    { fontSize: typography.size.md, color: colors.ui.slate600, textAlign: 'center', fontFamily: 'DMSans' },
+  ratingSection: { marginTop: spacing[8], borderTopWidth: 1, borderTopColor: colors.ui.slate200, paddingTop: spacing[6] },
+  ratingTitle:   { fontSize: typography.size.base, fontFamily: 'DMSansSemibold', color: colors.ui.slate900, marginBottom: spacing[3] },
+  starsRow:      { flexDirection: 'row', marginBottom: spacing[4] },
+  star:          { fontSize: 32, color: colors.ui.slate200, marginRight: spacing[2] },
+  starActive:    { color: colors.status.amber },
   commentInput:  {
-    borderWidth: 1, borderColor: '#E2E8F0', borderRadius: 8,
-    padding: 12, minHeight: 80, fontSize: 15, color: '#1E293B', marginBottom: 16,
+    borderWidth: 1, borderColor: colors.ui.slate200, borderRadius: radius.sm,
+    padding: spacing[3], minHeight: 80, fontSize: typography.size.base, color: colors.ui.slate900, marginBottom: spacing[4],
+    fontFamily: 'DMSans',
   },
-  submitBtn:     { backgroundColor: '#3B82F6', borderRadius: 8, paddingVertical: 12, alignItems: 'center' },
+  submitBtn:     { backgroundColor: colors.brand.green400, borderRadius: radius.sm, paddingVertical: spacing[3], alignItems: 'center' },
   submitDisabled:{ opacity: 0.5 },
-  submitText:    { color: '#fff', fontWeight: '600', fontSize: 16 },
-  ratingThanks:  { fontSize: 16, color: '#10B981', fontWeight: '600', textAlign: 'center' },
+  submitText:    { color: colors.ui.white, fontFamily: 'DMSansSemibold', fontSize: typography.size.base },
+  ratingThanks:  { fontSize: typography.size.base, color: colors.brand.green400, fontFamily: 'DMSansSemibold', textAlign: 'center' },
 })

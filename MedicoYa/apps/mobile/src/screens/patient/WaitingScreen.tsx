@@ -8,6 +8,9 @@ import { socketService } from '../../lib/socket'
 import { useAuthStore } from '../../store/authStore'
 import { useConsultationStore } from '../../store/consultationStore'
 import type { ConsultationDetail } from '../../lib/types'
+import { tokens } from '../../theme/tokens'
+
+const { colors, spacing, radius, typography } = tokens
 
 export default function WaitingScreen({ navigation, route }: any) {
   const { t } = useTranslation()
@@ -82,7 +85,7 @@ export default function WaitingScreen({ navigation, route }: any) {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{t('consultation.waiting_title')}</Text>
-      <ActivityIndicator size="large" color="#3B82F6" style={styles.spinner} />
+      <ActivityIndicator size="large" color={colors.brand.green400} style={styles.spinner} />
       <Text style={styles.subtitle}>{t('consultation.waiting_subtitle')}</Text>
 
       {symptomsText && (
@@ -104,19 +107,19 @@ export default function WaitingScreen({ navigation, route }: any) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 24, backgroundColor: '#fff', alignItems: 'center', justifyContent: 'center' },
-  title: { fontSize: 22, fontWeight: '700', marginBottom: 24, textAlign: 'center' },
-  spinner: { marginBottom: 16 },
-  subtitle: { fontSize: 14, color: '#64748B', textAlign: 'center', marginBottom: 32 },
+  container: { flex: 1, padding: spacing[6], backgroundColor: colors.ui.white, alignItems: 'center', justifyContent: 'center' },
+  title: { fontSize: typography.size.lg, fontFamily: 'DMSerifDisplay', marginBottom: spacing[6], textAlign: 'center' },
+  spinner: { marginBottom: spacing[4] },
+  subtitle: { fontSize: typography.size.md, color: colors.ui.slate600, textAlign: 'center', marginBottom: spacing[8], fontFamily: 'DMSans' },
   symptomsBox: {
-    width: '100%', backgroundColor: '#F8FAFC', borderRadius: 10,
-    padding: 16, marginBottom: 32,
+    width: '100%', backgroundColor: colors.brand.green50, borderRadius: radius.md,
+    padding: spacing[4], marginBottom: spacing[8],
   },
-  symptomsLabel: { fontSize: 11, color: '#94A3B8', marginBottom: 4, textTransform: 'uppercase' },
-  symptomsText: { fontSize: 15, color: '#334155' },
+  symptomsLabel: { fontSize: typography.size.xs, color: colors.ui.slate600, marginBottom: spacing[1], textTransform: 'uppercase', fontFamily: 'DMSansSemibold' },
+  symptomsText: { fontSize: typography.size.base, color: colors.ui.slate900, fontFamily: 'DMSans' },
   cancelBtn: {
-    padding: 14, borderWidth: 1, borderColor: '#EF4444',
-    borderRadius: 10, alignItems: 'center', width: '100%',
+    padding: spacing[4], borderWidth: 1, borderColor: colors.status.red,
+    borderRadius: radius.md, alignItems: 'center', width: '100%',
   },
-  cancelText: { color: '#EF4444', fontWeight: '600', fontSize: 15 },
+  cancelText: { color: colors.status.red, fontFamily: 'DMSansSemibold', fontSize: typography.size.base },
 })

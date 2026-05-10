@@ -10,6 +10,9 @@ import { socketService } from '../../lib/socket'
 import { useAuthStore } from '../../store/authStore'
 import { useConsultationStore } from '../../store/consultationStore'
 import type { ConsultationDetail, Message } from '../../lib/types'
+import { tokens } from '../../theme/tokens'
+
+const { colors, spacing, radius, typography } = tokens
 
 export default function DoctorConsultationScreen({ navigation, route }: any) {
   const { t } = useTranslation()
@@ -138,7 +141,7 @@ export default function DoctorConsultationScreen({ navigation, route }: any) {
           testID="confirm-payment-btn"
         >
           {confirmingPayment
-            ? <ActivityIndicator color="#fff" />
+            ? <ActivityIndicator color={colors.ui.white} />
             : <Text style={styles.paymentBarText}>
                 {priceLps
                   ? t('doctor.confirm_payment_amount', { amount: parseFloat(priceLps).toFixed(2) })
@@ -186,42 +189,42 @@ export default function DoctorConsultationScreen({ navigation, route }: any) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#fff' },
+  container: { flex: 1, backgroundColor: colors.ui.white },
   completeBar: {
-    backgroundColor: '#22C55E', padding: 12, alignItems: 'center',
-    borderBottomWidth: 1, borderBottomColor: '#BBF7D0',
+    backgroundColor: colors.brand.green400, padding: spacing[3], alignItems: 'center',
+    borderBottomWidth: 1, borderBottomColor: colors.brand.green50,
   },
-  completeBarText: { color: '#fff', fontWeight: '700', fontSize: 15 },
+  completeBarText: { color: colors.ui.white, fontFamily: 'DMSansSemibold', fontSize: typography.size.base },
   paymentBar: {
-    backgroundColor: '#F59E0B', padding: 12, alignItems: 'center',
-    borderBottomWidth: 1, borderBottomColor: '#FDE68A',
+    backgroundColor: colors.status.amber, padding: spacing[3], alignItems: 'center',
+    borderBottomWidth: 1, borderBottomColor: colors.status.amber,
   },
-  paymentBarText: { color: '#fff', fontWeight: '700', fontSize: 14 },
+  paymentBarText: { color: colors.ui.white, fontFamily: 'DMSansSemibold', fontSize: typography.size.md },
   paymentConfirmed: {
-    backgroundColor: '#DCFCE7', padding: 10, alignItems: 'center',
-    borderBottomWidth: 1, borderBottomColor: '#BBF7D0',
+    backgroundColor: colors.brand.green50, padding: spacing[3], alignItems: 'center',
+    borderBottomWidth: 1, borderBottomColor: colors.brand.green50,
   },
-  paymentConfirmedText: { color: '#15803D', fontWeight: '600', fontSize: 14 },
+  paymentConfirmedText: { color: colors.brand.green600, fontFamily: 'DMSansSemibold', fontSize: typography.size.md },
   symptomsHeader: {
-    backgroundColor: '#F8FAFC', borderRadius: 10, padding: 12,
-    marginBottom: 12, borderWidth: 1, borderColor: '#E2E8F0',
+    backgroundColor: colors.brand.green50, borderRadius: radius.md, padding: spacing[3],
+    marginBottom: spacing[3], borderWidth: 1, borderColor: colors.ui.slate200,
   },
-  symptomsText: { fontSize: 14, color: '#334155', marginBottom: 8, lineHeight: 20 },
-  symptomPhoto: { width: '100%', height: 200, borderRadius: 8 },
-  messageList: { padding: 16, paddingBottom: 8 },
-  bubble: { maxWidth: '80%', borderRadius: 12, padding: 10, marginBottom: 8 },
-  bubbleMine: { backgroundColor: '#EFF6FF', alignSelf: 'flex-end' },
-  bubbleTheirs: { backgroundColor: '#F1F5F9', alignSelf: 'flex-start' },
-  bubbleTextMine: { color: '#1D4ED8', fontSize: 15 },
-  bubbleTextTheirs: { color: '#334155', fontSize: 15 },
-  msgImage: { width: 200, height: 150, borderRadius: 8 },
+  symptomsText: { fontSize: typography.size.md, color: colors.ui.slate900, marginBottom: spacing[2], lineHeight: 20, fontFamily: 'DMSans' },
+  symptomPhoto: { width: '100%', height: 200, borderRadius: radius.sm },
+  messageList: { padding: spacing[4], paddingBottom: spacing[2] },
+  bubble: { maxWidth: '80%', borderRadius: radius.md, padding: spacing[3], marginBottom: spacing[2] },
+  bubbleMine: { backgroundColor: colors.brand.green50, alignSelf: 'flex-end' },
+  bubbleTheirs: { backgroundColor: colors.ui.slate200, alignSelf: 'flex-start' },
+  bubbleTextMine: { color: colors.brand.green600, fontSize: typography.size.base, fontFamily: 'DMSans' },
+  bubbleTextTheirs: { color: colors.ui.slate900, fontSize: typography.size.base, fontFamily: 'DMSans' },
+  msgImage: { width: 200, height: 150, borderRadius: radius.sm },
   inputRow: {
-    flexDirection: 'row', padding: 12, borderTopWidth: 1,
-    borderTopColor: '#E2E8F0', gap: 8, alignItems: 'center',
+    flexDirection: 'row', padding: spacing[3], borderTopWidth: 1,
+    borderTopColor: colors.ui.slate200, gap: spacing[2], alignItems: 'center',
   },
-  input: { flex: 1, borderWidth: 1, borderColor: '#CBD5E1', borderRadius: 10, padding: 10, fontSize: 15 },
-  inputDisabled: { backgroundColor: '#F1F5F9', color: '#94A3B8' },
-  sendBtn: { backgroundColor: '#3B82F6', borderRadius: 10, padding: 10 },
-  sendBtnDisabled: { backgroundColor: '#93C5FD' },
-  sendBtnText: { color: '#fff', fontWeight: '700' },
+  input: { flex: 1, borderWidth: 1, borderColor: colors.ui.slate200, borderRadius: radius.md, padding: spacing[3], fontSize: typography.size.base, fontFamily: 'DMSans' },
+  inputDisabled: { backgroundColor: colors.ui.slate200, color: colors.ui.slate600 },
+  sendBtn: { backgroundColor: colors.brand.green400, borderRadius: radius.md, padding: spacing[3] },
+  sendBtnDisabled: { backgroundColor: colors.brand.green400, opacity: 0.5 },
+  sendBtnText: { color: colors.ui.white, fontFamily: 'DMSansSemibold' },
 })

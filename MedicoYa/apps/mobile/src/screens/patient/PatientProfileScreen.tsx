@@ -7,6 +7,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useTranslation } from 'react-i18next'
 import api from '../../lib/api'
 import { useAuthStore } from '../../store/authStore'
+import { tokens } from '../../theme/tokens'
+
+const { colors, spacing, radius, typography } = tokens
 
 interface PatientProfile {
   name:      string | null
@@ -64,13 +67,13 @@ export default function PatientProfileScreen() {
   if (!profile) {
     return (
       <View style={styles.loading}>
-        <ActivityIndicator size="large" color="#3B82F6" />
+        <ActivityIndicator size="large" color={colors.brand.green400} />
       </View>
     )
   }
 
   return (
-    <ScrollView contentContainerStyle={[styles.container, { paddingTop: insets.top + 24 }]}>
+    <ScrollView contentContainerStyle={[styles.container, { paddingTop: insets.top + spacing[6] }]}>
       <Text style={styles.title}>{t('profile.title')}</Text>
 
       <Text style={styles.label}>{t('profile.name')}</Text>
@@ -110,12 +113,12 @@ export default function PatientProfileScreen() {
         testID="save-btn"
       >
         {saving
-          ? <ActivityIndicator color="#fff" />
+          ? <ActivityIndicator color={colors.ui.white} />
           : <Text style={styles.saveBtnText}>{saved ? t('profile.saved') : t('profile.save')}</Text>
         }
       </TouchableOpacity>
 
-      <Text style={[styles.label, { marginTop: 24 }]}>{t('profile.language')}</Text>
+      <Text style={[styles.label, { marginTop: spacing[6] }]}>{t('profile.language')}</Text>
       <View style={styles.langRow}>
         <TouchableOpacity
           onPress={() => setLanguage('es')}
@@ -142,31 +145,32 @@ export default function PatientProfileScreen() {
 
 const styles = StyleSheet.create({
   loading:         { flex: 1, alignItems: 'center', justifyContent: 'center' },
-  container:       { padding: 24, backgroundColor: '#fff', flexGrow: 1 },
-  title:           { fontSize: 24, fontWeight: 'bold', marginBottom: 24 },
-  label:           { fontSize: 14, color: '#64748B', marginBottom: 6, marginTop: 12 },
+  container:       { padding: spacing[6], backgroundColor: colors.ui.white, flexGrow: 1 },
+  title:           { fontSize: typography.size.xl, fontFamily: 'DMSerifDisplay', marginBottom: spacing[6] },
+  label:           { fontSize: typography.size.md, color: colors.ui.slate600, marginBottom: spacing[2], marginTop: spacing[3], fontFamily: 'DMSans' },
   input:           {
-    borderWidth: 1, borderColor: '#CBD5E1', borderRadius: 8,
-    padding: 12, fontSize: 15, color: '#1E293B',
+    borderWidth: 1, borderColor: colors.ui.slate200, borderRadius: radius.sm,
+    padding: spacing[3], fontSize: typography.size.base, color: colors.ui.slate900,
+    fontFamily: 'DMSans',
   },
   multiline:       { minHeight: 80, textAlignVertical: 'top' },
   saveBtn:         {
-    backgroundColor: '#3B82F6', borderRadius: 8,
-    padding: 14, alignItems: 'center', marginTop: 20,
+    backgroundColor: colors.brand.green400, borderRadius: radius.sm,
+    padding: spacing[4], alignItems: 'center', marginTop: spacing[6],
   },
   saveBtnDisabled: { opacity: 0.6 },
-  saveBtnText:     { color: '#fff', fontWeight: '700', fontSize: 16 },
-  langRow:         { flexDirection: 'row', gap: 8, marginBottom: 8 },
+  saveBtnText:     { color: colors.ui.white, fontFamily: 'DMSansSemibold', fontSize: typography.size.base },
+  langRow:         { flexDirection: 'row', gap: spacing[2], marginBottom: spacing[2] },
   langBtn:         {
-    paddingVertical: 8, paddingHorizontal: 16,
-    borderWidth: 1, borderColor: '#CBD5E1', borderRadius: 6,
+    paddingVertical: spacing[2], paddingHorizontal: spacing[4],
+    borderWidth: 1, borderColor: colors.ui.slate200, borderRadius: radius.sm,
   },
-  langBtnActive:   { borderColor: '#3B82F6', backgroundColor: '#EFF6FF' },
-  langText:        { color: '#64748B', fontWeight: '500' },
-  langTextActive:  { color: '#3B82F6', fontWeight: '600' },
+  langBtnActive:   { borderColor: colors.brand.green400, backgroundColor: colors.brand.green50 },
+  langText:        { color: colors.ui.slate600, fontFamily: 'DMSansMedium' },
+  langTextActive:  { color: colors.brand.green400, fontFamily: 'DMSansSemibold' },
   logoutBtn:       {
-    marginTop: 32, padding: 14, backgroundColor: '#EF4444',
-    borderRadius: 8, alignItems: 'center',
+    marginTop: spacing[8], padding: spacing[4], backgroundColor: colors.status.red,
+    borderRadius: radius.sm, alignItems: 'center',
   },
-  logoutText:      { color: '#fff', fontWeight: '600', fontSize: 16 },
+  logoutText:      { color: colors.ui.white, fontFamily: 'DMSansSemibold', fontSize: typography.size.base },
 })

@@ -7,6 +7,9 @@ import { useTranslation } from 'react-i18next'
 import api from '../../lib/api'
 import { useBrigadeStore } from '../../store/brigadeStore'
 import type { BrigadeInfo } from '../../lib/types'
+import { tokens } from '../../theme/tokens'
+
+const { colors, spacing, radius, typography } = tokens
 
 interface BrigadeListItem extends BrigadeInfo {
   joined_at: string
@@ -80,7 +83,7 @@ export default function BrigadeHomeScreen({ navigation }: any) {
   return (
     <View style={styles.container}>
       {loading ? (
-        <ActivityIndicator size="large" color="#3B82F6" style={{ marginTop: 32 }} />
+        <ActivityIndicator size="large" color={colors.brand.green400} style={{ marginTop: spacing[8] }} />
       ) : (
         <FlatList
           data={brigades}
@@ -131,7 +134,7 @@ export default function BrigadeHomeScreen({ navigation }: any) {
                   <Text style={styles.previewName}>{preview.name}</Text>
                   <Text style={styles.previewComm}>{preview.community}</Text>
                   <TouchableOpacity
-                    style={[styles.searchBtn, { backgroundColor: '#10B981' }]}
+                    style={[styles.searchBtn, { backgroundColor: colors.brand.green400 }]}
                     onPress={handleJoin}
                     disabled={joining}
                     testID="confirm-join-btn"
@@ -151,32 +154,33 @@ export default function BrigadeHomeScreen({ navigation }: any) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F8FAFC' },
-  list: { padding: 16 },
-  sectionLabel: { fontSize: 12, color: '#64748B', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8, marginTop: 8 },
+  container: { flex: 1, backgroundColor: colors.brand.green50 },
+  list: { padding: spacing[4] },
+  sectionLabel: { fontSize: typography.size.sm, color: colors.ui.slate600, textTransform: 'uppercase', letterSpacing: 1, marginBottom: spacing[2], marginTop: spacing[2], fontFamily: 'DMSansSemibold' },
   brigadeRow: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    backgroundColor: '#fff', borderRadius: 10, padding: 12, marginBottom: 8,
-    borderWidth: 1, borderColor: '#E2E8F0',
+    backgroundColor: colors.ui.white, borderRadius: radius.md, padding: spacing[3], marginBottom: spacing[2],
+    borderWidth: 1, borderColor: colors.ui.slate200,
   },
   brigadeInfo: { flex: 1 },
-  brigadeName: { fontSize: 15, fontWeight: '600', color: '#1E293B' },
-  brigadeComm: { fontSize: 12, color: '#94A3B8', marginTop: 2 },
-  enterBtn: { backgroundColor: '#3B82F6', borderRadius: 8, paddingHorizontal: 14, paddingVertical: 8 },
-  enterBtnText: { color: '#fff', fontWeight: '700', fontSize: 13 },
-  joinSection: { marginTop: 16 },
+  brigadeName: { fontSize: typography.size.base, fontFamily: 'DMSansSemibold', color: colors.ui.slate900 },
+  brigadeComm: { fontSize: typography.size.sm, color: colors.ui.slate600, marginTop: 2, fontFamily: 'DMSans' },
+  enterBtn: { backgroundColor: colors.brand.green400, borderRadius: radius.sm, paddingHorizontal: spacing[4], paddingVertical: spacing[2] },
+  enterBtnText: { color: colors.ui.white, fontFamily: 'DMSansSemibold', fontSize: typography.size.md },
+  joinSection: { marginTop: spacing[4] },
   input: {
-    borderWidth: 1, borderColor: '#CBD5E1', borderRadius: 8, padding: 12,
-    fontSize: 16, marginBottom: 8, backgroundColor: '#fff', letterSpacing: 2,
+    borderWidth: 1, borderColor: colors.ui.slate200, borderRadius: radius.sm, padding: spacing[3],
+    fontSize: typography.size.base, marginBottom: spacing[2], backgroundColor: colors.ui.white, letterSpacing: 2,
+    fontFamily: 'DMSans',
   },
   searchBtn: {
-    backgroundColor: '#3B82F6', borderRadius: 8, padding: 12, alignItems: 'center', marginBottom: 8,
+    backgroundColor: colors.brand.green400, borderRadius: radius.sm, padding: spacing[3], alignItems: 'center', marginBottom: spacing[2],
   },
-  searchBtnText: { color: '#fff', fontWeight: '700' },
+  searchBtnText: { color: colors.ui.white, fontFamily: 'DMSansSemibold' },
   preview: {
-    backgroundColor: '#fff', borderRadius: 10, padding: 14,
-    borderWidth: 1, borderColor: '#A7F3D0', marginBottom: 8,
+    backgroundColor: colors.ui.white, borderRadius: radius.md, padding: spacing[4],
+    borderWidth: 1, borderColor: colors.brand.green400, marginBottom: spacing[2],
   },
-  previewName: { fontSize: 15, fontWeight: '600', color: '#1E293B', marginBottom: 2 },
-  previewComm: { fontSize: 12, color: '#94A3B8', marginBottom: 10 },
+  previewName: { fontSize: typography.size.base, fontFamily: 'DMSansSemibold', color: colors.ui.slate900, marginBottom: 2 },
+  previewComm: { fontSize: typography.size.sm, color: colors.ui.slate600, marginBottom: spacing[3], fontFamily: 'DMSans' },
 })
