@@ -37,6 +37,7 @@ const addTreatmentSchema = z.object({
   priority:  z.enum(['urgent','elective']).optional(),
   cost_lps:  z.number().positive().optional(),
   notes:     z.string().max(500).optional(),
+  materials: z.array(z.string().max(100)).optional(),
 })
 
 export function createDentalRouter(db: PrismaClient): Router {

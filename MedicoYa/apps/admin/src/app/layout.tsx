@@ -24,7 +24,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const isLogin = pathname === '/'
 
   return (
-    <html lang="es">
+    <html lang="es" suppressHydrationWarning>
       <body className="bg-slate-950 text-slate-200 min-h-screen">
         <Providers>
           <div className="flex min-h-screen">

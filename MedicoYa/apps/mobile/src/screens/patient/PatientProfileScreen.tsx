@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next'
 import api from '../../lib/api'
 import { useAuthStore } from '../../store/authStore'
 import { tokens } from '../../theme/tokens'
+import DatePickerField from '../../components/DatePickerField'
 
 const { colors, spacing, radius, typography } = tokens
 
@@ -97,14 +98,11 @@ export default function PatientProfileScreen() {
         testID="last-name-input"
       />
 
-      <Text style={styles.label}>{t('profile.dob')}</Text>
-      <TextInput
-        style={styles.input}
+      <DatePickerField
+        label={t('profile.dob')}
         value={dob}
-        onChangeText={setDob}
-        placeholder="YYYY-MM-DD"
-        keyboardType="numbers-and-punctuation"
-        testID="dob-input"
+        onChange={setDob}
+        maxDate={new Date()}
       />
 
       <Text style={styles.label}>{t('profile.allergies')}</Text>

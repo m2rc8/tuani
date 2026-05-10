@@ -33,6 +33,7 @@ export interface AddTreatmentInput {
   priority?:   string
   cost_lps?:   number
   notes?:      string
+  materials?:  string[]
 }
 
 export class DentalService {
@@ -100,10 +101,11 @@ export class DentalService {
         dental_record_id: recordId,
         tooth_fdi:        input.tooth_fdi,
         procedure:        input.procedure,
-        status:           input.status   ?? 'completed',
-        priority:         input.priority ?? 'elective',
+        status:           input.status    ?? 'completed',
+        priority:         input.priority  ?? 'elective',
         cost_lps:         input.cost_lps,
         notes:            input.notes,
+        materials:        input.materials ?? [],
       },
     })
   }

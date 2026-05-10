@@ -7,6 +7,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useTranslation } from 'react-i18next'
 import api from '../../lib/api'
 import { tokens } from '../../theme/tokens'
+import DatePickerField from '../../components/DatePickerField'
 
 const { colors, spacing, radius, typography } = tokens
 
@@ -22,7 +23,7 @@ export default function DentalPickerScreen({ navigation }: any) {
   const [loading,       setLoading]       = useState(false)
 
   const canSubmitAdult = phone.trim().length > 0
-  const canSubmitMinor = firstName.trim().length > 0 && lastName.trim().length > 0 && dob.trim().length === 10
+  const canSubmitMinor = firstName.trim().length > 0 && lastName.trim().length > 0 && dob.length === 10
 
   async function handleAdult() {
     setLoading(true)
@@ -103,8 +104,12 @@ export default function DentalPickerScreen({ navigation }: any) {
             <Text style={styles.label}>{t('profile.last_name')}</Text>
             <TextInput style={styles.input} value={lastName} onChangeText={setLastName} placeholder={t('profile.last_name')} placeholderTextColor={colors.text.muted} />
 
-            <Text style={styles.label}>{t('profile.dob')} (YYYY-MM-DD)</Text>
-            <TextInput style={styles.input} value={dob} onChangeText={setDob} placeholder="2015-06-20" placeholderTextColor={colors.text.muted} keyboardType="numbers-and-punctuation" />
+            <DatePickerField
+              label={t('profile.dob')}
+              value={dob}
+              onChange={setDob}
+              maxDate={new Date()}
+            />
 
             <Text style={styles.label}>{t('dental.guardian_name')}</Text>
             <TextInput style={styles.input} value={guardianName} onChangeText={setGuardianName} placeholder={t('dental.guardian_placeholder')} placeholderTextColor={colors.text.muted} />

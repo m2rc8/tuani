@@ -269,24 +269,36 @@ export default function ConsultationScreen({ navigation, route }: any) {
         </TouchableOpacity>
       )}
 
-      <View style={styles.inputRow}>
-        <TextInput
-          style={[styles.input, isCompleted && styles.inputDisabled]}
-          value={inputText}
-          onChangeText={setInputText}
-          placeholder={t('consultation.chat_placeholder')}
-          editable={!isCompleted}
-          testID="chat-input"
-        />
+      {isCompleted ? (
         <TouchableOpacity
-          style={[styles.sendBtn, (!inputText.trim() || isCompleted) && styles.sendBtnDisabled]}
-          onPress={handleSend}
-          disabled={!inputText.trim() || isCompleted}
-          testID="send-btn"
+          style={styles.doneBtn}
+          onPress={async () => {
+            await useConsultationStore.getState().clear()
+            navigation.popToTop()
+          }}
+          testID="done-btn"
         >
-          <Text style={styles.sendBtnText}>{t('consultation.send')}</Text>
+          <Text style={styles.doneBtnText}>{t('consultation.done')}</Text>
         </TouchableOpacity>
-      </View>
+      ) : (
+        <View style={styles.inputRow}>
+          <TextInput
+            style={styles.input}
+            value={inputText}
+            onChangeText={setInputText}
+            placeholder={t('consultation.chat_placeholder')}
+            testID="chat-input"
+          />
+          <TouchableOpacity
+            style={[styles.sendBtn, !inputText.trim() && styles.sendBtnDisabled]}
+            onPress={handleSend}
+            disabled={!inputText.trim()}
+            testID="send-btn"
+          >
+            <Text style={styles.sendBtnText}>{t('consultation.send')}</Text>
+          </TouchableOpacity>
+        </View>
+      )}
     </KeyboardAvoidingView>
   )
 }
@@ -328,6 +340,11 @@ const styles = StyleSheet.create({
   sendBtnDisabled: { backgroundColor: colors.brand.green400, opacity: 0.4 },
   sendBtnText: { color: colors.text.inverse, fontFamily: 'DMSansSemibold' },
   msgImage: { width: 200, height: 150, borderRadius: radius.sm },
+  doneBtn: {
+    margin: spacing[4], backgroundColor: colors.brand.green400,
+    borderRadius: radius.full, padding: spacing[4], alignItems: 'center',
+  },
+  doneBtnText: { color: colors.text.inverse, fontFamily: 'DMSansSemibold', fontSize: typography.size.base },
   ratingCard: {
     borderWidth: 1, borderColor: colors.surface.border, borderRadius: radius.md,
     padding: spacing[4], marginTop: spacing[3], backgroundColor: colors.surface.card,

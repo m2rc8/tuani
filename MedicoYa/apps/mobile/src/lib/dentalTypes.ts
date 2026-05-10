@@ -21,6 +21,7 @@ export interface DentalTreatment {
   priority:         'urgent' | 'elective'
   cost_lps?:        number
   notes?:           string
+  materials?:       string[]
   performed_at:     string
 }
 
