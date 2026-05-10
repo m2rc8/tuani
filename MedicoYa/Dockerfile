@@ -10,7 +10,7 @@ RUN npm install --legacy-peer-deps
 
 RUN npm --workspace packages/api exec prisma generate
 
-RUN npm run build:api
+RUN npm run build:admin && npm run build:api
 
 EXPOSE 3000
 
