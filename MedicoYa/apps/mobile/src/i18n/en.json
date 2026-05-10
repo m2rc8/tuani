@@ -126,10 +126,15 @@
     "add_treatment":     "Add treatment",
     "patient_phone":     "Patient phone",
     "start_record":      "Start dental record",
-    "patient_not_found": "Patient not found",
-    "check_phone":       "Please check the phone number.",
-    "subtitle":          "Enter the patient's phone number to start a dental record",
-    "tab":               "Dental"
+    "patient_not_found":  "Patient not found",
+    "check_phone":        "Please check the phone number.",
+    "subtitle":           "Find the patient to start a dental record",
+    "tab":                "Dental",
+    "adult":              "Adult",
+    "minor":              "Minor (under 18)",
+    "phone_label":        "Patient phone number",
+    "guardian_name":      "Guardian name",
+    "guardian_placeholder": "Parent / legal guardian name"
   },
   "brigade": {
     "title": "Brigades",

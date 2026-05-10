@@ -1,8 +1,16 @@
 import { Router, Request, Response } from 'express'
 import { PrismaClient, Role } from '@prisma/client'
 import { z } from 'zod'
+import { randomUUID } from 'crypto'
 import { requireAuth, requireRole } from '../middleware/requireAuth'
 import { DentalService } from '../services/DentalService'
+
+const createMinorPatientSchema = z.object({
+  first_name:    z.string().min(1).max(60),
+  last_name:     z.string().min(1).max(60),
+  dob:           z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  guardian_name: z.string().max(100).optional(),
+})
 
 const createRecordSchema = z.object({
   patient_id:    z.string().uuid(),
@@ -99,6 +107,39 @@ export function createDentalRouter(db: PrismaClient): Router {
       try {
         const treatment = await service.addTreatment(req.params.id, parsed.data)
         res.status(201).json(treatment)
+      } catch { res.status(500).json({ error: 'Internal server error' }) }
+    }
+  )
+
+  // Create minor (under-18) patient for dental — no phone/OTP required
+  router.post(
+    '/patients/minor',
+    requireAuth,
+    requireRole(Role.doctor),
+    async (req: Request, res: Response): Promise<void> => {
+      const parsed = createMinorPatientSchema.safeParse(req.body)
+      if (!parsed.success) { res.status(400).json({ error: 'Invalid request' }); return }
+      const { first_name, last_name, dob, guardian_name } = parsed.data
+      const fullName = `${first_name} ${last_name}`
+      const placeholderPhone = `DENTAL-${randomUUID()}`
+      try {
+        const user = await db.user.create({
+          data: {
+            phone:      placeholderPhone,
+            name:       fullName,
+            first_name,
+            last_name,
+            role:       'patient',
+            patient:    {
+              create: {
+                dob:       new Date(dob),
+                allergies: guardian_name ? `Tutor: ${guardian_name}` : null,
+              },
+            },
+          },
+          select: { patient: { select: { id: true } } },
+        })
+        res.status(201).json({ patient_id: user.patient!.id })
       } catch { res.status(500).json({ error: 'Internal server error' }) }
     }
   )
