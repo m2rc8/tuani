@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import {
   View, Text, TextInput, TouchableOpacity, ScrollView,
-  StyleSheet, Alert, ActivityIndicator,
+  StyleSheet, Alert, ActivityIndicator, KeyboardAvoidingView, Platform,
 } from 'react-native'
 import { useTranslation } from 'react-i18next'
 import api from '../../lib/api'
@@ -57,7 +57,8 @@ export default function WriteRxScreen({ navigation, route }: any) {
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+    <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
       <Text style={styles.label}>{t('doctor.diagnosis_label')}</Text>
       <TextInput
         style={styles.input}
@@ -144,6 +145,7 @@ export default function WriteRxScreen({ navigation, route }: any) {
           : <Text style={styles.submitBtnText}>{t('doctor.submit_rx')}</Text>}
       </TouchableOpacity>
     </ScrollView>
+    </KeyboardAvoidingView>
   )
 }
 
