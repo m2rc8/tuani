@@ -1,4 +1,5 @@
 import express from 'express'
+import * as Sentry from '@sentry/node'
 import helmet from 'helmet'
 import path from 'path'
 import type { PrismaClient } from '@prisma/client'
@@ -44,6 +45,7 @@ export function createApp(deps?: AppDeps): { app: express.Express } {
   })
 
   app.set('trust proxy', 1)
+  Sentry.setupExpressErrorHandler(app)
   app.use(helmet())
   app.use(express.json({ limit: '10kb' }))
 

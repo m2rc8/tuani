@@ -32,7 +32,8 @@
           "microphonePermission": false,
           "photosPermission": "MédicoYa needs photo library access to attach symptom photos."
         }
-      ]
+      ],
+      "@sentry/react-native"
     ],
     "extra": {
       "eas": {

@@ -1,3 +1,11 @@
+import * as Sentry from '@sentry/react-native'
+
+Sentry.init({
+  dsn: process.env.EXPO_PUBLIC_SENTRY_DSN,
+  environment: process.env.EXPO_PUBLIC_ENV ?? 'development',
+  tracesSampleRate: 0.2,
+})
+
 import React, { useEffect, useState } from 'react'
 import { View, ActivityIndicator, StyleSheet } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native'
@@ -15,7 +23,7 @@ import { tokens } from './theme/tokens'
 
 const { colors } = tokens
 
-export default function App() {
+function App() {
   const [ready, setReady] = useState(false)
   const hydrate = useAuthStore((s) => s.hydrate)
 
@@ -70,3 +78,5 @@ export default function App() {
 const styles = StyleSheet.create({
   splash: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.surface.base },
 })
+
+export default Sentry.wrap(App)
