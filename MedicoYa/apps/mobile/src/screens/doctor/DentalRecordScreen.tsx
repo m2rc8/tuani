@@ -10,7 +10,7 @@ import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/dat
 import * as ImagePicker from 'expo-image-picker'
 import * as ImageManipulator from 'expo-image-manipulator'
 import api from '../../lib/api'
-import type { DentalRecord, DentalTreatment, ToothRecord, ToothSurface } from '../../lib/dentalTypes'
+import type { DentalVisit, DentalTreatment, ToothRecord, ToothSurface } from '../../lib/dentalTypes'
 import type { SurfaceMap } from './components/SurfaceEditor'
 import Odontogram from './components/Odontogram'
 import SurfaceEditor from './components/SurfaceEditor'
@@ -41,9 +41,10 @@ function fmtDatetime(iso: string | null | undefined): string {
 export default function DentalRecordScreen({ navigation: _navigation, route }: any) {
   const { t } = useTranslation()
   const insets = useSafeAreaInsets()
-  const { patientId, brigadeId, recordId } = route.params as { patientId?: string; brigadeId?: string; recordId?: string }
+  const { visitId, fileId } = route.params as { visitId: string; fileId: string }
 
-  const [record,      setRecord]      = useState<DentalRecord | null>(null)
+  const [visit,       setVisit]       = useState<DentalVisit | null>(null)
+  const [fileTeeth,   setFileTeeth]   = useState<ToothRecord[]>([])
   const [loading,     setLoading]     = useState(true)
   const [saving,      setSaving]      = useState(false)
   const [selectedFdi, setSelectedFdi] = useState<number | null>(null)
@@ -75,25 +76,26 @@ export default function DentalRecordScreen({ navigation: _navigation, route }: a
   const [txAfterUri,  setTxAfterUri]  = useState<string | null>(null)
 
   useEffect(() => {
-    const req = recordId
-      ? api.get<DentalRecord>(`/api/dental/records/${recordId}`)
-      : api.post<DentalRecord>('/api/dental/records', { patient_id: patientId, brigade_id: brigadeId })
-    req
-      .then(({ data }) => {
-        setRecord(data)
-        setReferralTo(data.referral_to ?? '')
-        setTreatmentPlan(data.treatment_plan ?? '')
+    Promise.all([
+      api.get<DentalVisit>(`/api/dental/visits/${visitId}`),
+      api.get<{ teeth: ToothRecord[] }>(`/api/dental/files/${fileId}`),
+    ])
+      .then(([visitRes, fileRes]) => {
+        setVisit(visitRes.data)
+        setFileTeeth(fileRes.data.teeth)
+        setReferralTo(visitRes.data.referral_to ?? '')
+        setTreatmentPlan(visitRes.data.treatment_plan ?? '')
       })
       .catch(() => Alert.alert(t('common.error_generic')))
       .finally(() => setLoading(false))
-  }, [patientId, brigadeId, recordId, t])
+  }, [visitId, fileId, t])
 
   const handleSelectTooth = useCallback((fdi: number) => {
     setSelectedFdi(fdi)
-    const toothData    = record?.teeth.find(tooth => tooth.tooth_fdi === fdi)
+    const toothData    = fileTeeth.find(tooth => tooth.tooth_fdi === fdi)
     const currentDirty = dirtyTeeth[fdi]
     setSurfaces(currentDirty ?? surfaceMapFromTooth(toothData))
-  }, [record, dirtyTeeth])
+  }, [fileTeeth, dirtyTeeth])
 
   const handleSurfaceChange = useCallback((updated: SurfaceMap) => {
     setSurfaces(updated)
@@ -103,7 +105,7 @@ export default function DentalRecordScreen({ navigation: _navigation, route }: a
   }, [selectedFdi])
 
   const handleSaveOdontogram = async () => {
-    if (!record || Object.keys(dirtyTeeth).length === 0) return
+    if (Object.keys(dirtyTeeth).length === 0) return
     setSaving(true)
     try {
       const teeth = Object.entries(dirtyTeeth).map(([fdi, s]) => ({
@@ -114,8 +116,8 @@ export default function DentalRecordScreen({ navigation: _navigation, route }: a
         surface_mesial:     s.surface_mesial,
         surface_distal:     s.surface_distal,
       }))
-      const { data } = await api.put<DentalRecord>(`/api/dental/records/${record.id}/teeth`, { teeth })
-      setRecord(data)
+      const { data } = await api.put<{ teeth: ToothRecord[] }>(`/api/dental/files/${fileId}/teeth`, { teeth })
+      setFileTeeth(data.teeth)
       setDirtyTeeth({})
       Alert.alert('Odontograma guardado')
     } catch {
@@ -126,10 +128,9 @@ export default function DentalRecordScreen({ navigation: _navigation, route }: a
   }
 
   const handleSaveReferral = async () => {
-    if (!record) return
     setSavingRef(true)
     try {
-      await api.patch(`/api/dental/records/${record.id}/referral`, {
+      await api.patch(`/api/dental/visits/${visitId}`, {
         referral_to: referralTo.trim() || null,
       })
       Alert.alert('Referencia guardada')
@@ -141,13 +142,12 @@ export default function DentalRecordScreen({ navigation: _navigation, route }: a
   }
 
   const handleSavePlan = async () => {
-    if (!record) return
     setSavingPlan(true)
     try {
-      await api.patch(`/api/dental/records/${record.id}/treatment-plan`, {
+      await api.patch(`/api/dental/visits/${visitId}`, {
         treatment_plan: treatmentPlan.trim() || null,
       })
-      setRecord(prev => prev ? { ...prev, treatment_plan: treatmentPlan.trim() || null } : prev)
+      setVisit(prev => prev ? { ...prev, treatment_plan: treatmentPlan.trim() || null } : prev)
       Alert.alert('Plan guardado')
     } catch {
       Alert.alert(t('common.error_generic'))
@@ -172,12 +172,12 @@ export default function DentalRecordScreen({ navigation: _navigation, route }: a
     }
   }
 
-  const uploadTreatmentImage = async (recordId: string, txId: string, uri: string, type: 'before' | 'after') => {
+  const uploadTreatmentImage = async (txId: string, uri: string, type: 'before' | 'after') => {
     const formData = new FormData()
     formData.append('image', { uri, type: 'image/jpeg', name: 'photo.jpg' } as any)
     formData.append('type', type)
     const { data } = await api.post<DentalTreatment>(
-      `/api/dental/records/${recordId}/treatments/${txId}/images`,
+      `/api/dental/visits/${visitId}/treatments/${txId}/images`,
       formData,
       { headers: { 'Content-Type': 'multipart/form-data' } }
     )
@@ -185,7 +185,7 @@ export default function DentalRecordScreen({ navigation: _navigation, route }: a
   }
 
   const handleAddTreatment = async () => {
-    if (!record || !procedure.trim()) return
+    if (!procedure.trim()) return
     setAddingTx(true)
     try {
       const mats = txMaterials.split(',').map(m => m.trim()).filter(Boolean)
@@ -201,14 +201,14 @@ export default function DentalRecordScreen({ navigation: _navigation, route }: a
       if (txEndedAt)       body.ended_at   = txEndedAt.toISOString()
 
       const { data: newTx } = await api.post<DentalTreatment>(
-        `/api/dental/records/${record.id}/treatments`, body
+        `/api/dental/visits/${visitId}/treatments`, body
       )
 
       let finalTx = newTx
-      if (txBeforeUri) finalTx = await uploadTreatmentImage(record.id, newTx.id, txBeforeUri, 'before')
-      if (txAfterUri)  finalTx = await uploadTreatmentImage(record.id, newTx.id, txAfterUri,  'after')
+      if (txBeforeUri) finalTx = await uploadTreatmentImage(newTx.id, txBeforeUri, 'before')
+      if (txAfterUri)  finalTx = await uploadTreatmentImage(newTx.id, txAfterUri,  'after')
 
-      setRecord(prev => prev ? { ...prev, treatments: [...prev.treatments, finalTx] } : prev)
+      setVisit(prev => prev ? { ...prev, treatments: [...prev.treatments, finalTx] } : prev)
       setProcedure(''); setTxNotes(''); setTxMaterials('')
       setTxStartedAt(null); setTxEndedAt(null)
       setTxBeforeUri(null); setTxAfterUri(null)
@@ -227,8 +227,8 @@ export default function DentalRecordScreen({ navigation: _navigation, route }: a
     )
   }
 
-  const teeth      = record?.teeth      ?? []
-  const treatments = record?.treatments ?? []
+  const teeth      = fileTeeth
+  const treatments = visit?.treatments ?? []
   const hasDirty   = Object.keys(dirtyTeeth).length > 0
 
   return (

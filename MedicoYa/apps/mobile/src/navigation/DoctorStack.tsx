@@ -10,6 +10,7 @@ import BrigadeQueueScreen from '../screens/doctor/BrigadeQueueScreen'
 import BrigadeConsultationScreen from '../screens/doctor/BrigadeConsultationScreen'
 import VideoCallScreen from '../screens/shared/VideoCallScreen'
 import DentalRecordScreen from '../screens/doctor/DentalRecordScreen'
+import DentalExpedienteScreen from '../screens/doctor/DentalExpedienteScreen'
 import CreateEditBrigadeScreen from '../screens/doctor/CreateEditBrigadeScreen'
 import { tokens } from '../theme/tokens'
 
@@ -24,7 +25,8 @@ export type DoctorStackParamList = {
   BrigadeQueueScreen: undefined
   BrigadeConsultationScreen: { local_id?: string }
   VideoCallScreen: { consultationId: string }
-  DentalRecordScreen: { patientId?: string; brigadeId?: string; recordId?: string }
+  DentalExpedienteScreen: { fileId: string; patientName?: string }
+  DentalRecordScreen: { visitId: string; fileId: string }
   CreateEditBrigadeScreen: { brigadeId?: string; initialData?: { name?: string; community?: string; brigade_type?: string } }
 }
 
@@ -75,6 +77,11 @@ export default function DoctorRoot() {
         name="VideoCallScreen"
         component={VideoCallScreen}
         options={{ headerShown: false, gestureEnabled: false }}
+      />
+      <Stack.Screen
+        name="DentalExpedienteScreen"
+        component={DentalExpedienteScreen}
+        options={{ headerShown: true, title: 'Expediente dental', ...headerOptions }}
       />
       <Stack.Screen
         name="DentalRecordScreen"

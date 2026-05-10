@@ -40,14 +40,33 @@ export default function DentalPickerScreen({ navigation }: any) {
   const canSubmitAdult  = phone.trim().length > 0
   const canSubmitMinor  = firstName.trim().length > 0 && lastName.trim().length > 0 && dob.length === 10
 
+  async function resolveFile(patientId: string, patientName?: string) {
+    try {
+      let fileId: string
+      try {
+        const { data } = await api.get<{ id: string }>(`/api/dental/files/by-patient/${patientId}`)
+        fileId = data.id
+      } catch (err: any) {
+        if (err?.response?.status === 404) {
+          const { data } = await api.post<{ id: string }>('/api/dental/files', { patient_id: patientId })
+          fileId = data.id
+        } else throw err
+      }
+      navigation.navigate('DentalExpedienteScreen', { fileId, patientName })
+    } catch {
+      Alert.alert(t('common.error_generic'))
+    } finally {
+      setLoading(false)
+    }
+  }
+
   async function handleAdult() {
     setLoading(true)
     try {
-      const { data } = await api.get<{ id: string }>(`/api/patients/by-phone/${encodeURIComponent(phone.trim())}`)
-      navigation.navigate('DentalRecordScreen', { patientId: data.id })
+      const { data } = await api.get<{ id: string; name?: string }>(`/api/patients/by-phone/${encodeURIComponent(phone.trim())}`)
+      await resolveFile(data.id, data.name ?? undefined)
     } catch {
       Alert.alert(t('dental.patient_not_found'), t('dental.check_phone'))
-    } finally {
       setLoading(false)
     }
   }
@@ -74,10 +93,9 @@ export default function DentalPickerScreen({ navigation }: any) {
         dob:           dob.trim(),
         guardian_name: guardianName.trim() || undefined,
       })
-      navigation.navigate('DentalRecordScreen', { patientId: data.patient_id })
+      await resolveFile(data.patient_id, `${firstName.trim()} ${lastName.trim()}`)
     } catch {
       Alert.alert(t('common.error_generic'))
-    } finally {
       setLoading(false)
     }
   }
@@ -203,7 +221,7 @@ export default function DentalPickerScreen({ navigation }: any) {
                     <TouchableOpacity
                       key={r.patient_id}
                       style={styles.resultCard}
-                      onPress={() => navigation.navigate('DentalRecordScreen', { patientId: r.patient_id })}
+                      onPress={() => { setLoading(true); resolveFile(r.patient_id, r.name ?? undefined) }}
                     >
                       <Text style={styles.resultName}>{r.name}</Text>
                     </TouchableOpacity>

@@ -6,7 +6,7 @@ type SurfaceKey = 'surface_vestibular' | 'surface_palatal' | 'surface_mesial' | 
 
 interface ToothRecord {
   id: string
-  dental_record_id: string
+  file_id: string
   tooth_fdi: number
   surface_mesial: ToothSurface
   surface_distal: ToothSurface

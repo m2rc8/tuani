@@ -14,7 +14,7 @@ interface MinorResult {
   name: string
 }
 
-interface DentalRecordCreated {
+interface DentalFile {
   id: string
 }
 
@@ -62,16 +62,21 @@ export default function DentalPage() {
     finally { setSearching(false) }
   }
 
-  async function handleStart(patientId: string) {
+  async function resolveFile(patientId: string) {
     setCreating(true); setCreateErr('')
     try {
-      const record = await apiFetch<DentalRecordCreated>('/api/dental/records', {
-        method: 'POST',
-        body:   JSON.stringify({ patient_id: patientId }),
-      })
-      router.push(`/doctor/dental/${record.id}`)
+      let file: DentalFile
+      try {
+        file = await apiFetch<DentalFile>(`/api/dental/files/by-patient/${patientId}`)
+      } catch {
+        file = await apiFetch<DentalFile>('/api/dental/files', {
+          method: 'POST',
+          body:   JSON.stringify({ patient_id: patientId }),
+        })
+      }
+      router.push(`/doctor/dental/patients/${file.id}`)
     } catch (err) {
-      setCreateErr(err instanceof Error ? err.message : 'Error al crear ficha dental.')
+      setCreateErr(err instanceof Error ? err.message : 'Error al abrir expediente.')
       setCreating(false)
     }
   }
@@ -101,7 +106,7 @@ export default function DentalPage() {
           guardian_name: guardianName.trim() || undefined,
         }),
       })
-      await handleStart(data.patient_id)
+      resolveFile(data.patient_id)
     } catch (err) {
       setMinorErr(err instanceof Error ? err.message : 'Error al registrar menor.')
       setCreatingMinor(false)
@@ -153,7 +158,7 @@ export default function DentalPage() {
                   <p className="text-slate-400 text-xs">{patient.phone}</p>
                 </div>
               </div>
-              <button onClick={() => handleStart(patient.id)} disabled={creating} className={BTN_GREEN + ' w-full'}>
+              <button onClick={() => resolveFile(patient.id)} disabled={creating} className={BTN_GREEN + ' w-full'}>
                 {creating ? 'Creando ficha...' : 'Iniciar ficha dental'}
               </button>
               {createErr && <p className="text-red-400 text-sm mt-2">{createErr}</p>}
@@ -214,7 +219,7 @@ export default function DentalPage() {
                 {minorResults.map(r => (
                   <button
                     key={r.patient_id}
-                    onClick={() => handleStart(r.patient_id)}
+                    onClick={() => resolveFile(r.patient_id)}
                     disabled={creating}
                     className="text-left bg-slate-900 hover:bg-slate-700 border border-slate-700 rounded-lg px-4 py-3 transition-colors"
                   >

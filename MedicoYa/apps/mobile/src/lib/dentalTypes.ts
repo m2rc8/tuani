@@ -2,7 +2,7 @@ export type ToothSurface = 'healthy' | 'caries' | 'filled' | 'missing' | 'crown'
 
 export interface ToothRecord {
   id:                 string
-  dental_record_id:   string
+  file_id:            string
   tooth_fdi:          number
   surface_mesial:     ToothSurface
   surface_distal:     ToothSurface
@@ -13,33 +13,47 @@ export interface ToothRecord {
 }
 
 export interface DentalTreatment {
-  id:               string
-  dental_record_id: string
-  tooth_fdi?:       number
-  procedure:        string
-  status:           'pending' | 'in_progress' | 'completed'
-  priority:         'urgent' | 'elective'
-  cost_lps?:        number
-  notes?:           string
-  materials?:       string[]
-  performed_at:     string
-  started_at?:      string | null
-  ended_at?:        string | null
+  id:                string
+  visit_id:          string
+  tooth_fdi?:        number
+  procedure:         string
+  status:            'pending' | 'in_progress' | 'completed'
+  priority:          'urgent' | 'elective'
+  cost_lps?:         number
+  notes?:            string
+  materials?:        string[]
+  performed_at:      string
+  started_at?:       string | null
+  ended_at?:         string | null
   before_image_url?: string | null
   after_image_url?:  string | null
 }
 
-export interface DentalRecord {
+export interface DentistSummary {
+  name?:       string | null
+  first_name?: string | null
+  last_name?:  string | null
+}
+
+export interface DentalVisit {
   id:              string
-  patient_id:      string
+  file_id:         string
   dentist_id:      string
   brigade_id?:     string
-  record_date:     string
-  cpod_index?:     number
-  hygiene_notes?:  string
-  referral_to?:    string | null
+  visit_date:      string
+  hygiene_notes?:  string | null
+  cpod_index?:     number | null
   treatment_plan?: string | null
-  created_at:      string
-  teeth:           ToothRecord[]
+  referral_to?:    string | null
   treatments:      DentalTreatment[]
+  dentist?:        DentistSummary
+}
+
+export interface DentalPatientFile {
+  id:         string
+  patient_id: string
+  created_at: string
+  updated_at: string
+  teeth:      ToothRecord[]
+  visits:     DentalVisit[]
 }
