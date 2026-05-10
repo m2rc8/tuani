@@ -7,17 +7,20 @@
     "packages/*"
   ],
   "scripts": {
-    "dev:api":    "npm --workspace packages/api run dev",
-    "test":       "npm --workspace packages/api run test",
+    "dev:api": "npm --workspace packages/api run dev",
+    "test": "npm --workspace packages/api run test",
     "build:admin": "npm --workspace apps/admin run build",
-    "build:api":   "npm --workspace packages/api run build",
-    "build":       "npm run build:api",
-    "build:all":   "npm run build:admin && npm run build:api",
-    "start":       "npm --workspace packages/api run start",
-    "dev:mobile":  "npm --workspace apps/mobile run start"
+    "build:api": "npm --workspace packages/api run build",
+    "build": "npm run build:api",
+    "build:all": "npm run build:admin && npm run build:api",
+    "start": "npm --workspace packages/api run start",
+    "dev:mobile": "npm --workspace apps/mobile run start"
   },
   "engines": {
     "node": ">=20.0.0"
   },
-  "packageManager": "npm@11.12.1"
+  "packageManager": "npm@11.12.1",
+  "devDependencies": {
+    "react-test-renderer": "^18.3.1"
+  }
 }
