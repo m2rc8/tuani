@@ -1,7 +1,7 @@
 import express from 'express'
+import cors from 'cors'
 import * as Sentry from '@sentry/node'
 import helmet from 'helmet'
-import path from 'path'
 import type { PrismaClient } from '@prisma/client'
 import type { Server } from 'socket.io'
 import { AuthService } from './services/AuthService'
@@ -39,13 +39,9 @@ interface AppDeps {
 export function createApp(deps?: AppDeps): { app: express.Express } {
   const app = express()
 
-  app.use('/admin', express.static(path.join(__dirname, '../../../apps/admin/out')))
-  app.get('/admin/*', (_req, res) => {
-    res.sendFile(path.join(__dirname, '../../../apps/admin/out/index.html'))
-  })
-
   app.set('trust proxy', 1)
   Sentry.setupExpressErrorHandler(app)
+  app.use(cors())
   app.use(helmet())
   app.use(express.json({ limit: '10kb' }))
 
