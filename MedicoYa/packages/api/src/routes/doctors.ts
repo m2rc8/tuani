@@ -58,9 +58,10 @@ export function createDoctorsRouter(db: PrismaClient): Router {
         res.status(400).json({ error: 'available (boolean) is required' })
         return
       }
-      const doctor = await db.doctor.update({
-        where: { id: req.user!.sub },
-        data:  { available: parsed.data.available },
+      const doctor = await db.doctor.upsert({
+        where:  { id: req.user!.sub },
+        update: { available: parsed.data.available },
+        create: { id: req.user!.sub, available: parsed.data.available },
       })
       res.json(doctor)
     }
