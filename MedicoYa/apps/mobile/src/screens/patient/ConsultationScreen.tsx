@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react'
 import {
   View, Text, TextInput, TouchableOpacity, FlatList,
-  StyleSheet, KeyboardAvoidingView, Platform,
+  StyleSheet, KeyboardAvoidingView, Platform, Image,
 } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useTranslation } from 'react-i18next'
@@ -110,6 +110,13 @@ export default function ConsultationScreen({ navigation, route }: any) {
 
   const renderMessage = ({ item }: { item: Message }) => {
     const isMine = item.sender_id === userId
+    if (item.msg_type === 'image') {
+      return (
+        <View style={[styles.bubble, isMine ? styles.bubbleMine : styles.bubbleTheirs]}>
+          <Image source={{ uri: item.content }} style={styles.msgImage} resizeMode="cover" />
+        </View>
+      )
+    }
     return (
       <View style={[styles.bubble, isMine ? styles.bubbleMine : styles.bubbleTheirs]}>
         <Text style={isMine ? styles.bubbleTextMine : styles.bubbleTextTheirs}>
@@ -192,4 +199,5 @@ const styles = StyleSheet.create({
   sendBtn: { backgroundColor: '#3B82F6', borderRadius: 10, padding: 10 },
   sendBtnDisabled: { backgroundColor: '#93C5FD' },
   sendBtnText: { color: '#fff', fontWeight: '700' },
+  msgImage: { width: 200, height: 150, borderRadius: 8 },
 })

@@ -1,7 +1,7 @@
 import React, { useEffect, useCallback, useRef, useState } from 'react'
 import {
   View, Text, TextInput, TouchableOpacity, FlatList,
-  StyleSheet, KeyboardAvoidingView, Platform, Alert, ActivityIndicator,
+  StyleSheet, KeyboardAvoidingView, Platform, Alert, ActivityIndicator, Image,
 } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useTranslation } from 'react-i18next'
@@ -25,6 +25,8 @@ export default function DoctorConsultationScreen({ navigation, route }: any) {
   const [priceLps, setPriceLps] = useState<string | null>(null)
   const [paymentStatus, setPaymentStatus] = useState<'pending' | 'confirmed' | null>(null)
   const [confirmingPayment, setConfirmingPayment] = useState(false)
+  const [symptomPhoto, setSymptomPhoto] = useState<string | null>(null)
+  const [symptomsText, setSymptomsText] = useState<string | null>(null)
 
   const isCompleted = status === 'completed'
 
@@ -53,6 +55,8 @@ export default function DoctorConsultationScreen({ navigation, route }: any) {
         if (data.status === 'completed') setStatus('completed')
         setPriceLps(data.price_lps ?? null)
         setPaymentStatus(data.payment_status ?? null)
+        setSymptomPhoto(data.symptom_photo ?? null)
+        setSymptomsText(data.symptoms_text ?? null)
       })
       .catch(() => {})
 
@@ -81,6 +85,35 @@ export default function DoctorConsultationScreen({ navigation, route }: any) {
     socketService.emit('send_message', { consultation_id: consultationId, content, msg_type: 'text' })
     setInputText('')
   }
+
+  const renderMessage = ({ item }: { item: Message }) => {
+    const isMine = item.sender_id === userId
+    if (item.msg_type === 'image') {
+      return (
+        <View style={[styles.bubble, isMine ? styles.bubbleMine : styles.bubbleTheirs]}>
+          <Image source={{ uri: item.content }} style={styles.msgImage} resizeMode="cover" />
+        </View>
+      )
+    }
+    return (
+      <View style={[styles.bubble, isMine ? styles.bubbleMine : styles.bubbleTheirs]}>
+        <Text style={isMine ? styles.bubbleTextMine : styles.bubbleTextTheirs}>
+          {item.content}
+        </Text>
+      </View>
+    )
+  }
+
+  const ListHeader = (symptomsText || symptomPhoto) ? (
+    <View style={styles.symptomsHeader}>
+      {symptomsText ? (
+        <Text style={styles.symptomsText}>{symptomsText}</Text>
+      ) : null}
+      {symptomPhoto ? (
+        <Image source={{ uri: symptomPhoto }} style={styles.symptomPhoto} resizeMode="cover" />
+      ) : null}
+    </View>
+  ) : null
 
   return (
     <KeyboardAvoidingView
@@ -125,16 +158,8 @@ export default function DoctorConsultationScreen({ navigation, route }: any) {
         ref={listRef}
         data={messages}
         keyExtractor={(m) => m.id}
-        renderItem={({ item }) => {
-          const isMine = item.sender_id === userId
-          return (
-            <View style={[styles.bubble, isMine ? styles.bubbleMine : styles.bubbleTheirs]}>
-              <Text style={isMine ? styles.bubbleTextMine : styles.bubbleTextTheirs}>
-                {item.content}
-              </Text>
-            </View>
-          )
-        }}
+        renderItem={renderMessage}
+        ListHeaderComponent={ListHeader}
         contentContainerStyle={styles.messageList}
       />
 
@@ -177,12 +202,19 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1, borderBottomColor: '#BBF7D0',
   },
   paymentConfirmedText: { color: '#15803D', fontWeight: '600', fontSize: 14 },
+  symptomsHeader: {
+    backgroundColor: '#F8FAFC', borderRadius: 10, padding: 12,
+    marginBottom: 12, borderWidth: 1, borderColor: '#E2E8F0',
+  },
+  symptomsText: { fontSize: 14, color: '#334155', marginBottom: 8, lineHeight: 20 },
+  symptomPhoto: { width: '100%', height: 200, borderRadius: 8 },
   messageList: { padding: 16, paddingBottom: 8 },
   bubble: { maxWidth: '80%', borderRadius: 12, padding: 10, marginBottom: 8 },
   bubbleMine: { backgroundColor: '#EFF6FF', alignSelf: 'flex-end' },
   bubbleTheirs: { backgroundColor: '#F1F5F9', alignSelf: 'flex-start' },
   bubbleTextMine: { color: '#1D4ED8', fontSize: 15 },
   bubbleTextTheirs: { color: '#334155', fontSize: 15 },
+  msgImage: { width: 200, height: 150, borderRadius: 8 },
   inputRow: {
     flexDirection: 'row', padding: 12, borderTopWidth: 1,
     borderTopColor: '#E2E8F0', gap: 8, alignItems: 'center',
