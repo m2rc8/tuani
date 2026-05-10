@@ -50,7 +50,7 @@ export default function OtpForm() {
       setRole(role as 'admin' | 'coordinator' | 'doctor')
       if (role === 'coordinator') router.replace('/brigades')
       else if (role === 'doctor') router.replace('/doctor/queue')
-      else router.replace('/doctors')
+      else router.replace('/users')
     } finally {
       setLoading(false)
     }
