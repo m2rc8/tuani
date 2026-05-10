@@ -40,6 +40,8 @@ export default function DoctorConsultationScreen({ navigation, route }: any) {
   }, [consultationId, setStatus])
 
   useEffect(() => {
+    useConsultationStore.getState().clear()
+
     socketService.connect(baseURL, token ?? '')
     socketService.emit('join_consultation', { consultation_id: consultationId })
     socketService.on('receive_message', handleReceiveMessage)
