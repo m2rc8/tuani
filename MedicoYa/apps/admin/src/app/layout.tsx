@@ -17,7 +17,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       const role = getRole()
       if (role === 'coordinator') router.replace('/brigades')
       else if (role === 'doctor') router.replace('/doctor/queue')
-      else router.replace('/doctors')
+      else router.replace('/users')
     }
   }, [pathname, router])
 

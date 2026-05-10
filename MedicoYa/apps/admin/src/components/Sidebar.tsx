@@ -6,6 +6,7 @@ import { clearToken, getRole } from '../lib/auth'
 const ADMIN_NAV = [
   { href: '/doctors',       label: 'Médicos' },
   { href: '/consultations', label: 'Consultas' },
+  { href: '/users',         label: 'Usuarios' },
 ]
 
 const COORDINATOR_NAV = [
