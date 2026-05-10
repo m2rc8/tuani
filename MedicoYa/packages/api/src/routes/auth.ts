@@ -28,7 +28,7 @@ export function createAuthRouter(authService: AuthService): Router {
 
   const otpLimiter = rateLimit({
     windowMs: 10 * 60 * 1000,
-    max: 3,
+    max: process.env.NODE_ENV === 'development' ? 100 : 3,
     message: { error: 'Too many OTP requests, try again in 10 minutes' },
     standardHeaders: true,
     legacyHeaders: false,

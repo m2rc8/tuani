@@ -26,11 +26,16 @@ export default function QueueScreen({ navigation }: any) {
     setItems((prev) => prev.filter((i) => i.id !== id))
   }, [])
 
-  useEffect(() => {
+  const fetchQueue = useCallback(() => {
     api.get<QueueItem[]>('/api/consultations/queue')
       .then(({ data }) => setItems(data))
       .catch(() => {})
       .finally(() => setLoading(false))
+  }, [])
+
+  useEffect(() => {
+    fetchQueue()
+    const poll = setInterval(fetchQueue, 10_000)
 
     socketService.connect(baseURL, token ?? '')
 
@@ -43,6 +48,7 @@ export default function QueueScreen({ navigation }: any) {
     socketService.on('consultation_updated', handleUpdated)
 
     return () => {
+      clearInterval(poll)
       socketService.off('new_consultation', handleNew)
       socketService.off('consultation_updated', handleUpdated)
     }
