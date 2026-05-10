@@ -13,7 +13,10 @@ const COORDINATOR_NAV = [
 ]
 
 const DOCTOR_NAV = [
-  { href: '/my-consultations', label: '📋 Mis consultas' },
+  { href: '/doctor/queue',     label: '📋 Cola' },
+  { href: '/my-consultations', label: '📁 Historial' },
+  { href: '/doctor/dental',    label: '🦷 Dental' },
+  { href: '/doctor/brigades',  label: '🚑 Brigadas' },
 ]
 
 export default function Sidebar() {
