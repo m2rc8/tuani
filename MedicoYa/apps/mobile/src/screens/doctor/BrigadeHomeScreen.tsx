@@ -13,6 +13,7 @@ const { colors, spacing, radius, typography } = tokens
 
 interface BrigadeListItem extends BrigadeInfo {
   joined_at: string
+  is_organizer?: boolean
 }
 
 export default function BrigadeHomeScreen({ navigation }: any) {
@@ -24,8 +25,10 @@ export default function BrigadeHomeScreen({ navigation }: any) {
   const [searching, setSearching] = useState(false)
   const [preview, setPreview] = useState<{ id: string; name: string; community: string } | null>(null)
   const [joining, setJoining] = useState(false)
+  const [refreshKey, setRefreshKey] = useState(0)
 
   useEffect(() => {
+    setLoading(true)
     api.get<BrigadeListItem[]>('/api/brigades')
       .then(({ data }) => {
         setBrigadesLocal(data)
@@ -33,7 +36,7 @@ export default function BrigadeHomeScreen({ navigation }: any) {
       })
       .catch(() => {})
       .finally(() => setLoading(false))
-  }, [setBrigades])
+  }, [setBrigades, refreshKey])
 
   const handleEnter = useCallback(async (brigadeId: string) => {
     try {
@@ -72,6 +75,7 @@ export default function BrigadeHomeScreen({ navigation }: any) {
         `/api/sync/brigade/${preview.id}`
       )
       await setActiveBrigade(data.brigade, data.patients)
+      setRefreshKey(k => k + 1)
       navigation.navigate('BrigadeQueueScreen')
     } catch {
       Alert.alert(t('common.error_generic'))
@@ -90,7 +94,16 @@ export default function BrigadeHomeScreen({ navigation }: any) {
           keyExtractor={(b) => b.id}
           contentContainerStyle={styles.list}
           ListHeaderComponent={
-            <Text style={styles.sectionLabel}>{t('brigade.my_brigades')}</Text>
+            <View>
+              <TouchableOpacity
+                style={styles.createBtn}
+                onPress={() => navigation.navigate('CreateEditBrigadeScreen', {})}
+                testID="create-brigade-btn"
+              >
+                <Text style={styles.createBtnText}>{t('brigade.create_btn')}</Text>
+              </TouchableOpacity>
+              <Text style={styles.sectionLabel}>{t('brigade.my_brigades')}</Text>
+            </View>
           }
           renderItem={({ item }) => (
             <View style={styles.brigadeRow}>
@@ -98,13 +111,27 @@ export default function BrigadeHomeScreen({ navigation }: any) {
                 <Text style={styles.brigadeName}>{item.name}</Text>
                 <Text style={styles.brigadeComm}>{item.community}</Text>
               </View>
-              <TouchableOpacity
-                style={styles.enterBtn}
-                onPress={() => handleEnter(item.id)}
-                testID={`enter-${item.id}`}
-              >
-                <Text style={styles.enterBtnText}>{t('brigade.enter')}</Text>
-              </TouchableOpacity>
+              <View style={styles.rowActions}>
+                {item.is_organizer && (
+                  <TouchableOpacity
+                    style={styles.editBtn}
+                    onPress={() => navigation.navigate('CreateEditBrigadeScreen', {
+                      brigadeId: item.id,
+                      initialData: { name: item.name, community: item.community, brigade_type: item.brigade_type ?? 'medical' },
+                    })}
+                    testID={`edit-${item.id}`}
+                  >
+                    <Text style={styles.editBtnText}>✎</Text>
+                  </TouchableOpacity>
+                )}
+                <TouchableOpacity
+                  style={styles.enterBtn}
+                  onPress={() => handleEnter(item.id)}
+                  testID={`enter-${item.id}`}
+                >
+                  <Text style={styles.enterBtnText}>{t('brigade.enter')}</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           )}
           ListFooterComponent={
@@ -165,8 +192,13 @@ const styles = StyleSheet.create({
   brigadeInfo: { flex: 1 },
   brigadeName: { fontSize: typography.size.base, fontFamily: 'DMSansSemibold', color: colors.text.primary },
   brigadeComm: { fontSize: typography.size.sm, color: colors.text.secondary, marginTop: 2, fontFamily: 'DMSans' },
+  rowActions: { flexDirection: 'row', alignItems: 'center', gap: spacing[2] },
   enterBtn: { backgroundColor: colors.brand.green400, borderRadius: radius.full, paddingHorizontal: spacing[4], paddingVertical: spacing[2] },
   enterBtnText: { color: colors.text.inverse, fontFamily: 'DMSansSemibold', fontSize: typography.size.md },
+  editBtn: { borderWidth: 1, borderColor: colors.surface.border, borderRadius: radius.full, paddingHorizontal: spacing[3], paddingVertical: spacing[2], backgroundColor: colors.surface.card },
+  editBtnText: { fontSize: typography.size.base, color: colors.text.secondary },
+  createBtn: { backgroundColor: colors.surface.card, borderWidth: 1, borderColor: colors.brand.green400, borderRadius: radius.full, paddingVertical: spacing[2], paddingHorizontal: spacing[4], alignSelf: 'flex-end', marginBottom: spacing[3] },
+  createBtnText: { color: colors.brand.green400, fontFamily: 'DMSansSemibold', fontSize: typography.size.sm },
   joinSection: { marginTop: spacing[4] },
   input: {
     borderWidth: 1, borderColor: colors.surface.inputBorder, borderRadius: radius.sm, padding: spacing[3],

@@ -162,6 +162,21 @@
     "med_dose": "Dosis",
     "med_frequency": "Frecuencia",
     "error_required": "Nombre y (teléfono o fecha de nacimiento) son requeridos",
-    "error_code_not_found": "Código de brigada no encontrado"
+    "error_code_not_found": "Código de brigada no encontrado",
+    "create_title": "Nueva brigada",
+    "edit_title": "Editar brigada",
+    "create_btn": "+ Nueva brigada",
+    "type_medical": "Médica",
+    "type_dental": "Odontológica",
+    "field_name": "Nombre",
+    "field_community": "Comunidad",
+    "field_municipality": "Municipio (opcional)",
+    "field_department": "Departamento (opcional)",
+    "field_start_date": "Fecha inicio",
+    "field_end_date": "Fecha fin",
+    "field_type": "Tipo de brigada",
+    "save": "Guardar",
+    "saving": "Guardando...",
+    "error_name_required": "Nombre y comunidad son requeridos"
   }
 }

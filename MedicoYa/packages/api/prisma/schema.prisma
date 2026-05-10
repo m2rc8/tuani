@@ -181,6 +181,7 @@ model Brigade {
   end_date     DateTime
   join_code    String        @unique
   status       BrigadeStatus @default(active)
+  brigade_type String        @default("medical")
   created_at   DateTime      @default(now())
 
   organizer      User            @relation(fields: [organizer_id], references: [id], onDelete: Restrict)

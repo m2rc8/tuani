@@ -10,6 +10,7 @@ import BrigadeQueueScreen from '../screens/doctor/BrigadeQueueScreen'
 import BrigadeConsultationScreen from '../screens/doctor/BrigadeConsultationScreen'
 import VideoCallScreen from '../screens/shared/VideoCallScreen'
 import DentalRecordScreen from '../screens/doctor/DentalRecordScreen'
+import CreateEditBrigadeScreen from '../screens/doctor/CreateEditBrigadeScreen'
 import { tokens } from '../theme/tokens'
 
 const { colors, typography } = tokens
@@ -24,6 +25,7 @@ export type DoctorStackParamList = {
   BrigadeConsultationScreen: { local_id?: string }
   VideoCallScreen: { consultationId: string }
   DentalRecordScreen: { patientId: string; brigadeId?: string }
+  CreateEditBrigadeScreen: { brigadeId?: string; initialData?: { name?: string; community?: string; brigade_type?: string } }
 }
 
 const Stack = createNativeStackNavigator<DoctorStackParamList>()
@@ -78,6 +80,15 @@ export default function DoctorRoot() {
         name="DentalRecordScreen"
         component={DentalRecordScreen}
         options={{ headerShown: true, title: t('dental.title'), ...headerOptions }}
+      />
+      <Stack.Screen
+        name="CreateEditBrigadeScreen"
+        component={CreateEditBrigadeScreen}
+        options={({ route }) => ({
+          headerShown: true,
+          title: (route.params as any)?.brigadeId ? t('brigade.edit_title') : t('brigade.create_title'),
+          ...headerOptions,
+        })}
       />
     </Stack.Navigator>
   )

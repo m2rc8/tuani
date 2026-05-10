@@ -162,6 +162,21 @@
     "med_dose": "Dose",
     "med_frequency": "Frequency",
     "error_required": "Name and (phone or date of birth) are required",
-    "error_code_not_found": "Brigade code not found"
+    "error_code_not_found": "Brigade code not found",
+    "create_title": "New brigade",
+    "edit_title": "Edit brigade",
+    "create_btn": "+ New brigade",
+    "type_medical": "Medical",
+    "type_dental": "Dental",
+    "field_name": "Name",
+    "field_community": "Community",
+    "field_municipality": "Municipality (optional)",
+    "field_department": "Department (optional)",
+    "field_start_date": "Start date",
+    "field_end_date": "End date",
+    "field_type": "Brigade type",
+    "save": "Save",
+    "saving": "Saving...",
+    "error_name_required": "Name and community are required"
   }
 }

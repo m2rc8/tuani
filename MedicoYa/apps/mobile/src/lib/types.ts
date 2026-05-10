@@ -68,6 +68,8 @@ export interface BrigadeInfo {
   name: string
   community: string
   status: 'active' | 'closed'
+  brigade_type?: 'medical' | 'dental'
+  is_organizer?: boolean
 }
 
 export interface OfflineConsultation {

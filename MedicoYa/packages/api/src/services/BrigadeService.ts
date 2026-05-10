@@ -18,6 +18,7 @@ export interface CreateBrigadeInput {
   department?: string
   start_date: string
   end_date: string
+  brigade_type?: string
 }
 
 export interface SyncItem {
@@ -57,6 +58,7 @@ export class BrigadeService {
       start_date:   new Date(data.start_date),
       end_date:     new Date(data.end_date),
       join_code:    code,
+      brigade_type: data.brigade_type ?? 'medical',
     })
     try {
       return await this.db.brigade.create({ data: build(generateJoinCode()) })
@@ -231,10 +233,10 @@ export class BrigadeService {
   async getMyBrigades(doctorId: string) {
     const rows = await this.db.brigadeDoctor.findMany({
       where:   { doctor_id: doctorId },
-      include: { brigade: { select: { id: true, name: true, community: true, status: true } } },
+      include: { brigade: { select: { id: true, name: true, community: true, status: true, brigade_type: true, organizer_id: true } } },
       orderBy: { joined_at: 'desc' },
     })
-    return rows.map(r => ({ ...r.brigade, joined_at: r.joined_at }))
+    return rows.map(r => ({ ...r.brigade, joined_at: r.joined_at, is_organizer: r.brigade.organizer_id === doctorId }))
   }
 
   async getBrigadeByCode(code: string) {
@@ -253,11 +255,31 @@ export class BrigadeService {
     community: string
     status: BrigadeStatus
     join_code: string
+    brigade_type: string
   }[]> {
     return this.db.brigade.findMany({
       where:   { organizer_id: organizerId },
-      select:  { id: true, name: true, community: true, status: true, join_code: true },
+      select:  { id: true, name: true, community: true, status: true, join_code: true, brigade_type: true },
       orderBy: { start_date: 'desc' },
+    })
+  }
+
+  async updateBrigade(id: string, organizerId: string, data: Record<string, any>) {
+    const brigade = await this.db.brigade.findUnique({ where: { id } })
+    if (!brigade) throw new Error('NOT_FOUND')
+    if (brigade.organizer_id !== organizerId) throw new Error('FORBIDDEN')
+    return this.db.brigade.update({
+      where: { id },
+      data: {
+        ...(data.name && { name: data.name }),
+        ...(data.community && { community: data.community }),
+        ...(data.municipality !== undefined && { municipality: data.municipality }),
+        ...(data.department !== undefined && { department: data.department }),
+        ...(data.start_date && { start_date: new Date(data.start_date) }),
+        ...(data.end_date && { end_date: new Date(data.end_date) }),
+        ...(data.brigade_type && { brigade_type: data.brigade_type }),
+        ...(data.status && { status: data.status as any }),
+      },
     })
   }
 

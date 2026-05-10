@@ -13,6 +13,18 @@ const createBrigadeSchema = z.object({
   department:   z.string().max(100).optional(),
   start_date:   z.string().datetime(),
   end_date:     z.string().datetime(),
+  brigade_type: z.enum(['medical', 'dental']).default('medical'),
+})
+
+const updateBrigadeSchema = z.object({
+  name:         z.string().min(1).max(100).optional(),
+  community:    z.string().min(1).max(100).optional(),
+  municipality: z.string().max(100).optional(),
+  department:   z.string().max(100).optional(),
+  start_date:   z.string().datetime().optional(),
+  end_date:     z.string().datetime().optional(),
+  brigade_type: z.enum(['medical', 'dental']).optional(),
+  status:       z.enum(['active', 'closed']).optional(),
 })
 
 export function createBrigadesRouter(db: PrismaClient): Router {
@@ -22,7 +34,7 @@ export function createBrigadesRouter(db: PrismaClient): Router {
   router.post(
     '/',
     requireAuth,
-    requireRole(Role.coordinator),
+    requireRole(Role.doctor),
     async (req: Request, res: Response): Promise<void> => {
       const parsed = createBrigadeSchema.safeParse(req.body)
       if (!parsed.success) { res.status(400).json({ error: 'Invalid request body' }); return }
@@ -72,6 +84,23 @@ export function createBrigadesRouter(db: PrismaClient): Router {
         const brigades = await service.getMyBrigadesCoordinator(req.user!.sub)
         res.json(brigades)
       } catch {
+        res.status(500).json({ error: 'Internal server error' })
+      }
+    }
+  )
+
+  router.put(
+    '/:id',
+    requireAuth,
+    async (req: Request, res: Response): Promise<void> => {
+      const parsed = updateBrigadeSchema.safeParse(req.body)
+      if (!parsed.success) { res.status(400).json({ error: 'Invalid request body' }); return }
+      try {
+        const brigade = await service.updateBrigade(req.params.id, req.user!.sub, parsed.data)
+        res.json(brigade)
+      } catch (err: any) {
+        if (err?.message === 'NOT_FOUND') { res.status(404).json({ error: 'Brigade not found' }); return }
+        if (err?.message === 'FORBIDDEN') { res.status(403).json({ error: 'Forbidden' }); return }
         res.status(500).json({ error: 'Internal server error' })
       }
     }
