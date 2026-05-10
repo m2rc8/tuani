@@ -19,14 +19,18 @@ export default function QueueScreen({ navigation }: any) {
   const { t } = useTranslation()
   const token = useAuthStore((s: any) => s.token)
   const baseURL = process.env.EXPO_PUBLIC_API_URL ?? ''
-  const [items, setItems] = useState<QueueItem[]>([])
-  const [loading, setLoading] = useState(true)
+  const [items,    setItems]    = useState<QueueItem[]>([])
+  const [loading,  setLoading]  = useState(true)
+  const [approved, setApproved] = useState<boolean | null>(null)
 
   const removeItem = useCallback((id: string) => {
     setItems((prev) => prev.filter((i) => i.id !== id))
   }, [])
 
   const fetchQueue = useCallback(() => {
+    api.get<{ approved_at: string | null }>('/api/doctors/me')
+      .then(({ data }) => setApproved(!!data.approved_at))
+      .catch(() => setApproved(true))
     api.get<QueueItem[]>('/api/consultations/queue')
       .then(({ data }) => setItems(data))
       .catch(() => {})
@@ -92,6 +96,18 @@ export default function QueueScreen({ navigation }: any) {
     )
   }
 
+  if (approved === false) {
+    return (
+      <View style={styles.flex}>
+        <View style={styles.center}>
+          <Text style={styles.pendingIcon}>⏳</Text>
+          <Text style={styles.pendingTitle}>{t('doctor.pending_title')}</Text>
+          <Text style={styles.pendingBody}>{t('doctor.pending_body')}</Text>
+        </View>
+      </View>
+    )
+  }
+
   if (items.length === 0) {
     return (
       <View style={styles.flex}>
@@ -145,7 +161,10 @@ export default function QueueScreen({ navigation }: any) {
 const styles = StyleSheet.create({
   flex: { flex: 1 },
   center: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-  emptyText: { fontSize: 16, color: '#94A3B8' },
+  emptyText:    { fontSize: 16, color: '#94A3B8' },
+  pendingIcon:  { fontSize: 48, marginBottom: 16 },
+  pendingTitle: { fontSize: 18, fontWeight: '700', color: '#1E293B', marginBottom: 8 },
+  pendingBody:  { fontSize: 14, color: '#64748B', textAlign: 'center', paddingHorizontal: 32 },
   list: { padding: 16 },
   brigadeBanner: {
     backgroundColor: '#EF4444',

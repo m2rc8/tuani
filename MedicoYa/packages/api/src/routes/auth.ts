@@ -89,5 +89,42 @@ export function createAuthRouter(authService: AuthService): Router {
     }
   )
 
+  const registerDoctorSchema = z.object({
+    phone:  z.string().min(1),
+    code:   z.string().length(6),
+    name:   z.string().min(1),
+    cedula: z.string().min(1),
+  })
+
+  router.post(
+    '/register-doctor',
+    otpLimiter,
+    async (req: Request, res: Response): Promise<void> => {
+      const parsed = registerDoctorSchema.safeParse(req.body)
+      if (!parsed.success) {
+        res.status(400).json({ error: 'phone, code, name and cedula are required' })
+        return
+      }
+      const phone = parseValidPhone(parsed.data.phone)
+      if (!phone) {
+        res.status(400).json({ error: 'Invalid phone number format' })
+        return
+      }
+      const lang = parseLang(req.headers['accept-language'])
+      try {
+        const result = await authService.registerDoctor(
+          phone, parsed.data.code, parsed.data.name, parsed.data.cedula, lang
+        )
+        res.status(201).json(result)
+      } catch (err: unknown) {
+        if (err instanceof Error && err.message === 'INVALID_CODE') {
+          res.status(401).json({ error: 'Invalid or expired code' })
+          return
+        }
+        throw err
+      }
+    }
+  )
+
   return router
 }

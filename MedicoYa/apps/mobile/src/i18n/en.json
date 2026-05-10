@@ -8,7 +8,13 @@
     "verifying": "Verifying...",
     "change_phone": "← Change phone",
     "error_send": "Failed to send code",
-    "error_verify": "Invalid code"
+    "error_verify": "Invalid code",
+    "doctor_register_title": "Doctor registration",
+    "doctor_name_label": "Full name",
+    "doctor_cedula_label": "Medical license number",
+    "doctor_submit": "Register",
+    "register_as_doctor": "Are you a doctor? Register here",
+    "back_to_login": "← Back to login"
   },
   "profile": {
     "title": "Profile",
@@ -93,7 +99,9 @@
     "instructions_label": "Instructions (optional)",
     "price_label": "Price in lempiras (optional)",
     "submit_rx": "Complete and generate prescription",
-    "availability_label": "Available for consultations"
+    "availability_label": "Available for consultations",
+    "pending_title": "Account under review",
+    "pending_body": "Your application is being reviewed by the MedicoYa team. We'll notify you once approved."
   },
   "brigade": {
     "title": "Brigades",

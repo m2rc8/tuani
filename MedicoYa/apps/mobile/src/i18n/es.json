@@ -8,7 +8,13 @@
     "verifying": "Verificando...",
     "change_phone": "← Cambiar teléfono",
     "error_send": "Error al enviar código",
-    "error_verify": "Código inválido"
+    "error_verify": "Código inválido",
+    "doctor_register_title": "Registro de médico",
+    "doctor_name_label": "Nombre completo",
+    "doctor_cedula_label": "Cédula profesional",
+    "doctor_submit": "Registrarme",
+    "register_as_doctor": "¿Eres médico? Regístrate aquí",
+    "back_to_login": "← Volver al inicio de sesión"
   },
   "profile": {
     "title": "Perfil",
@@ -93,7 +99,9 @@
     "instructions_label": "Instrucciones (opcional)",
     "price_label": "Precio en lempiras (opcional)",
     "submit_rx": "Completar y generar receta",
-    "availability_label": "Disponible para consultas"
+    "availability_label": "Disponible para consultas",
+    "pending_title": "Cuenta en revisión",
+    "pending_body": "Tu solicitud está siendo revisada por el equipo de MedicoYa. Te notificaremos cuando sea aprobada."
   },
   "brigade": {
     "title": "Brigadas",

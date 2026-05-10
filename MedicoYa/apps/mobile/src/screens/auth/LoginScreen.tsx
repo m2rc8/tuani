@@ -52,6 +52,13 @@ export default function LoginScreen({ navigation }: Props) {
           ? <ActivityIndicator color="#fff" />
           : <Text style={styles.btnText}>{t('auth.send_code')}</Text>}
       </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => navigation.navigate('DoctorRegister')}
+        style={styles.registerLink}
+        testID="doctor-register-btn"
+      >
+        <Text style={styles.registerLinkText}>{t('auth.register_as_doctor')}</Text>
+      </TouchableOpacity>
     </View>
   )
 }
@@ -70,4 +77,6 @@ const styles = StyleSheet.create({
   btnDisabled: { opacity: 0.5 },
   btnText: { color: '#fff', fontWeight: '600', fontSize: 16 },
   error: { color: '#EF4444', marginBottom: 4 },
+  registerLink: { marginTop: 20, alignItems: 'center' },
+  registerLinkText: { color: '#3B82F6', fontSize: 14 },
 })
