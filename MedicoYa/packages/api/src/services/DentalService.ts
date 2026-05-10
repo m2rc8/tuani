@@ -8,22 +8,14 @@ const ADULT_TEETH = [
   41,42,43,44,45,46,47,48,
 ]
 
-export interface CreateDentalRecordInput {
-  patient_id:    string
-  brigade_id?:   string
-  hygiene_notes?: string
-}
-
-export interface UpdateTeethInput {
-  teeth: {
-    tooth_fdi:          number
-    surface_mesial?:    string
-    surface_distal?:    string
-    surface_occlusal?:  string
-    surface_vestibular?: string
-    surface_palatal?:   string
-    notes?:             string
-  }[]
+export interface UpsertToothInput {
+  tooth_fdi:           number
+  surface_mesial?:     string
+  surface_distal?:     string
+  surface_occlusal?:   string
+  surface_vestibular?: string
+  surface_palatal?:    string
+  notes?:              string
 }
 
 export interface AddTreatmentInput {
@@ -38,41 +30,176 @@ export interface AddTreatmentInput {
   ended_at?:   string
 }
 
+export interface UpdateVisitInput {
+  hygiene_notes?:  string | null
+  cpod_index?:     number | null
+  treatment_plan?: string | null
+  referral_to?:    string | null
+}
+
 export class DentalService {
   constructor(private db: PrismaClient) {}
 
-  async createRecord(dentistId: string, input: CreateDentalRecordInput) {
-    const id = crypto.randomUUID()
-    const record = await this.db.dentalRecord.create({
+  // ── File ────────────────────────────────────────────────────────────────────
+
+  async createFile(patientId: string) {
+    return this.db.dentalPatientFile.create({
       data: {
-        id,
-        patient_id:    input.patient_id,
-        dentist_id:    dentistId,
-        brigade_id:    input.brigade_id,
-        hygiene_notes: input.hygiene_notes,
+        id:         crypto.randomUUID(),
+        patient_id: patientId,
         teeth: {
           create: ADULT_TEETH.map(fdi => ({
-            id:       crypto.randomUUID(),
+            id:        crypto.randomUUID(),
             tooth_fdi: fdi,
           })),
         },
       },
-      include: { teeth: true, treatments: true },
+      include: { teeth: true, visits: { include: { treatments: true } } },
     })
-    return record
   }
 
-  async getDentistRecords(dentistId: string) {
-    return this.db.dentalRecord.findMany({
-      where:   { dentist_id: dentistId },
+  async getFileByPatient(patientId: string) {
+    return this.db.dentalPatientFile.findUnique({
+      where:   { patient_id: patientId },
       include: {
-        patient: { include: { user: { select: { name: true } } } },
-        treatments: { select: { id: true } },
+        teeth: true,
+        visits: {
+          include: {
+            treatments: true,
+            dentist:    { select: { name: true, first_name: true, last_name: true } },
+          },
+          orderBy: { visit_date: 'desc' },
+        },
       },
-      orderBy: { record_date: 'desc' },
-      take: 100,
     })
   }
+
+  async getFile(fileId: string) {
+    return this.db.dentalPatientFile.findUnique({
+      where:   { id: fileId },
+      include: {
+        teeth: true,
+        visits: {
+          include: {
+            treatments: true,
+            dentist:    { select: { name: true, first_name: true, last_name: true } },
+          },
+          orderBy: { visit_date: 'desc' },
+        },
+      },
+    })
+  }
+
+  // ── Teeth ───────────────────────────────────────────────────────────────────
+
+  async upsertTeeth(fileId: string, teeth: UpsertToothInput[]) {
+    await Promise.all(
+      teeth.map(t =>
+        this.db.toothRecord.upsert({
+          where:  { file_id_tooth_fdi: { file_id: fileId, tooth_fdi: t.tooth_fdi } },
+          create: {
+            id:                 crypto.randomUUID(),
+            file_id:            fileId,
+            tooth_fdi:          t.tooth_fdi,
+            surface_mesial:     t.surface_mesial     ?? 'healthy',
+            surface_distal:     t.surface_distal     ?? 'healthy',
+            surface_occlusal:   t.surface_occlusal   ?? 'healthy',
+            surface_vestibular: t.surface_vestibular ?? 'healthy',
+            surface_palatal:    t.surface_palatal    ?? 'healthy',
+            notes:              t.notes,
+          },
+          update: {
+            surface_mesial:     t.surface_mesial,
+            surface_distal:     t.surface_distal,
+            surface_occlusal:   t.surface_occlusal,
+            surface_vestibular: t.surface_vestibular,
+            surface_palatal:    t.surface_palatal,
+            notes:              t.notes,
+          },
+        })
+      )
+    )
+    return this.getFile(fileId)
+  }
+
+  // ── Visits ──────────────────────────────────────────────────────────────────
+
+  async createVisit(fileId: string, dentistId: string, brigadeId?: string) {
+    return this.db.dentalVisit.create({
+      data: {
+        id:         crypto.randomUUID(),
+        file_id:    fileId,
+        dentist_id: dentistId,
+        brigade_id: brigadeId,
+      },
+      include: { treatments: true },
+    })
+  }
+
+  async getVisit(visitId: string) {
+    return this.db.dentalVisit.findUnique({
+      where:   { id: visitId },
+      include: { treatments: true },
+    })
+  }
+
+  async updateVisit(visitId: string, input: UpdateVisitInput) {
+    return this.db.dentalVisit.update({
+      where:   { id: visitId },
+      data:    {
+        hygiene_notes:  input.hygiene_notes,
+        cpod_index:     input.cpod_index,
+        treatment_plan: input.treatment_plan,
+        referral_to:    input.referral_to,
+      },
+      include: { treatments: true },
+    })
+  }
+
+  async getDentistVisits(dentistId: string) {
+    return this.db.dentalVisit.findMany({
+      where:   { dentist_id: dentistId },
+      include: {
+        file: {
+          include: {
+            patient: { include: { user: { select: { name: true, first_name: true, last_name: true } } } },
+          },
+        },
+        treatments: { select: { id: true } },
+      },
+      orderBy: { visit_date: 'desc' },
+      take:    100,
+    })
+  }
+
+  // ── Treatments ──────────────────────────────────────────────────────────────
+
+  async addTreatment(visitId: string, input: AddTreatmentInput) {
+    return this.db.dentalTreatment.create({
+      data: {
+        id:         crypto.randomUUID(),
+        visit_id:   visitId,
+        tooth_fdi:  input.tooth_fdi,
+        procedure:  input.procedure,
+        status:     input.status   ?? 'completed',
+        priority:   input.priority ?? 'elective',
+        cost_lps:   input.cost_lps,
+        notes:      input.notes,
+        materials:  input.materials ?? [],
+        started_at: input.started_at ? new Date(input.started_at) : undefined,
+        ended_at:   input.ended_at   ? new Date(input.ended_at)   : undefined,
+      },
+    })
+  }
+
+  async updateTreatmentImage(treatmentId: string, type: 'before' | 'after', url: string) {
+    return this.db.dentalTreatment.update({
+      where: { id: treatmentId },
+      data:  type === 'before' ? { before_image_url: url } : { after_image_url: url },
+    })
+  }
+
+  // ── Minor patients ──────────────────────────────────────────────────────────
 
   async searchMinorPatients(q: string) {
     return this.db.user.findMany({
@@ -85,92 +212,18 @@ export class DentalService {
     })
   }
 
-  async getPatientRecords(patientId: string) {
-    return this.db.dentalRecord.findMany({
-      where:   { patient_id: patientId },
-      include: { teeth: true, treatments: true },
-      orderBy: { record_date: 'desc' },
-    })
-  }
-
-  async getRecord(recordId: string) {
-    return this.db.dentalRecord.findUnique({
-      where:   { id: recordId },
-      include: { teeth: true, treatments: true },
-    })
-  }
-
-  async updateTeeth(recordId: string, input: UpdateTeethInput) {
-    await Promise.all(
-      input.teeth.map(t =>
-        this.db.toothRecord.updateMany({
-          where: { dental_record_id: recordId, tooth_fdi: t.tooth_fdi },
-          data:  {
-            surface_mesial:     t.surface_mesial,
-            surface_distal:     t.surface_distal,
-            surface_occlusal:   t.surface_occlusal,
-            surface_vestibular: t.surface_vestibular,
-            surface_palatal:    t.surface_palatal,
-            notes:              t.notes,
-          },
-        })
-      )
-    )
-    return this.getRecord(recordId)
-  }
-
-  async addTreatment(recordId: string, input: AddTreatmentInput) {
-    return this.db.dentalTreatment.create({
-      data: {
-        id:               crypto.randomUUID(),
-        dental_record_id: recordId,
-        tooth_fdi:        input.tooth_fdi,
-        procedure:        input.procedure,
-        status:           input.status    ?? 'completed',
-        priority:         input.priority  ?? 'elective',
-        cost_lps:         input.cost_lps,
-        notes:            input.notes,
-        materials:        input.materials ?? [],
-        started_at:       input.started_at ? new Date(input.started_at) : undefined,
-        ended_at:         input.ended_at   ? new Date(input.ended_at)   : undefined,
-      },
-    })
-  }
-
-  async updateTreatmentPlan(recordId: string, plan: string | null) {
-    return this.db.dentalRecord.update({
-      where: { id: recordId },
-      data:  { treatment_plan: plan },
-    })
-  }
-
-  async updateTreatmentImage(treatmentId: string, type: 'before' | 'after', url: string) {
-    return this.db.dentalTreatment.update({
-      where: { id: treatmentId },
-      data:  type === 'before' ? { before_image_url: url } : { after_image_url: url },
-    })
-  }
-
-  async updateReferral(recordId: string, referralTo: string | null) {
-    await this.db.dentalRecord.update({
-      where: { id: recordId },
-      data:  { referral_to: referralTo },
-    })
-    return this.getRecord(recordId)
-  }
+  // ── Brigade report ──────────────────────────────────────────────────────────
 
   async getBrigadeDentalReport(brigadeId: string) {
-    const records = await this.db.dentalRecord.findMany({
+    const visits = await this.db.dentalVisit.findMany({
       where:   { brigade_id: brigadeId },
-      include: { teeth: true, treatments: true },
+      include: { treatments: true },
     })
-
-    const totalPatients    = records.length
-    const totalTreatments  = records.reduce((sum, r) => sum + r.treatments.length, 0)
-
+    const totalPatients   = new Set(visits.map(v => v.file_id)).size
+    const totalTreatments = visits.reduce((sum, v) => sum + v.treatments.length, 0)
     const procedureCounts: Record<string, number> = {}
-    for (const r of records) {
-      for (const t of r.treatments) {
+    for (const v of visits) {
+      for (const t of v.treatments) {
         procedureCounts[t.procedure] = (procedureCounts[t.procedure] ?? 0) + 1
       }
     }
@@ -178,7 +231,6 @@ export class DentalService {
       .sort((a, b) => b[1] - a[1])
       .slice(0, 10)
       .map(([procedure, count]) => ({ procedure, count }))
-
     return { total_patients: totalPatients, total_treatments: totalTreatments, top_procedures: topProcedures }
   }
 }
