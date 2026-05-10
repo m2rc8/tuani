@@ -100,6 +100,9 @@
     "price_label": "Precio en lempiras (opcional)",
     "submit_rx": "Completar y generar receta",
     "availability_label": "Disponible para consultas",
+    "confirm_payment": "Confirmar pago recibido (Tigo Money) ✓",
+    "confirm_payment_amount": "Confirmar pago de L. {{amount}} recibido ✓",
+    "payment_confirmed": "Pago confirmado ✓",
     "pending_title": "Cuenta en revisión",
     "pending_body": "Tu solicitud está siendo revisada por el equipo de MedicoYa. Te notificaremos cuando sea aprobada."
   },

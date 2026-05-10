@@ -1,7 +1,7 @@
 import React, { useEffect, useCallback, useRef, useState } from 'react'
 import {
   View, Text, TextInput, TouchableOpacity, FlatList,
-  StyleSheet, KeyboardAvoidingView, Platform,
+  StyleSheet, KeyboardAvoidingView, Platform, Alert, ActivityIndicator,
 } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useTranslation } from 'react-i18next'
@@ -22,6 +22,9 @@ export default function DoctorConsultationScreen({ navigation, route }: any) {
   const [inputText, setInputText] = useState('')
   const listRef = useRef<FlatList>(null)
   const scrollTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const [priceLps, setPriceLps] = useState<string | null>(null)
+  const [paymentStatus, setPaymentStatus] = useState<'pending' | 'confirmed' | null>(null)
+  const [confirmingPayment, setConfirmingPayment] = useState(false)
 
   const isCompleted = status === 'completed'
 
@@ -46,6 +49,8 @@ export default function DoctorConsultationScreen({ navigation, route }: any) {
       .then(({ data }) => {
         data.messages?.forEach((m) => appendMessage(m))
         if (data.status === 'completed') setStatus('completed')
+        setPriceLps(data.price_lps ?? null)
+        setPaymentStatus(data.payment_status ?? null)
       })
       .catch(() => {})
 
@@ -55,6 +60,18 @@ export default function DoctorConsultationScreen({ navigation, route }: any) {
       if (scrollTimer.current) clearTimeout(scrollTimer.current)
     }
   }, [consultationId, handleReceiveMessage, handleConsultationUpdated, baseURL, token])
+
+  const handleConfirmPayment = async () => {
+    setConfirmingPayment(true)
+    try {
+      await api.put(`/api/consultations/${consultationId}/payment`)
+      setPaymentStatus('confirmed')
+    } catch {
+      Alert.alert(t('common.error_generic'))
+    } finally {
+      setConfirmingPayment(false)
+    }
+  }
 
   const handleSend = () => {
     const content = inputText.trim()
@@ -76,6 +93,30 @@ export default function DoctorConsultationScreen({ navigation, route }: any) {
         >
           <Text style={styles.completeBarText}>{t('doctor.complete_cta')}</Text>
         </TouchableOpacity>
+      )}
+
+      {isCompleted && paymentStatus === 'pending' && (
+        <TouchableOpacity
+          style={styles.paymentBar}
+          onPress={handleConfirmPayment}
+          disabled={confirmingPayment}
+          testID="confirm-payment-btn"
+        >
+          {confirmingPayment
+            ? <ActivityIndicator color="#fff" />
+            : <Text style={styles.paymentBarText}>
+                {priceLps
+                  ? t('doctor.confirm_payment_amount', { amount: parseFloat(priceLps).toFixed(2) })
+                  : t('doctor.confirm_payment')}
+              </Text>
+          }
+        </TouchableOpacity>
+      )}
+
+      {isCompleted && paymentStatus === 'confirmed' && (
+        <View style={styles.paymentConfirmed} testID="payment-confirmed">
+          <Text style={styles.paymentConfirmedText}>{t('doctor.payment_confirmed')}</Text>
+        </View>
       )}
 
       <FlatList
@@ -124,6 +165,16 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1, borderBottomColor: '#BBF7D0',
   },
   completeBarText: { color: '#fff', fontWeight: '700', fontSize: 15 },
+  paymentBar: {
+    backgroundColor: '#F59E0B', padding: 12, alignItems: 'center',
+    borderBottomWidth: 1, borderBottomColor: '#FDE68A',
+  },
+  paymentBarText: { color: '#fff', fontWeight: '700', fontSize: 14 },
+  paymentConfirmed: {
+    backgroundColor: '#DCFCE7', padding: 10, alignItems: 'center',
+    borderBottomWidth: 1, borderBottomColor: '#BBF7D0',
+  },
+  paymentConfirmedText: { color: '#15803D', fontWeight: '600', fontSize: 14 },
   messageList: { padding: 16, paddingBottom: 8 },
   bubble: { maxWidth: '80%', borderRadius: 12, padding: 10, marginBottom: 8 },
   bubbleMine: { backgroundColor: '#EFF6FF', alignSelf: 'flex-end' },

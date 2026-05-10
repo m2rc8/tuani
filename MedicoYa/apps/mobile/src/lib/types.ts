@@ -32,6 +32,8 @@ export interface ConsultationDetail {
   symptom_photo: string | null
   diagnosis: string | null
   diagnosis_code: string | null
+  price_lps: string | null
+  payment_status: 'pending' | 'confirmed'
   created_at: string
   completed_at: string | null
   prescription: Prescription | null
