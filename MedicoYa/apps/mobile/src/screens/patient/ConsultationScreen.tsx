@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react'
 import {
   View, Text, TextInput, TouchableOpacity, FlatList,
-  StyleSheet, KeyboardAvoidingView, Platform, Image,
+  StyleSheet, KeyboardAvoidingView, Platform, Image, ActivityIndicator,
 } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useTranslation } from 'react-i18next'
@@ -36,6 +36,72 @@ function PrescriptionCard({ prescription, diagnosis, onView }: PrescriptionCardP
   )
 }
 
+interface RatingCardProps {
+  consultationId: string
+  onRated: () => void
+}
+
+function RatingCard({ consultationId, onRated }: RatingCardProps) {
+  const { t } = useTranslation()
+  const [stars, setStars] = useState(0)
+  const [comment, setComment] = useState('')
+  const [submitting, setSubmitting] = useState(false)
+  const [done, setDone] = useState(false)
+
+  const handleSubmit = async () => {
+    if (stars === 0) return
+    setSubmitting(true)
+    try {
+      await api.post('/api/ratings', { consultation_id: consultationId, stars, comment: comment.trim() || undefined })
+      setDone(true)
+      onRated()
+    } catch {
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  if (done) {
+    return (
+      <View style={styles.ratingCard} testID="rating-thanks">
+        <Text style={styles.ratingThanks}>{t('consultation.rate_thanks')}</Text>
+      </View>
+    )
+  }
+
+  return (
+    <View style={styles.ratingCard} testID="rating-card">
+      <Text style={styles.ratingTitle}>{t('consultation.rate_title')}</Text>
+      <View style={styles.starsRow}>
+        {[1, 2, 3, 4, 5].map((n) => (
+          <TouchableOpacity key={n} onPress={() => setStars(n)} testID={`star-${n}`}>
+            <Text style={[styles.star, n <= stars && styles.starActive]}>★</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+      <TextInput
+        style={styles.ratingInput}
+        value={comment}
+        onChangeText={setComment}
+        placeholder={t('consultation.rate_comment')}
+        multiline
+        numberOfLines={2}
+        testID="rating-comment"
+      />
+      <TouchableOpacity
+        style={[styles.ratingBtn, (stars === 0 || submitting) && styles.ratingBtnDisabled]}
+        onPress={handleSubmit}
+        disabled={stars === 0 || submitting}
+        testID="rating-submit"
+      >
+        {submitting
+          ? <ActivityIndicator color={colors.ui.white} />
+          : <Text style={styles.ratingBtnText}>{t('consultation.rate_submit')}</Text>}
+      </TouchableOpacity>
+    </View>
+  )
+}
+
 export default function ConsultationScreen({ navigation, route }: any) {
   const { t } = useTranslation()
   const { consultationId } = route.params as { consultationId: string }
@@ -47,6 +113,7 @@ export default function ConsultationScreen({ navigation, route }: any) {
   const [inputText, setInputText] = useState('')
   const [prescription, setPrescription] = useState<Prescription | null>(null)
   const [diagnosis, setDiagnosis] = useState<string | null>(null)
+  const [rated, setRated] = useState(false)
   const listRef = useRef<FlatList>(null)
   const scrollTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
@@ -89,6 +156,7 @@ export default function ConsultationScreen({ navigation, route }: any) {
           setStatus('completed')
           setPrescription(data.prescription)
           setDiagnosis(data.diagnosis)
+          if (data.rating) setRated(true)
         }
       })
       .catch(() => {})
@@ -141,13 +209,18 @@ export default function ConsultationScreen({ navigation, route }: any) {
         renderItem={renderMessage}
         contentContainerStyle={styles.messageList}
         ListFooterComponent={
-          prescription
-            ? <PrescriptionCard
+          prescription ? (
+            <View>
+              <PrescriptionCard
                 prescription={prescription}
                 diagnosis={diagnosis}
                 onView={() => navigation.navigate('PrescriptionScreen', { consultationId })}
               />
-            : null
+              {!rated && (
+                <RatingCard consultationId={consultationId} onRated={() => setRated(true)} />
+              )}
+            </View>
+          ) : null
         }
       />
 
@@ -203,4 +276,24 @@ const styles = StyleSheet.create({
   sendBtnDisabled: { backgroundColor: colors.brand.green400, opacity: 0.5 },
   sendBtnText: { color: colors.ui.white, fontFamily: 'DMSansSemibold' },
   msgImage: { width: 200, height: 150, borderRadius: radius.sm },
+  ratingCard: {
+    borderWidth: 1, borderColor: colors.ui.slate200, borderRadius: radius.md,
+    padding: spacing[4], marginTop: spacing[3], backgroundColor: colors.ui.white,
+  },
+  ratingTitle: { fontSize: typography.size.base, fontFamily: 'DMSansSemibold', color: colors.ui.slate900, marginBottom: spacing[3] },
+  starsRow: { flexDirection: 'row', gap: spacing[2], marginBottom: spacing[3] },
+  star: { fontSize: 32, color: colors.ui.slate200 },
+  starActive: { color: colors.status.amber },
+  ratingInput: {
+    borderWidth: 1, borderColor: colors.ui.slate200, borderRadius: radius.sm,
+    padding: spacing[3], fontSize: typography.size.md, fontFamily: 'DMSans',
+    minHeight: 60, textAlignVertical: 'top', marginBottom: spacing[3],
+  },
+  ratingBtn: {
+    backgroundColor: colors.brand.green400, borderRadius: radius.sm,
+    padding: spacing[3], alignItems: 'center',
+  },
+  ratingBtnDisabled: { opacity: 0.5 },
+  ratingBtnText: { color: colors.ui.white, fontFamily: 'DMSansSemibold', fontSize: typography.size.md },
+  ratingThanks: { fontSize: typography.size.base, fontFamily: 'DMSansSemibold', color: colors.brand.green400, textAlign: 'center', paddingVertical: spacing[2] },
 })
