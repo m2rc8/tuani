@@ -3,6 +3,7 @@ import {
   View, Text, TextInput, TouchableOpacity, FlatList,
   StyleSheet, KeyboardAvoidingView, Platform,
 } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useTranslation } from 'react-i18next'
 import api from '../../lib/api'
 import { socketService } from '../../lib/socket'
@@ -13,6 +14,7 @@ import type { ConsultationDetail, Message } from '../../lib/types'
 export default function DoctorConsultationScreen({ navigation, route }: any) {
   const { t } = useTranslation()
   const { consultationId } = route.params as { consultationId: string }
+  const insets = useSafeAreaInsets()
   const token = useAuthStore((s: any) => s.token)
   const userId = useAuthStore((s: any) => s.userId)
   const baseURL = process.env.EXPO_PUBLIC_API_URL ?? ''
@@ -63,7 +65,7 @@ export default function DoctorConsultationScreen({ navigation, route }: any) {
 
   return (
     <KeyboardAvoidingView
-      style={styles.container}
+      style={[styles.container, { paddingTop: insets.top }]}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       {!isCompleted && (
