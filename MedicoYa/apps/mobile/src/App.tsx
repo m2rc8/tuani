@@ -19,7 +19,7 @@ export default function App() {
   const [ready, setReady] = useState(false)
   const hydrate = useAuthStore((s) => s.hydrate)
 
-  const [fontsLoaded] = useFonts({
+  const [fontsLoaded, fontError] = useFonts({
     DMSans: DMSans_400Regular,
     DMSansMedium: DMSans_500Medium,
     DMSansSemibold: DMSans_600SemiBold,
@@ -52,7 +52,7 @@ export default function App() {
     init()
   }, [hydrate])
 
-  if (!ready || !fontsLoaded) return (
+  if (!ready || (!fontsLoaded && !fontError)) return (
     <View style={styles.splash}>
       <ActivityIndicator size="large" color={colors.brand.green400} />
     </View>
