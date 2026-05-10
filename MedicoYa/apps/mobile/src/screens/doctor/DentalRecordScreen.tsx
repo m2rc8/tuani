@@ -29,7 +29,7 @@ function surfaceMapFromTooth(t: ToothRecord | undefined): SurfaceMap {
 export default function DentalRecordScreen({ navigation: _navigation, route }: any) {
   const { t } = useTranslation()
   const insets = useSafeAreaInsets()
-  const { patientId, brigadeId } = route.params as { patientId: string; brigadeId?: string }
+  const { patientId, brigadeId, recordId } = route.params as { patientId?: string; brigadeId?: string; recordId?: string }
 
   const [record,      setRecord]      = useState<DentalRecord | null>(null)
   const [loading,     setLoading]     = useState(true)
@@ -47,11 +47,14 @@ export default function DentalRecordScreen({ navigation: _navigation, route }: a
   const [addingTx,     setAddingTx]     = useState(false)
 
   useEffect(() => {
-    api.post<DentalRecord>('/api/dental/records', { patient_id: patientId, brigade_id: brigadeId })
+    const req = recordId
+      ? api.get<DentalRecord>(`/api/dental/records/${recordId}`)
+      : api.post<DentalRecord>('/api/dental/records', { patient_id: patientId, brigade_id: brigadeId })
+    req
       .then(({ data }) => { setRecord(data); setReferralTo((data as any).referral_to ?? '') })
       .catch(() => Alert.alert(t('common.error_generic')))
       .finally(() => setLoading(false))
-  }, [patientId, brigadeId, t])
+  }, [patientId, brigadeId, recordId, t])
 
   const handleSelectTooth = useCallback((fdi: number) => {
     setSelectedFdi(fdi)

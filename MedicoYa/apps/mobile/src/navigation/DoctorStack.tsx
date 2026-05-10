@@ -24,7 +24,7 @@ export type DoctorStackParamList = {
   BrigadeQueueScreen: undefined
   BrigadeConsultationScreen: { local_id?: string }
   VideoCallScreen: { consultationId: string }
-  DentalRecordScreen: { patientId: string; brigadeId?: string }
+  DentalRecordScreen: { patientId?: string; brigadeId?: string; recordId?: string }
   CreateEditBrigadeScreen: { brigadeId?: string; initialData?: { name?: string; community?: string; brigade_type?: string } }
 }
 

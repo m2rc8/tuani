@@ -59,6 +59,35 @@ export function createDentalRouter(db: PrismaClient): Router {
     }
   )
 
+  // Get dentist's own records — must be before /records/:id
+  router.get(
+    '/records/mine',
+    requireAuth,
+    async (req: Request, res: Response): Promise<void> => {
+      try {
+        const records = await service.getDentistRecords(req.user!.sub)
+        res.json(records)
+      } catch { res.status(500).json({ error: 'Internal server error' }) }
+    }
+  )
+
+  // Search minor (dental) patients by name — must be before /patients/minor
+  router.get(
+    '/patients/minor/search',
+    requireAuth,
+    async (req: Request, res: Response): Promise<void> => {
+      const q = String(req.query.q ?? '').trim()
+      if (!q) { res.json([]); return }
+      try {
+        const results = await service.searchMinorPatients(q)
+        res.json(results.filter(r => r.patient).map(r => ({
+          patient_id: r.patient!.id,
+          name:       r.name,
+        })))
+      } catch { res.status(500).json({ error: 'Internal server error' }) }
+    }
+  )
+
   // Get patient dental history
   router.get(
     '/records/patient/:patientId',

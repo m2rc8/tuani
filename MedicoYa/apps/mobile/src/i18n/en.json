@@ -82,6 +82,10 @@
   "history": {
     "title": "History",
     "empty": "You have no past consultations",
+    "empty_dental": "No dental records",
+    "tab_medical": "Medical",
+    "tab_dental": "Dental",
+    "brigade_mode": "Brigade",
     "status": {
       "pending": "Pending",
       "active": "In progress",
@@ -138,7 +142,14 @@
     "minor":              "Minor (under 18)",
     "phone_label":        "Patient phone number",
     "guardian_name":      "Guardian name",
-    "guardian_placeholder": "Parent / legal guardian name"
+    "guardian_placeholder": "Parent / legal guardian name",
+    "search_minor_title": "Search minor patient",
+    "search_minor_placeholder": "Patient name",
+    "search_btn": "Search",
+    "minor_not_found": "No minor patient found with that name.",
+    "create_minor": "Register new minor",
+    "new_minor": "New minor patient",
+    "search_existing": "Search existing patient"
   },
   "brigade": {
     "title": "Brigades",

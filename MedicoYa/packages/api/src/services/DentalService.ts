@@ -60,6 +60,29 @@ export class DentalService {
     return record
   }
 
+  async getDentistRecords(dentistId: string) {
+    return this.db.dentalRecord.findMany({
+      where:   { dentist_id: dentistId },
+      include: {
+        patient: { include: { user: { select: { name: true } } } },
+        treatments: { select: { id: true } },
+      },
+      orderBy: { record_date: 'desc' },
+      take: 100,
+    })
+  }
+
+  async searchMinorPatients(q: string) {
+    return this.db.user.findMany({
+      where: {
+        phone: { startsWith: 'DENTAL-' },
+        name:  { contains: q, mode: 'insensitive' },
+      },
+      select: { patient: { select: { id: true } }, name: true, first_name: true, last_name: true },
+      take: 20,
+    })
+  }
+
   async getPatientRecords(patientId: string) {
     return this.db.dentalRecord.findMany({
       where:   { patient_id: patientId },

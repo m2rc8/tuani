@@ -82,6 +82,10 @@
   "history": {
     "title": "Historial",
     "empty": "No tienes consultas anteriores",
+    "empty_dental": "Sin fichas odontológicas",
+    "tab_medical": "Médico",
+    "tab_dental": "Odontológico",
+    "brigade_mode": "Brigada",
     "status": {
       "pending": "Pendiente",
       "active": "En curso",
@@ -138,7 +142,14 @@
     "minor":              "Menor de edad",
     "phone_label":        "Teléfono del paciente",
     "guardian_name":      "Nombre del tutor",
-    "guardian_placeholder": "Nombre del padre/madre/tutor"
+    "guardian_placeholder": "Nombre del padre/madre/tutor",
+    "search_minor_title": "Buscar menor de edad",
+    "search_minor_placeholder": "Nombre del paciente",
+    "search_btn": "Buscar",
+    "minor_not_found": "No se encontró ningún menor con ese nombre.",
+    "create_minor": "Registrar nuevo menor",
+    "new_minor": "Nuevo paciente menor",
+    "search_existing": "Buscar paciente existente"
   },
   "brigade": {
     "title": "Brigadas",
