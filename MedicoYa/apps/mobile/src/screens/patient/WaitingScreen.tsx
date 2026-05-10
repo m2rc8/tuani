@@ -30,7 +30,6 @@ export default function WaitingScreen({ navigation, route }: any) {
       }
       if (data.status === 'rejected' || data.status === 'cancelled') {
         await clear()
-        Alert.alert(t('common.error_generic'))
         navigation.goBack()
       }
     },
@@ -75,11 +74,14 @@ export default function WaitingScreen({ navigation, route }: any) {
   const handleCancel = async () => {
     try {
       await api.put(`/api/consultations/${consultationId}/cancel`)
-      await clear()
-      navigation.goBack()
-    } catch {
-      Alert.alert(t('common.error_generic'))
+    } catch (err: any) {
+      if (err?.response?.status !== 409) {
+        Alert.alert(t('common.error_generic'))
+        return
+      }
     }
+    await clear()
+    navigation.goBack()
   }
 
   return (
