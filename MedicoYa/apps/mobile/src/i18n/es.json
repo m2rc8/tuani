@@ -21,6 +21,8 @@
     "language": "Idioma",
     "logout": "Cerrar sesión",
     "name": "Nombre completo",
+    "first_name": "Nombre",
+    "last_name": "Apellido",
     "dob": "Fecha de nacimiento (AAAA-MM-DD)",
     "allergies": "Alergias conocidas",
     "save": "Guardar",

@@ -12,10 +12,12 @@ import { tokens } from '../../theme/tokens'
 const { colors, spacing, radius, typography } = tokens
 
 interface PatientProfile {
-  name:      string | null
-  phone:     string
-  dob:       string | null
-  allergies: string | null
+  first_name: string | null
+  last_name:  string | null
+  name:       string | null
+  phone:      string
+  dob:        string | null
+  allergies:  string | null
 }
 
 export default function PatientProfileScreen() {
@@ -25,36 +27,37 @@ export default function PatientProfileScreen() {
   const setLanguage = useAuthStore((s) => s.setLanguage)
   const logout      = useAuthStore((s) => s.logout)
 
-  const [profile,   setProfile]   = useState<PatientProfile | null>(null)
-  const [name,      setName]      = useState('')
-  const [dob,       setDob]       = useState('')
-  const [allergies, setAllergies] = useState('')
-  const [saving,    setSaving]    = useState(false)
-  const [saved,     setSaved]     = useState(false)
+  const [profile,    setProfile]    = useState<PatientProfile | null>(null)
+  const [firstName,  setFirstName]  = useState('')
+  const [lastName,   setLastName]   = useState('')
+  const [dob,        setDob]        = useState('')
+  const [allergies,  setAllergies]  = useState('')
+  const [saving,     setSaving]     = useState(false)
+  const [saved,      setSaved]      = useState(false)
 
   useEffect(() => {
     api.get<PatientProfile>('/api/patients/me')
       .then(({ data }) => {
         setProfile(data)
-        setName(data.name ?? '')
+        setFirstName(data.first_name ?? '')
+        setLastName(data.last_name ?? '')
         setDob(data.dob ? data.dob.slice(0, 10) : '')
         setAllergies(data.allergies ?? '')
       })
       .catch(() => {
-        setProfile({ name: null, phone: '', dob: null, allergies: null })
+        setProfile({ first_name: null, last_name: null, name: null, phone: '', dob: null, allergies: null })
       })
   }, [])
 
   const handleSave = async () => {
     setSaving(true)
     try {
-      const body: Record<string, string | null> = {}
-      if (name.trim())     body.name      = name.trim()
-      if (dob.trim())      body.dob       = dob.trim()
-      else                 body.dob       = null
-      body.allergies = allergies.trim() || null
-
-      await api.put('/api/patients/me', body)
+      await api.put('/api/patients/me', {
+        first_name: firstName.trim() || undefined,
+        last_name:  lastName.trim()  || undefined,
+        dob:        dob.trim() || null,
+        allergies:  allergies.trim() || null,
+      })
       setSaved(true)
       setTimeout(() => setSaved(false), 2000)
     } catch {
@@ -76,13 +79,22 @@ export default function PatientProfileScreen() {
     <ScrollView contentContainerStyle={[styles.container, { paddingTop: insets.top + spacing[6] }]}>
       <Text style={styles.title}>{t('profile.title')}</Text>
 
-      <Text style={styles.label}>{t('profile.name')}</Text>
+      <Text style={styles.label}>{t('profile.first_name')}</Text>
       <TextInput
         style={styles.input}
-        value={name}
-        onChangeText={setName}
-        placeholder={t('profile.name')}
-        testID="name-input"
+        value={firstName}
+        onChangeText={setFirstName}
+        placeholder={t('profile.first_name')}
+        testID="first-name-input"
+      />
+
+      <Text style={styles.label}>{t('profile.last_name')}</Text>
+      <TextInput
+        style={styles.input}
+        value={lastName}
+        onChangeText={setLastName}
+        placeholder={t('profile.last_name')}
+        testID="last-name-input"
       />
 
       <Text style={styles.label}>{t('profile.dob')}</Text>

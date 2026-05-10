@@ -21,6 +21,8 @@
     "language": "Language",
     "logout": "Sign out",
     "name": "Full name",
+    "first_name": "First name",
+    "last_name": "Last name",
     "dob": "Date of birth (YYYY-MM-DD)",
     "allergies": "Known allergies",
     "save": "Save",
