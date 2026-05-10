@@ -19,7 +19,8 @@ export default function WaitingScreen({ navigation, route }: any) {
   const baseURL = process.env.EXPO_PUBLIC_API_URL ?? ''
   const { setStatus, clear } = useConsultationStore()
   const [symptomsText, setSymptomsText] = useState<string | null>(null)
-  const appState = useRef<AppStateStatus>(AppState.currentState)
+  const appState    = useRef<AppStateStatus>(AppState.currentState)
+  const leavingRef  = useRef(false)
 
   const handleConsultationUpdated = useCallback(
     async (data: { id: string; status: string }) => {
@@ -29,6 +30,8 @@ export default function WaitingScreen({ navigation, route }: any) {
         navigation.replace('ConsultationScreen', { consultationId })
       }
       if (data.status === 'rejected' || data.status === 'cancelled') {
+        if (leavingRef.current) return
+        leavingRef.current = true
         await clear()
         navigation.goBack()
       }
@@ -72,10 +75,13 @@ export default function WaitingScreen({ navigation, route }: any) {
   }, [consultationId, handleConsultationUpdated, baseURL, token])
 
   const handleCancel = async () => {
+    if (leavingRef.current) return
+    leavingRef.current = true
     try {
       await api.put(`/api/consultations/${consultationId}/cancel`)
     } catch (err: any) {
       if (err?.response?.status !== 409) {
+        leavingRef.current = false
         Alert.alert(t('common.error_generic'))
         return
       }
