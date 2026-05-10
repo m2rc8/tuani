@@ -26,6 +26,7 @@ export default function RxPage() {
   const [diagnosisCode, setDiagnosisCode] = useState('')
   const [instructions,  setInstructions]  = useState('')
   const [priceLps,      setPriceLps]      = useState<number | ''>('')
+  const [referralTo,    setReferralTo]    = useState('')
   const [medications,   setMedications]   = useState<Medication[]>([emptyMed()])
   const [submitting,    setSubmitting]    = useState(false)
   const [error,         setError]         = useState<string | null>(null)
@@ -60,12 +61,13 @@ export default function RxPage() {
 
     try {
       await apiFetch(`/api/consultations/${id}/complete`, {
-        method: 'POST',
+        method: 'PUT',
         body: JSON.stringify({
           diagnosis:      diagnosis.trim(),
           diagnosis_code: diagnosisCode.trim() || undefined,
           instructions:   instructions.trim()  || undefined,
           price_lps:      priceLps !== ''      ? Number(priceLps) : undefined,
+          referral_to:    referralTo.trim()    || undefined,
           medications:    filteredMeds,
         }),
       })
@@ -115,6 +117,20 @@ export default function RxPage() {
             value={diagnosisCode}
             onChange={e => setDiagnosisCode(e.target.value)}
             placeholder="Ej: J06.9"
+            className="bg-slate-900 border border-slate-600 rounded px-3 py-2 text-sm text-slate-200 w-full"
+          />
+        </div>
+
+        {/* Referral */}
+        <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
+          <label className="block text-sm font-medium text-slate-300 mb-1">
+            Referir a especialista <span className="text-slate-500">(opcional)</span>
+          </label>
+          <input
+            type="text"
+            value={referralTo}
+            onChange={e => setReferralTo(e.target.value)}
+            placeholder="Ej: Cardiólogo, Dermatólogo, Ortopedista..."
             className="bg-slate-900 border border-slate-600 rounded px-3 py-2 text-sm text-slate-200 w-full"
           />
         </div>

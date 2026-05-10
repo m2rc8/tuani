@@ -27,12 +27,14 @@ interface DentalTreatment {
   status: string
   cost_lps?: number
   notes?: string
+  materials?: string[]
   performed_at: string
 }
 
 interface DentalRecord {
   id: string
   patient_id: string
+  referral_to?: string | null
   teeth: ToothRecord[]
   treatments: DentalTreatment[]
 }
@@ -69,11 +71,17 @@ export default function DentalRecordPage({ params }: { params: Promise<{ recordI
   const [saving,        setSaving]        = useState(false)
   const [saveMsg,       setSaveMsg]       = useState('')
 
+  // Referral
+  const [referralTo,   setReferralTo]   = useState('')
+  const [savingRef,    setSavingRef]    = useState(false)
+  const [refMsg,       setRefMsg]       = useState('')
+
   // Treatment form
   const [procedure,    setProcedure]    = useState('')
   const [txToothFdi,   setTxToothFdi]   = useState('')
   const [costLps,      setCostLps]      = useState('')
   const [txNotes,      setTxNotes]      = useState('')
+  const [txMaterials,  setTxMaterials]  = useState('')
   const [addingTx,     setAddingTx]     = useState(false)
   const [txErr,        setTxErr]        = useState('')
   const [showTxForm,   setShowTxForm]   = useState(false)
@@ -85,6 +93,7 @@ export default function DentalRecordPage({ params }: { params: Promise<{ recordI
     apiFetch<DentalRecord>(`/api/dental/records/${recordId}`)
       .then(data => {
         setRecord(data)
+        setReferralTo(data.referral_to ?? '')
         const m = new Map<number, ToothRecord>()
         for (const t of data.teeth) m.set(t.tooth_fdi, t)
         setTeethMap(m)
@@ -150,6 +159,24 @@ export default function DentalRecordPage({ params }: { params: Promise<{ recordI
     }
   }
 
+  // ── Save referral
+  async function handleSaveReferral() {
+    if (!record) return
+    setSavingRef(true)
+    setRefMsg('')
+    try {
+      await apiFetch(`/api/dental/records/${record.id}/referral`, {
+        method: 'PATCH',
+        body:   JSON.stringify({ referral_to: referralTo.trim() || null }),
+      })
+      setRefMsg('Referencia guardada.')
+    } catch (err) {
+      setRefMsg(err instanceof Error ? err.message : 'Error al guardar.')
+    } finally {
+      setSavingRef(false)
+    }
+  }
+
   // ── Add treatment
   async function handleAddTreatment(e: React.FormEvent) {
     e.preventDefault()
@@ -157,17 +184,19 @@ export default function DentalRecordPage({ params }: { params: Promise<{ recordI
     setAddingTx(true)
     setTxErr('')
     try {
+      const mats = txMaterials.split(',').map(m => m.trim()).filter(Boolean)
       const body: Record<string, unknown> = { procedure: procedure.trim() }
       if (txToothFdi.trim()) body.tooth_fdi = parseInt(txToothFdi, 10)
       if (costLps.trim())    body.cost_lps  = parseFloat(costLps)
       if (txNotes.trim())    body.notes     = txNotes.trim()
+      if (mats.length > 0)   body.materials = mats
 
       const newTx = await apiFetch<DentalTreatment>(`/api/dental/records/${record.id}/treatments`, {
         method: 'POST',
         body:   JSON.stringify(body),
       })
       setRecord(prev => prev ? { ...prev, treatments: [...prev.treatments, newTx] } : prev)
-      setProcedure(''); setTxToothFdi(''); setCostLps(''); setTxNotes('')
+      setProcedure(''); setTxToothFdi(''); setCostLps(''); setTxNotes(''); setTxMaterials('')
       setShowTxForm(false)
     } catch (err) {
       setTxErr(err instanceof Error ? err.message : 'Error al agregar tratamiento.')
@@ -252,6 +281,28 @@ export default function DentalRecordPage({ params }: { params: Promise<{ recordI
         </div>
       </div>
 
+      {/* Referral section */}
+      <div className="bg-slate-800 rounded-lg p-4 border border-slate-700 mb-6">
+        <h2 className="text-xs font-semibold text-sky-400 uppercase tracking-wider mb-3">Referencia a especialista</h2>
+        <div className="flex gap-3 items-end max-w-lg">
+          <div className="flex-1">
+            <input
+              type="text"
+              value={referralTo}
+              onChange={e => setReferralTo(e.target.value)}
+              placeholder="Ej: Ortodoncista, Cirujano maxilofacial..."
+              className="bg-slate-900 border border-slate-600 rounded px-3 py-2 text-sm text-slate-200 w-full"
+            />
+          </div>
+          <button onClick={handleSaveReferral} disabled={savingRef} className={BTN_GREEN}>
+            {savingRef ? 'Guardando...' : 'Guardar'}
+          </button>
+        </div>
+        {refMsg && (
+          <p className={`text-xs mt-2 ${refMsg.startsWith('Error') ? 'text-red-400' : 'text-green-400'}`}>{refMsg}</p>
+        )}
+      </div>
+
       {/* Treatments section */}
       <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
         <div className="flex items-center justify-between mb-4">
@@ -312,6 +363,15 @@ export default function DentalRecordPage({ params }: { params: Promise<{ recordI
                 className={INPUT_CLASS}
               />
             </div>
+            <div>
+              <label className={LABEL_CLASS}>Materiales (separados por coma)</label>
+              <input
+                value={txMaterials}
+                onChange={e => setTxMaterials(e.target.value)}
+                placeholder="Ej: Amalgama, Resina compuesta..."
+                className={INPUT_CLASS}
+              />
+            </div>
             {txErr && <p className="text-red-400 text-sm">{txErr}</p>}
             <button
               type="submit"
@@ -350,6 +410,13 @@ export default function DentalRecordPage({ params }: { params: Promise<{ recordI
                     </span>
                   </div>
                   {tx.notes && <p className="text-slate-400 text-xs mt-0.5">{tx.notes}</p>}
+                  {tx.materials && tx.materials.length > 0 && (
+                    <div className="flex flex-wrap gap-1 mt-1">
+                      {tx.materials.map((m, i) => (
+                        <span key={i} className="text-xs bg-sky-900/50 text-sky-300 px-1.5 py-0.5 rounded">{m}</span>
+                      ))}
+                    </div>
+                  )}
                 </div>
                 <div className="text-right shrink-0">
                   {tx.cost_lps !== undefined && (

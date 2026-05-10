@@ -12,6 +12,9 @@ interface Consultation {
   status:        'pending' | 'active' | 'completed'
   created_at:    string
   symptoms_text: string | null
+  diagnosis:     string | null
+  referral_to:   string | null
+  mode:          string
   patient:       CPatient
 }
 
@@ -67,8 +70,9 @@ export default function MyConsultationsPage() {
             <thead>
               <tr className="text-slate-400 text-left border-b border-slate-800">
                 <th className="pb-3 pr-6 font-medium">Paciente</th>
-                <th className="pb-3 pr-6 font-medium">Síntomas</th>
+                <th className="pb-3 pr-6 font-medium">Diagnóstico / Síntomas</th>
                 <th className="pb-3 pr-6 font-medium">Estado</th>
+                <th className="pb-3 pr-6 font-medium">Modo</th>
                 <th className="pb-3       font-medium">Fecha</th>
               </tr>
             </thead>
@@ -79,14 +83,24 @@ export default function MyConsultationsPage() {
                     <p className="text-white">{c.patient?.user?.name ?? '—'}</p>
                     <p className="text-slate-500 text-xs">{c.patient?.user?.phone ?? '—'}</p>
                   </td>
-                  <td className="py-3 pr-6 text-slate-400 max-w-xs">
-                    {c.symptoms_text
-                      ? c.symptoms_text.slice(0, 60) + (c.symptoms_text.length > 60 ? '…' : '')
-                      : <span className="text-slate-600">—</span>}
+                  <td className="py-3 pr-6 max-w-xs">
+                    {c.diagnosis
+                      ? <p className="text-white text-sm">{c.diagnosis.slice(0, 60)}{c.diagnosis.length > 60 ? '…' : ''}</p>
+                      : c.symptoms_text
+                        ? <p className="text-slate-400 text-sm">{c.symptoms_text.slice(0, 60)}{c.symptoms_text.length > 60 ? '…' : ''}</p>
+                        : <span className="text-slate-600">—</span>}
+                    {c.referral_to && (
+                      <p className="text-amber-400 text-xs mt-0.5">→ {c.referral_to}</p>
+                    )}
                   </td>
                   <td className="py-3 pr-6">
                     <span className={`text-xs px-2 py-0.5 rounded ${STATUS_BADGE[c.status] ?? ''}`}>
                       {STATUS_LABEL[c.status] ?? c.status}
+                    </span>
+                  </td>
+                  <td className="py-3 pr-6">
+                    <span className={`text-xs px-2 py-0.5 rounded ${c.mode === 'brigade' ? 'bg-purple-900 text-purple-300' : 'bg-slate-700 text-slate-400'}`}>
+                      {c.mode === 'brigade' ? 'Brigada' : 'Telemedicina'}
                     </span>
                   </td>
                   <td className="py-3 text-slate-400">
