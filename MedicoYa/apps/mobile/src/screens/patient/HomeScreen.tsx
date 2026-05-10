@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useState, useCallback } from 'react'
 import {
   View, Text, TextInput, TouchableOpacity, StyleSheet,
   ActivityIndicator, Alert, Image,
@@ -6,6 +6,7 @@ import {
 import * as ImagePicker from 'expo-image-picker'
 import * as ImageManipulator from 'expo-image-manipulator'
 import { useTranslation } from 'react-i18next'
+import { useFocusEffect } from '@react-navigation/native'
 import api from '../../lib/api'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useConsultationStore } from '../../store/consultationStore'
@@ -36,19 +37,21 @@ export default function HomeScreen({ navigation }: any) {
     }
   }, [])
 
-  useEffect(() => {
-    if (activeConsultationId && status === 'pending') {
-      navigation.navigate('WaitingScreen', { consultationId: activeConsultationId })
-      return
-    }
-    if (activeConsultationId && status === 'active') {
-      navigation.navigate('ConsultationScreen', { consultationId: activeConsultationId })
-      return
-    }
-    fetchDoctors()
-    const interval = setInterval(fetchDoctors, 30_000)
-    return () => clearInterval(interval)
-  }, [activeConsultationId, status, fetchDoctors])
+  useFocusEffect(
+    useCallback(() => {
+      if (activeConsultationId && status === 'pending') {
+        navigation.navigate('WaitingScreen', { consultationId: activeConsultationId })
+        return
+      }
+      if (activeConsultationId && status === 'active') {
+        navigation.navigate('ConsultationScreen', { consultationId: activeConsultationId })
+        return
+      }
+      fetchDoctors()
+      const interval = setInterval(fetchDoctors, 30_000)
+      return () => clearInterval(interval)
+    }, [activeConsultationId, status, fetchDoctors, navigation])
+  )
 
   const pickPhoto = async (source: 'camera' | 'library') => {
     try {
