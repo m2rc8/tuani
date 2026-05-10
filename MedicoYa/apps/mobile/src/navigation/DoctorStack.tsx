@@ -8,6 +8,7 @@ import PrescriptionScreen from '../screens/patient/PrescriptionScreen'
 import BrigadeHomeScreen from '../screens/doctor/BrigadeHomeScreen'
 import BrigadeQueueScreen from '../screens/doctor/BrigadeQueueScreen'
 import BrigadeConsultationScreen from '../screens/doctor/BrigadeConsultationScreen'
+import VideoCallScreen from '../screens/shared/VideoCallScreen'
 import { tokens } from '../theme/tokens'
 
 const { colors, typography } = tokens
@@ -20,6 +21,7 @@ export type DoctorStackParamList = {
   BrigadeHomeScreen: undefined
   BrigadeQueueScreen: undefined
   BrigadeConsultationScreen: { local_id?: string }
+  VideoCallScreen: { consultationId: string }
 }
 
 const Stack = createNativeStackNavigator<DoctorStackParamList>()
@@ -64,6 +66,11 @@ export default function DoctorRoot() {
         name="BrigadeConsultationScreen"
         component={BrigadeConsultationScreen}
         options={{ headerShown: true, title: t('brigade.new_consultation_title'), ...headerOptions }}
+      />
+      <Stack.Screen
+        name="VideoCallScreen"
+        component={VideoCallScreen}
+        options={{ headerShown: false, gestureEnabled: false }}
       />
     </Stack.Navigator>
   )

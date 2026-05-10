@@ -224,6 +224,16 @@ export default function ConsultationScreen({ navigation, route }: any) {
         }
       />
 
+      {!isCompleted && (
+        <TouchableOpacity
+          style={styles.videoBtn}
+          onPress={() => navigation.navigate('VideoCallScreen', { consultationId })}
+          testID="video-call-btn"
+        >
+          <Text style={styles.videoBtnText}>{t('consultation.video_call')}</Text>
+        </TouchableOpacity>
+      )}
+
       <View style={styles.inputRow}>
         <TextInput
           style={[styles.input, isCompleted && styles.inputDisabled]}
@@ -263,6 +273,12 @@ const styles = StyleSheet.create({
   prescriptionMeds: { fontSize: typography.size.md, color: colors.text.secondary, marginBottom: spacing[3], fontFamily: 'DMSans' },
   viewBtn: { backgroundColor: colors.brand.green400, borderRadius: radius.full, padding: spacing[3], alignItems: 'center' },
   viewBtnText: { color: colors.text.inverse, fontFamily: 'DMSansSemibold', fontSize: typography.size.md },
+  videoBtn: {
+    backgroundColor: colors.teal.teal400, borderRadius: radius.full,
+    marginHorizontal: spacing[3], marginBottom: spacing[2],
+    padding: spacing[3], alignItems: 'center',
+  },
+  videoBtnText: { color: colors.text.inverse, fontFamily: 'DMSansSemibold', fontSize: typography.size.md },
   inputRow: {
     flexDirection: 'row', padding: spacing[3], borderTopWidth: 1,
     borderTopColor: colors.surface.border, gap: spacing[2], alignItems: 'center',

@@ -66,7 +66,10 @@
     "rate_submit":  "Submit rating",
     "rate_thanks":  "Thanks for your rating!",
     "rate_comment": "Comment (optional)",
-    "avg_rating":   "ratings"
+    "avg_rating":   "ratings",
+    "video_call":    "Video call",
+    "video_end":     "End call",
+    "video_waiting": "Waiting for the other participant..."
   },
   "history": {
     "title": "History",

@@ -10,10 +10,19 @@
     ],
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.medicoya.app"
+      "bundleIdentifier": "com.medicoya.app",
+      "infoPlist": {
+        "NSCameraUsageDescription": "MédicoYa uses your camera for video consultations.",
+        "NSMicrophoneUsageDescription": "MédicoYa uses your microphone for video consultations."
+      }
     },
     "android": {
-      "package": "com.medicoya.app"
+      "package": "com.medicoya.app",
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO",
+        "android.permission.MODIFY_AUDIO_SETTINGS"
+      ]
     },
     "plugins": [
       [

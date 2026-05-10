@@ -66,7 +66,10 @@
     "rate_submit":  "Enviar calificación",
     "rate_thanks":  "¡Gracias por tu calificación!",
     "rate_comment": "Comentario (opcional)",
-    "avg_rating":   "calificaciones"
+    "avg_rating":   "calificaciones",
+    "video_call":    "Videollamada",
+    "video_end":     "Terminar",
+    "video_waiting": "Esperando al otro participante..."
   },
   "history": {
     "title": "Historial",

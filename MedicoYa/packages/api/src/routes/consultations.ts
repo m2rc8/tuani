@@ -2,9 +2,11 @@ import { Router, Request, Response } from 'express'
 import multer from 'multer'
 import { z } from 'zod'
 import { Role } from '@prisma/client'
+import { RtcTokenBuilder, RtcRole } from 'agora-access-token'
 import { requireAuth, requireRole } from '../middleware/requireAuth'
 import { ConsultationService, ConsultationError } from '../services/ConsultationService'
 import { UploadService } from '../services/UploadService'
+import { prisma } from '../lib/prisma'
 
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -178,6 +180,57 @@ export function createConsultationsRouter(
       } catch (err) {
         if (!handleConsultationError(err, res)) throw err
       }
+    }
+  )
+
+  router.post(
+    '/:id/video-token',
+    requireAuth,
+    async (req: Request, res: Response): Promise<void> => {
+      const consultationId = req.params.id
+
+      const consultation = await prisma.consultation.findUnique({
+        where:  { id: consultationId },
+        select: { patient_id: true, doctor_id: true, status: true },
+      })
+
+      if (!consultation) {
+        res.status(404).json({ error: 'Consultation not found' })
+        return
+      }
+
+      if (consultation.status === 'completed') {
+        res.status(403).json({ error: 'Consultation already completed' })
+        return
+      }
+
+      const userId = req.user!.sub
+      if (userId !== consultation.patient_id && userId !== consultation.doctor_id) {
+        res.status(403).json({ error: 'Not a participant of this consultation' })
+        return
+      }
+
+      const appId          = process.env.AGORA_APP_ID          ?? ''
+      const appCertificate = process.env.AGORA_APP_CERTIFICATE ?? ''
+
+      if (!appId || !appCertificate) {
+        res.status(503).json({ error: 'Video calls not configured' })
+        return
+      }
+
+      const uid        = 0
+      const expireTime = Math.floor(Date.now() / 1000) + 3600
+
+      const token = RtcTokenBuilder.buildTokenWithUid(
+        appId,
+        appCertificate,
+        consultationId,
+        uid,
+        RtcRole.PUBLISHER,
+        expireTime,
+      )
+
+      res.json({ token, channel: consultationId, uid: 0, appId })
     }
   )
 
