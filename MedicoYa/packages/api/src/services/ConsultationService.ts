@@ -180,6 +180,7 @@ export class ConsultationService {
     const where = role === Role.patient ? { patient_id: userId } : { doctor_id: userId }
     return this.db.consultation.findMany({
       where,
+      include: { patient: { include: { user: { select: { name: true, phone: true } } } } },
       orderBy: { created_at: 'desc' },
       take: 20,
     })

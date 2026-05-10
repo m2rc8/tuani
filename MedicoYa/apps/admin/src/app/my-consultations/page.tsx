@@ -76,8 +76,8 @@ export default function MyConsultationsPage() {
               {data.map(c => (
                 <tr key={c.id} className="border-b border-slate-800/50 hover:bg-slate-900/50">
                   <td className="py-3 pr-6">
-                    <p className="text-white">{c.patient.user.name ?? '—'}</p>
-                    <p className="text-slate-500 text-xs">{c.patient.user.phone}</p>
+                    <p className="text-white">{c.patient?.user?.name ?? '—'}</p>
+                    <p className="text-slate-500 text-xs">{c.patient?.user?.phone ?? '—'}</p>
                   </td>
                   <td className="py-3 pr-6 text-slate-400 max-w-xs">
                     {c.symptoms_text
