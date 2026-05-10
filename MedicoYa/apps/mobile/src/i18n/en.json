@@ -150,6 +150,8 @@
     "will_sync": "Will sync automatically when connected",
     "leave": "← Leave brigade",
     "patient_phone": "Phone",
+    "patient_phone_optional": "Phone (optional)",
+    "patient_dob": "Date of birth (YYYY-MM-DD)",
     "patient_name": "Name",
     "symptoms": "Symptoms",
     "diagnosis": "Diagnosis",
@@ -159,7 +161,7 @@
     "med_name": "Name",
     "med_dose": "Dose",
     "med_frequency": "Frequency",
-    "error_required": "Phone and name are required",
+    "error_required": "Name and (phone or date of birth) are required",
     "error_code_not_found": "Brigade code not found"
   }
 }

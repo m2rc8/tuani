@@ -21,6 +21,7 @@ export default function BrigadeConsultationScreen({ navigation, route }: any) {
   const { patientCache, offlineQueue, addConsultation } = useBrigadeStore()
 
   const [phone, setPhone]     = useState('')
+  const [dob, setDob]         = useState('')
   const [name, setName]       = useState('')
   const [symptoms, setSymptoms]   = useState('')
   const [diagnosis, setDiagnosis] = useState('')
@@ -30,7 +31,8 @@ export default function BrigadeConsultationScreen({ navigation, route }: any) {
     if (local_id) {
       const existing = offlineQueue.find(c => c.local_id === local_id)
       if (existing) {
-        setPhone(existing.patient_phone)
+        setPhone(existing.patient_phone ?? '')
+        setDob(existing.patient_dob ?? '')
         setName(existing.patient_name)
         setSymptoms(existing.symptoms_text ?? '')
         setDiagnosis(existing.diagnosis ?? '')
@@ -46,12 +48,13 @@ export default function BrigadeConsultationScreen({ navigation, route }: any) {
   }, [phone, name, patientCache])
 
   const handleSave = useCallback(() => {
-    if (!phone.trim() || !name.trim()) {
+    if (!name.trim() || (!phone.trim() && !dob.trim())) {
       Alert.alert(t('brigade.error_required'))
       return
     }
     addConsultation({
-      patient_phone: phone.trim(),
+      patient_phone: phone.trim() || undefined,
+      patient_dob:   dob.trim() || undefined,
       patient_name:  name.trim(),
       symptoms_text: symptoms.trim() || undefined,
       diagnosis:     diagnosis.trim() || undefined,
@@ -59,7 +62,7 @@ export default function BrigadeConsultationScreen({ navigation, route }: any) {
       created_at:    new Date().toISOString(),
     })
     navigation.goBack()
-  }, [phone, name, symptoms, diagnosis, meds, addConsultation, navigation, t])
+  }, [phone, dob, name, symptoms, diagnosis, meds, addConsultation, navigation, t])
 
   const addMed = useCallback(() => {
     setMeds(prev => [...prev, { name: '', dose: '', frequency: '' }])
@@ -75,7 +78,7 @@ export default function BrigadeConsultationScreen({ navigation, route }: any) {
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <Text style={styles.label}>{t('brigade.patient_phone')}</Text>
+      <Text style={styles.label}>{t('brigade.patient_phone_optional')}</Text>
       <TextInput
         style={styles.input}
         value={phone}
@@ -92,6 +95,19 @@ export default function BrigadeConsultationScreen({ navigation, route }: any) {
         onChangeText={setName}
         testID="name-input"
       />
+
+      {!phone.trim() && (
+        <>
+          <Text style={styles.label}>{t('brigade.patient_dob')}</Text>
+          <TextInput
+            style={styles.input}
+            value={dob}
+            onChangeText={setDob}
+            placeholder="YYYY-MM-DD"
+            testID="dob-input"
+          />
+        </>
+      )}
 
       <Text style={styles.label}>{t('brigade.symptoms')}</Text>
       <TextInput

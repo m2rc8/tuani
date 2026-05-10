@@ -150,6 +150,8 @@
     "will_sync": "Se sincronizará automáticamente con conexión",
     "leave": "← Salir de brigada",
     "patient_phone": "Teléfono",
+    "patient_phone_optional": "Teléfono (opcional)",
+    "patient_dob": "Fecha de nacimiento (AAAA-MM-DD)",
     "patient_name": "Nombre",
     "symptoms": "Síntomas",
     "diagnosis": "Diagnóstico",
@@ -159,7 +161,7 @@
     "med_name": "Nombre",
     "med_dose": "Dosis",
     "med_frequency": "Frecuencia",
-    "error_required": "Teléfono y nombre son requeridos",
+    "error_required": "Nombre y (teléfono o fecha de nacimiento) son requeridos",
     "error_code_not_found": "Código de brigada no encontrado"
   }
 }

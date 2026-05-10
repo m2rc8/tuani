@@ -9,7 +9,8 @@ const syncSchema = z.object({
   brigade_id: z.string().uuid(),
   consultations: z.array(z.object({
     local_id:      z.string().min(1),
-    patient_phone: z.string().min(1),
+    patient_phone: z.string().optional(),
+    patient_dob:   z.string().optional(),
     patient_name:  z.string().min(1),
     symptoms_text: z.string().optional(),
     diagnosis:     z.string().optional(),

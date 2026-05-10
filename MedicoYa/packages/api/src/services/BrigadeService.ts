@@ -21,13 +21,14 @@ export interface CreateBrigadeInput {
 }
 
 export interface SyncItem {
-  local_id:      string
-  patient_phone: string
-  patient_name:  string
+  local_id:       string
+  patient_phone?: string
+  patient_dob?:   string
+  patient_name:   string
   symptoms_text?: string
-  diagnosis?:    string
-  medications?:  { name: string; dose: string; frequency: string }[]
-  created_at:    string
+  diagnosis?:     string
+  medications?:   { name: string; dose: string; frequency: string }[]
+  created_at:     string
 }
 
 export interface SyncResult {
@@ -153,16 +154,43 @@ export class BrigadeService {
 
     for (const item of items) {
       try {
-        const user = await this.db.user.upsert({
-          where:  { phone: item.patient_phone },
-          create: { id: crypto.randomUUID(), phone: item.patient_phone, name: item.patient_name, role: Role.patient },
-          update: {},
-        })
-        await this.db.patient.upsert({
-          where:  { id: user.id },
-          create: { id: user.id, registered_by: doctorId, registration_mode: RegistrationMode.brigade_doctor },
-          update: {},
-        })
+        // Generate placeholder phone for patients without one
+        const phone = item.patient_phone ?? `BRG-${crypto.randomUUID().slice(0, 8)}`
+
+        // If no real phone, try to find existing patient by name+dob before creating
+        let user: { id: string }
+        if (!item.patient_phone && item.patient_dob) {
+          const dob = new Date(item.patient_dob)
+          const existing = await this.db.patient.findFirst({
+            where: {
+              user: { name: item.patient_name },
+              dob: { gte: new Date(dob.getFullYear(), dob.getMonth(), dob.getDate()), lt: new Date(dob.getFullYear(), dob.getMonth(), dob.getDate() + 1) },
+            },
+            select: { id: true },
+          })
+          if (existing) {
+            user = existing
+          } else {
+            const created = await this.db.user.create({
+              data: { id: crypto.randomUUID(), phone, name: item.patient_name, role: Role.patient },
+            })
+            await this.db.patient.create({
+              data: { id: created.id, registered_by: doctorId, registration_mode: RegistrationMode.brigade_doctor, dob: dob },
+            })
+            user = created
+          }
+        } else {
+          user = await this.db.user.upsert({
+            where:  { phone },
+            create: { id: crypto.randomUUID(), phone, name: item.patient_name, role: Role.patient },
+            update: {},
+          })
+          await this.db.patient.upsert({
+            where:  { id: user.id },
+            create: { id: user.id, registered_by: doctorId, registration_mode: RegistrationMode.brigade_doctor },
+            update: {},
+          })
+        }
 
         await this.db.$transaction(async (tx) => {
           const consultation = await tx.consultation.create({

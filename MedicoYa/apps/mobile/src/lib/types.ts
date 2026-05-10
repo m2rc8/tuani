@@ -72,7 +72,8 @@ export interface BrigadeInfo {
 
 export interface OfflineConsultation {
   local_id: string
-  patient_phone: string
+  patient_phone?: string
+  patient_dob?: string
   patient_name: string
   symptoms_text?: string
   diagnosis?: string
