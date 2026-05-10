@@ -4,6 +4,10 @@ import { z } from 'zod'
 import { requireAuth, requireRole } from '../middleware/requireAuth'
 
 const availabilitySchema = z.object({ available: z.boolean() })
+const profileUpdateSchema = z.object({
+  name: z.string().min(1).optional(),
+  bio:  z.string().optional(),
+})
 
 export function createDoctorsRouter(db: PrismaClient): Router {
   const router = Router()
@@ -47,6 +51,32 @@ export function createDoctorsRouter(db: PrismaClient): Router {
     })
     res.json(doctors)
   })
+
+  router.put(
+    '/me',
+    requireAuth,
+    requireRole(Role.doctor),
+    async (req: Request, res: Response, next): Promise<void> => {
+      try {
+        const parsed = profileUpdateSchema.safeParse(req.body)
+        if (!parsed.success) { res.status(400).json({ error: parsed.error.flatten() }); return }
+        const { name, bio } = parsed.data
+        await Promise.all([
+          name !== undefined
+            ? db.user.update({ where: { id: req.user!.sub }, data: { name } })
+            : Promise.resolve(),
+          bio !== undefined
+            ? db.doctor.upsert({
+                where:  { id: req.user!.sub },
+                update: { bio },
+                create: { id: req.user!.sub, bio },
+              })
+            : Promise.resolve(),
+        ])
+        res.json({ ok: true })
+      } catch (err) { next(err) }
+    }
+  )
 
   router.put(
     '/availability',

@@ -108,6 +108,8 @@
     "price_label": "Price in lempiras (optional)",
     "submit_rx": "Complete and generate prescription",
     "availability_label": "Available for consultations",
+    "bio_label": "Biography / Specialty",
+    "bio_placeholder": "E.g.: General practitioner with 5 years of experience...",
     "confirm_payment": "Confirm payment received (Tigo Money) ✓",
     "confirm_payment_amount": "Confirm payment of L. {{amount}} received ✓",
     "payment_confirmed": "Payment confirmed ✓",

@@ -108,6 +108,8 @@
     "price_label": "Precio en lempiras (opcional)",
     "submit_rx": "Completar y generar receta",
     "availability_label": "Disponible para consultas",
+    "bio_label": "Biografía / Especialidad",
+    "bio_placeholder": "Ej: Médico general con 5 años de experiencia...",
     "confirm_payment": "Confirmar pago recibido (Tigo Money) ✓",
     "confirm_payment_amount": "Confirmar pago de L. {{amount}} recibido ✓",
     "payment_confirmed": "Pago confirmado ✓",
