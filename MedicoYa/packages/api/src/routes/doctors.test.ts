@@ -20,8 +20,9 @@ const mockDoctor = {
 
 const mockDb = {
   doctor: {
-    findMany: vi.fn(),
-    update:   vi.fn(),
+    findMany:   vi.fn(),
+    update:     vi.fn(),
+    upsert:     vi.fn(),
     findUnique: vi.fn(),
   },
   rating: {
@@ -66,17 +67,17 @@ describe('PUT /api/doctors/availability', () => {
   })
 
   it('updates available field for doctor', async () => {
-    mockDb.doctor.update.mockResolvedValue({ ...mockDoctor, available: false })
+    mockDb.doctor.upsert.mockResolvedValue({ ...mockDoctor, available: false })
     const app = makeTestApp()
     const res = await request(app)
       .put('/api/doctors/availability')
       .set('Authorization', `Bearer ${makeToken(DOC_ID, Role.doctor)}`)
       .send({ available: false })
     expect(res.status).toBe(200)
-    expect(mockDb.doctor.update).toHaveBeenCalledWith({
-      where: { id: DOC_ID },
-      data:  { available: false },
-    })
+    expect(mockDb.doctor.upsert).toHaveBeenCalledWith(expect.objectContaining({
+      where:  { id: DOC_ID },
+      update: { available: false },
+    }))
   })
 })
 
