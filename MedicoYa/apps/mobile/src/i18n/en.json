@@ -87,6 +87,7 @@
     "waiting_since": "Waiting"
   },
   "doctor": {
+    "consultation_title": "In consultation",
     "complete_cta": "Complete",
     "rx_title": "Complete consultation",
     "diagnosis_label": "Diagnosis",
@@ -118,6 +119,8 @@
     "confirm_join": "Join",
     "cancel": "Cancel",
     "new_consultation": "+ New consultation",
+    "new_consultation_title": "New consultation",
+    "session_title": "Brigade",
     "sync": "↑ Sync",
     "pending_count": "{{count}} unsynced",
     "synced_count": "{{count}} synced",

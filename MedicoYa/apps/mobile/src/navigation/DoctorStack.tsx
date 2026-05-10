@@ -1,5 +1,6 @@
 import React from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import { useTranslation } from 'react-i18next'
 import DoctorTabs from './DoctorTabs'
 import DoctorConsultationScreen from '../screens/doctor/DoctorConsultationScreen'
 import WriteRxScreen from '../screens/doctor/WriteRxScreen'
@@ -23,74 +24,46 @@ export type DoctorStackParamList = {
 
 const Stack = createNativeStackNavigator<DoctorStackParamList>()
 
+const headerOptions = {
+  headerStyle: { backgroundColor: colors.ui.slate800 },
+  headerTintColor: colors.brand.green400,
+  headerTitleStyle: { fontFamily: 'DMSansSemibold', fontSize: typography.size.base, color: colors.text.primary },
+}
+
 export default function DoctorRoot() {
+  const { t } = useTranslation()
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="DoctorTabs" component={DoctorTabs} />
       <Stack.Screen
         name="DoctorConsultationScreen"
         component={DoctorConsultationScreen}
-        options={{
-          headerShown: true,
-          title: 'En consulta',
-          headerStyle: { backgroundColor: colors.ui.slate800 },
-          headerTintColor: colors.brand.green400,
-          headerTitleStyle: { fontFamily: 'DMSansSemibold', fontSize: typography.size.base, color: colors.text.primary },
-        }}
+        options={{ headerShown: true, title: t('doctor.consultation_title'), ...headerOptions }}
       />
       <Stack.Screen
         name="WriteRxScreen"
         component={WriteRxScreen}
-        options={{
-          headerShown: true,
-          title: 'Completar consulta',
-          headerStyle: { backgroundColor: colors.ui.slate800 },
-          headerTintColor: colors.brand.green400,
-          headerTitleStyle: { fontFamily: 'DMSansSemibold', fontSize: typography.size.base, color: colors.text.primary },
-        }}
+        options={{ headerShown: true, title: t('doctor.rx_title'), ...headerOptions }}
       />
       <Stack.Screen
         name="PrescriptionScreen"
         component={PrescriptionScreen}
-        options={{
-          headerShown: true,
-          headerStyle: { backgroundColor: colors.ui.slate800 },
-          headerTintColor: colors.brand.green400,
-          headerTitleStyle: { fontFamily: 'DMSansSemibold', fontSize: typography.size.base, color: colors.text.primary },
-        }}
+        options={{ headerShown: true, title: t('consultation.prescription_title'), ...headerOptions }}
       />
       <Stack.Screen
         name="BrigadeHomeScreen"
         component={BrigadeHomeScreen}
-        options={{
-          headerShown: true,
-          title: 'Brigadas',
-          headerStyle: { backgroundColor: colors.ui.slate800 },
-          headerTintColor: colors.brand.green400,
-          headerTitleStyle: { fontFamily: 'DMSansSemibold', fontSize: typography.size.base, color: colors.text.primary },
-        }}
+        options={{ headerShown: true, title: t('brigade.title'), ...headerOptions }}
       />
       <Stack.Screen
         name="BrigadeQueueScreen"
         component={BrigadeQueueScreen}
-        options={{
-          headerShown: true,
-          title: 'Brigada',
-          headerStyle: { backgroundColor: colors.ui.slate800 },
-          headerTintColor: colors.brand.green400,
-          headerTitleStyle: { fontFamily: 'DMSansSemibold', fontSize: typography.size.base, color: colors.text.primary },
-        }}
+        options={{ headerShown: true, title: t('brigade.session_title'), ...headerOptions }}
       />
       <Stack.Screen
         name="BrigadeConsultationScreen"
         component={BrigadeConsultationScreen}
-        options={{
-          headerShown: true,
-          title: 'Nueva consulta',
-          headerStyle: { backgroundColor: colors.ui.slate800 },
-          headerTintColor: colors.brand.green400,
-          headerTitleStyle: { fontFamily: 'DMSansSemibold', fontSize: typography.size.base, color: colors.text.primary },
-        }}
+        options={{ headerShown: true, title: t('brigade.new_consultation_title'), ...headerOptions }}
       />
     </Stack.Navigator>
   )
