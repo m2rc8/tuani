@@ -60,7 +60,7 @@ export default function OtpScreen({ navigation, route }: Props) {
         testID="verify-btn"
       >
         {loading
-          ? <ActivityIndicator color={colors.ui.white} />
+          ? <ActivityIndicator color={colors.text.inverse} />
           : <Text style={styles.btnText}>{t('auth.verify')}</Text>}
       </TouchableOpacity>
       <TouchableOpacity onPress={() => navigation.goBack()} testID="back-btn">
@@ -71,19 +71,20 @@ export default function OtpScreen({ navigation, route }: Props) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: spacing[6], justifyContent: 'center' },
-  label: { fontSize: typography.size.base, marginBottom: spacing[1], fontFamily: 'DMSans' },
+  container: { flex: 1, padding: spacing[6], justifyContent: 'center', backgroundColor: colors.surface.base },
+  label: { fontSize: typography.size.base, marginBottom: spacing[1], fontFamily: 'DMSans', color: colors.text.primary },
   input: {
-    borderWidth: 1, borderColor: colors.ui.slate200, borderRadius: radius.sm,
+    borderWidth: 1, borderColor: colors.surface.inputBorder, borderRadius: radius.sm,
     padding: spacing[3], fontSize: 28, textAlign: 'center', letterSpacing: 8,
     marginBottom: spacing[2], fontFamily: 'DMSans',
+    backgroundColor: colors.surface.input, color: colors.text.primary,
   },
   btn: {
     backgroundColor: colors.brand.green400, padding: spacing[4],
-    borderRadius: radius.sm, alignItems: 'center', marginTop: spacing[2],
+    borderRadius: radius.full, alignItems: 'center', marginTop: spacing[2],
   },
-  btnDisabled: { opacity: 0.5 },
-  btnText: { color: colors.ui.white, fontFamily: 'DMSansSemibold', fontSize: typography.size.base },
+  btnDisabled: { opacity: 0.4 },
+  btnText: { color: colors.text.inverse, fontFamily: 'DMSansSemibold', fontSize: typography.size.base },
   error: { color: colors.status.red, marginBottom: spacing[1], fontFamily: 'DMSans' },
   back: { color: colors.brand.green400, textAlign: 'center', marginTop: spacing[4], fontSize: typography.size.md, fontFamily: 'DMSans' },
 })

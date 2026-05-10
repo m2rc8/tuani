@@ -86,7 +86,9 @@ export default function PrescriptionScreen({ route }: any) {
       )}
 
       <View style={styles.qrContainer}>
-        <QRCode value={`MEDICOYA:${prescription.qr_code}`} size={180} />
+        <View style={styles.qrWrapper}>
+          <QRCode value={`MEDICOYA:${prescription.qr_code}`} size={180} />
+        </View>
       </View>
 
       <Text style={styles.validUntil}>
@@ -137,33 +139,34 @@ export default function PrescriptionScreen({ route }: any) {
 }
 
 const styles = StyleSheet.create({
-  loading:       { flex: 1, alignItems: 'center', justifyContent: 'center' },
-  container:     { padding: spacing[6], backgroundColor: colors.ui.white, flexGrow: 1 },
-  heading:       { fontSize: typography.size.lg, fontFamily: 'DMSerifDisplay', marginBottom: spacing[6] },
+  loading:       { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.surface.base },
+  container:     { padding: spacing[6], backgroundColor: colors.surface.base, flexGrow: 1 },
+  heading:       { fontSize: typography.size.lg, fontFamily: 'DMSerifDisplay', marginBottom: spacing[6], color: colors.text.primary },
   section:       { marginBottom: spacing[6] },
   label:         {
-    fontSize: typography.size.xs, color: colors.ui.slate600, textTransform: 'uppercase',
+    fontSize: typography.size.xs, color: colors.text.secondary, textTransform: 'uppercase',
     fontFamily: 'DMSansSemibold', marginBottom: spacing[2], letterSpacing: 0.5,
   },
-  value:         { fontSize: 17, color: colors.ui.slate900, fontFamily: 'DMSansSemibold' },
-  medication:    { fontSize: typography.size.base, color: colors.ui.slate900, marginBottom: spacing[1], fontFamily: 'DMSans' },
+  value:         { fontSize: 17, color: colors.text.primary, fontFamily: 'DMSansSemibold' },
+  medication:    { fontSize: typography.size.base, color: colors.text.primary, marginBottom: spacing[1], fontFamily: 'DMSans' },
   qrContainer:   {
     alignItems: 'center', padding: spacing[6],
-    backgroundColor: colors.brand.green50, borderRadius: radius.md, marginVertical: spacing[6],
+    backgroundColor: colors.surface.cardBrand, borderRadius: radius.md, marginVertical: spacing[6],
   },
-  validUntil:    { fontSize: typography.size.md, color: colors.ui.slate600, textAlign: 'center', fontFamily: 'DMSans' },
-  ratingSection: { marginTop: spacing[8], borderTopWidth: 1, borderTopColor: colors.ui.slate200, paddingTop: spacing[6] },
-  ratingTitle:   { fontSize: typography.size.base, fontFamily: 'DMSansSemibold', color: colors.ui.slate900, marginBottom: spacing[3] },
+  qrWrapper:     { backgroundColor: colors.ui.white, padding: spacing[3], borderRadius: radius.md, alignSelf: 'center' },
+  validUntil:    { fontSize: typography.size.md, color: colors.text.secondary, textAlign: 'center', fontFamily: 'DMSans' },
+  ratingSection: { marginTop: spacing[8], borderTopWidth: 1, borderTopColor: colors.surface.border, paddingTop: spacing[6] },
+  ratingTitle:   { fontSize: typography.size.base, fontFamily: 'DMSansSemibold', color: colors.text.primary, marginBottom: spacing[3] },
   starsRow:      { flexDirection: 'row', marginBottom: spacing[4] },
-  star:          { fontSize: 32, color: colors.ui.slate200, marginRight: spacing[2] },
+  star:          { fontSize: 32, color: colors.surface.border, marginRight: spacing[2] },
   starActive:    { color: colors.status.amber },
   commentInput:  {
-    borderWidth: 1, borderColor: colors.ui.slate200, borderRadius: radius.sm,
-    padding: spacing[3], minHeight: 80, fontSize: typography.size.base, color: colors.ui.slate900, marginBottom: spacing[4],
-    fontFamily: 'DMSans',
+    borderWidth: 1, borderColor: colors.surface.inputBorder, borderRadius: radius.sm,
+    padding: spacing[3], minHeight: 80, fontSize: typography.size.base, color: colors.text.primary, marginBottom: spacing[4],
+    fontFamily: 'DMSans', backgroundColor: colors.surface.input,
   },
-  submitBtn:     { backgroundColor: colors.brand.green400, borderRadius: radius.sm, paddingVertical: spacing[3], alignItems: 'center' },
-  submitDisabled:{ opacity: 0.5 },
-  submitText:    { color: colors.ui.white, fontFamily: 'DMSansSemibold', fontSize: typography.size.base },
-  ratingThanks:  { fontSize: typography.size.base, color: colors.brand.green400, fontFamily: 'DMSansSemibold', textAlign: 'center' },
+  submitBtn:     { backgroundColor: colors.brand.green400, borderRadius: radius.full, paddingVertical: spacing[3], alignItems: 'center' },
+  submitDisabled:{ opacity: 0.4 },
+  submitText:    { color: colors.text.inverse, fontFamily: 'DMSansSemibold', fontSize: typography.size.base },
+  ratingThanks:  { fontSize: typography.size.base, color: colors.text.brand, fontFamily: 'DMSansSemibold', textAlign: 'center' },
 })

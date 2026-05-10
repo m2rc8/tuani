@@ -107,19 +107,19 @@ export default function WaitingScreen({ navigation, route }: any) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: spacing[6], backgroundColor: colors.ui.white, alignItems: 'center', justifyContent: 'center' },
-  title: { fontSize: typography.size.lg, fontFamily: 'DMSerifDisplay', marginBottom: spacing[6], textAlign: 'center' },
+  container: { flex: 1, padding: spacing[6], backgroundColor: colors.surface.base, alignItems: 'center', justifyContent: 'center' },
+  title: { fontSize: typography.size.lg, fontFamily: 'DMSerifDisplay', marginBottom: spacing[6], textAlign: 'center', color: colors.text.primary },
   spinner: { marginBottom: spacing[4] },
-  subtitle: { fontSize: typography.size.md, color: colors.ui.slate600, textAlign: 'center', marginBottom: spacing[8], fontFamily: 'DMSans' },
+  subtitle: { fontSize: typography.size.md, color: colors.text.secondary, textAlign: 'center', marginBottom: spacing[8], fontFamily: 'DMSans' },
   symptomsBox: {
-    width: '100%', backgroundColor: colors.brand.green50, borderRadius: radius.md,
+    width: '100%', backgroundColor: colors.surface.cardBrand, borderRadius: radius.md,
     padding: spacing[4], marginBottom: spacing[8],
   },
-  symptomsLabel: { fontSize: typography.size.xs, color: colors.ui.slate600, marginBottom: spacing[1], textTransform: 'uppercase', fontFamily: 'DMSansSemibold' },
-  symptomsText: { fontSize: typography.size.base, color: colors.ui.slate900, fontFamily: 'DMSans' },
+  symptomsLabel: { fontSize: typography.size.xs, color: colors.text.secondary, marginBottom: spacing[1], textTransform: 'uppercase', fontFamily: 'DMSansSemibold' },
+  symptomsText: { fontSize: typography.size.base, color: colors.text.primary, fontFamily: 'DMSans' },
   cancelBtn: {
     padding: spacing[4], borderWidth: 1, borderColor: colors.status.red,
-    borderRadius: radius.md, alignItems: 'center', width: '100%',
+    borderRadius: radius.full, alignItems: 'center', width: '100%',
   },
   cancelText: { color: colors.status.red, fontFamily: 'DMSansSemibold', fontSize: typography.size.base },
 })

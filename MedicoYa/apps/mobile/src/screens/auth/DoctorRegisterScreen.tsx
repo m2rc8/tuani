@@ -87,7 +87,7 @@ export default function DoctorRegisterScreen({ navigation }: any) {
               testID="dr-send-btn"
             >
               {loading
-                ? <ActivityIndicator color={colors.ui.white} />
+                ? <ActivityIndicator color={colors.text.inverse} />
                 : <Text style={styles.btnText}>{t('auth.send_code')}</Text>}
             </TouchableOpacity>
           </>
@@ -145,7 +145,7 @@ export default function DoctorRegisterScreen({ navigation }: any) {
               testID="dr-submit-btn"
             >
               {loading
-                ? <ActivityIndicator color={colors.ui.white} />
+                ? <ActivityIndicator color={colors.text.inverse} />
                 : <Text style={styles.btnText}>{t('auth.doctor_submit')}</Text>}
             </TouchableOpacity>
           </>
@@ -160,22 +160,22 @@ export default function DoctorRegisterScreen({ navigation }: any) {
 }
 
 const styles = StyleSheet.create({
-  container:  { flexGrow: 1, padding: spacing[6], justifyContent: 'center' },
-  title:      { fontSize: typography.size.lg, fontFamily: 'DMSansSemibold', marginBottom: spacing[6], color: colors.ui.slate900 },
-  label:      { fontSize: typography.size.base, marginBottom: spacing[1], color: colors.ui.slate900, fontFamily: 'DMSans' },
+  container:  { flexGrow: 1, padding: spacing[6], justifyContent: 'center', backgroundColor: colors.surface.base },
+  title:      { fontSize: typography.size.lg, fontFamily: 'DMSansSemibold', marginBottom: spacing[6], color: colors.text.primary },
+  label:      { fontSize: typography.size.base, marginBottom: spacing[1], color: colors.text.primary, fontFamily: 'DMSans' },
   input:      {
-    borderWidth: 1, borderColor: colors.ui.slate200, borderRadius: radius.sm,
+    borderWidth: 1, borderColor: colors.surface.inputBorder, borderRadius: radius.sm,
     padding: spacing[3], fontSize: typography.size.base, marginBottom: spacing[4],
-    fontFamily: 'DMSans',
+    fontFamily: 'DMSans', backgroundColor: colors.surface.input, color: colors.text.primary,
   },
   codeInput:  {
-    borderWidth: 1, borderColor: colors.ui.slate200, borderRadius: radius.sm,
+    borderWidth: 1, borderColor: colors.surface.inputBorder, borderRadius: radius.sm,
     padding: spacing[3], fontSize: 28, textAlign: 'center', letterSpacing: 8, marginBottom: spacing[4],
-    fontFamily: 'DMSans',
+    fontFamily: 'DMSans', backgroundColor: colors.surface.input, color: colors.text.primary,
   },
-  btn:        { backgroundColor: colors.brand.green400, padding: spacing[4], borderRadius: radius.sm, alignItems: 'center', marginTop: spacing[1] },
-  btnDisabled:{ opacity: 0.5 },
-  btnText:    { color: colors.ui.white, fontFamily: 'DMSansSemibold', fontSize: typography.size.base },
+  btn:        { backgroundColor: colors.brand.green400, padding: spacing[4], borderRadius: radius.full, alignItems: 'center', marginTop: spacing[1] },
+  btnDisabled:{ opacity: 0.4 },
+  btnText:    { color: colors.text.inverse, fontFamily: 'DMSansSemibold', fontSize: typography.size.base },
   error:      { color: colors.status.red, marginBottom: spacing[2], fontFamily: 'DMSans' },
   link:       { color: colors.brand.green400, textAlign: 'center', marginTop: spacing[4], fontSize: typography.size.md, fontFamily: 'DMSans' },
   backRow:    { marginTop: spacing[2] },

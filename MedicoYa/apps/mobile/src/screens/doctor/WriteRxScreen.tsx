@@ -150,7 +150,7 @@ export default function WriteRxScreen({ navigation, route }: any) {
           accessibilityState={{ disabled: !canSubmit }}
         >
           {submitting
-            ? <ActivityIndicator color={colors.ui.white} />
+            ? <ActivityIndicator color={colors.text.inverse} />
             : <Text style={styles.submitBtnText}>{t('doctor.submit_rx')}</Text>}
         </TouchableOpacity>
       </ScrollView>
@@ -159,26 +159,26 @@ export default function WriteRxScreen({ navigation, route }: any) {
 }
 
 const styles = StyleSheet.create({
-  container: { padding: spacing[6], backgroundColor: colors.ui.white, flexGrow: 1 },
+  container: { padding: spacing[6], backgroundColor: colors.surface.base, flexGrow: 1 },
   label: {
-    fontSize: typography.size.xs, color: colors.ui.slate600, textTransform: 'uppercase',
+    fontSize: typography.size.xs, color: colors.text.secondary, textTransform: 'uppercase',
     fontFamily: 'DMSansSemibold', marginBottom: spacing[2], marginTop: spacing[4], letterSpacing: 0.5,
   },
   input: {
-    borderWidth: 1, borderColor: colors.ui.slate200, borderRadius: radius.md,
+    borderWidth: 1, borderColor: colors.surface.inputBorder, borderRadius: radius.md,
     padding: spacing[3], fontSize: typography.size.base, marginBottom: spacing[1],
-    fontFamily: 'DMSans',
+    fontFamily: 'DMSans', backgroundColor: colors.surface.input, color: colors.text.primary,
   },
   multiline: { minHeight: 80 },
   medRow: { marginBottom: spacing[2] },
   medInput: { marginBottom: spacing[1] },
   removeText: { color: colors.status.red, fontSize: typography.size.md, textAlign: 'right', marginBottom: spacing[2], fontFamily: 'DMSans' },
   addMedBtn: { marginTop: spacing[1], marginBottom: spacing[2] },
-  addMedText: { color: colors.brand.green400, fontSize: typography.size.md, fontFamily: 'DMSansSemibold' },
+  addMedText: { color: colors.text.brand, fontSize: typography.size.md, fontFamily: 'DMSansSemibold' },
   submitBtn: {
-    backgroundColor: colors.brand.green400, borderRadius: radius.md,
+    backgroundColor: colors.brand.green400, borderRadius: radius.full,
     padding: spacing[4], alignItems: 'center', marginTop: spacing[6],
   },
-  submitBtnDisabled: { backgroundColor: colors.brand.green400, opacity: 0.5 },
-  submitBtnText: { color: colors.ui.white, fontSize: typography.size.base, fontFamily: 'DMSansSemibold' },
+  submitBtnDisabled: { backgroundColor: colors.brand.green400, opacity: 0.4 },
+  submitBtnText: { color: colors.text.inverse, fontSize: typography.size.base, fontFamily: 'DMSansSemibold' },
 })

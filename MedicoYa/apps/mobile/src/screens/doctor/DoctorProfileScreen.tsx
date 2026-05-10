@@ -59,7 +59,7 @@ export default function DoctorProfileScreen() {
               testID="availability-switch"
               value={available}
               onValueChange={handleToggle}
-              trackColor={{ false: colors.ui.slate200, true: colors.brand.green400 }}
+              trackColor={{ false: colors.surface.border, true: colors.brand.green400 }}
               thumbColor={colors.ui.white}
             />
           </View>
@@ -100,24 +100,24 @@ export default function DoctorProfileScreen() {
 }
 
 const styles = StyleSheet.create({
-  container:    { flex: 1, padding: spacing[6] },
-  title:        { fontSize: typography.size.xl, fontFamily: 'DMSerifDisplay', marginBottom: spacing[6] },
+  container:    { flex: 1, padding: spacing[6], backgroundColor: colors.surface.base },
+  title:        { fontSize: typography.size.xl, fontFamily: 'DMSerifDisplay', marginBottom: spacing[6], color: colors.text.primary },
   loader:       { marginBottom: spacing[6] },
   row:          { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: spacing[3] },
-  label:        { fontSize: typography.size.base, color: colors.ui.slate900, fontFamily: 'DMSans' },
+  label:        { fontSize: typography.size.base, color: colors.text.primary, fontFamily: 'DMSans' },
   ratingText:   { fontSize: typography.size.md, color: colors.status.amber, fontFamily: 'DMSansSemibold', marginBottom: spacing[6] },
-  sectionLabel: { fontSize: typography.size.base, marginBottom: spacing[2], fontFamily: 'DMSans' },
+  sectionLabel: { fontSize: typography.size.base, marginBottom: spacing[2], fontFamily: 'DMSans', color: colors.text.primary },
   langRow:      { flexDirection: 'row', gap: spacing[2], marginBottom: spacing[8] },
   langBtn: {
     paddingVertical: spacing[2], paddingHorizontal: spacing[4],
-    borderWidth: 1, borderColor: colors.ui.slate200, borderRadius: radius.sm,
+    borderWidth: 1, borderColor: colors.surface.border, borderRadius: radius.sm,
   },
-  langBtnActive:  { borderColor: colors.brand.green400, backgroundColor: colors.brand.green50 },
-  langText:       { color: colors.ui.slate600, fontFamily: 'DMSansMedium' },
-  langTextActive: { color: colors.brand.green400, fontFamily: 'DMSansSemibold' },
+  langBtnActive:  { borderColor: colors.surface.borderBrand, backgroundColor: colors.surface.cardBrand },
+  langText:       { color: colors.text.secondary, fontFamily: 'DMSansMedium' },
+  langTextActive: { color: colors.text.brand, fontFamily: 'DMSansSemibold' },
   logoutBtn: {
     marginTop: 'auto', padding: spacing[4], backgroundColor: colors.status.red,
-    borderRadius: radius.sm, alignItems: 'center',
+    borderRadius: radius.full, alignItems: 'center',
   },
-  logoutText: { color: colors.ui.white, fontFamily: 'DMSansSemibold', fontSize: typography.size.base },
+  logoutText: { color: colors.text.primary, fontFamily: 'DMSansSemibold', fontSize: typography.size.base },
 })

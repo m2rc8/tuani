@@ -134,7 +134,7 @@ export default function BrigadeHomeScreen({ navigation }: any) {
                   <Text style={styles.previewName}>{preview.name}</Text>
                   <Text style={styles.previewComm}>{preview.community}</Text>
                   <TouchableOpacity
-                    style={[styles.searchBtn, { backgroundColor: colors.brand.green400 }]}
+                    style={styles.searchBtn}
                     onPress={handleJoin}
                     disabled={joining}
                     testID="confirm-join-btn"
@@ -154,33 +154,33 @@ export default function BrigadeHomeScreen({ navigation }: any) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.brand.green50 },
+  container: { flex: 1, backgroundColor: colors.surface.base },
   list: { padding: spacing[4] },
-  sectionLabel: { fontSize: typography.size.sm, color: colors.ui.slate600, textTransform: 'uppercase', letterSpacing: 1, marginBottom: spacing[2], marginTop: spacing[2], fontFamily: 'DMSansSemibold' },
+  sectionLabel: { fontSize: typography.size.sm, color: colors.text.secondary, textTransform: 'uppercase', letterSpacing: 1, marginBottom: spacing[2], marginTop: spacing[2], fontFamily: 'DMSansSemibold' },
   brigadeRow: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    backgroundColor: colors.ui.white, borderRadius: radius.md, padding: spacing[3], marginBottom: spacing[2],
-    borderWidth: 1, borderColor: colors.ui.slate200,
+    backgroundColor: colors.surface.card, borderRadius: radius.md, padding: spacing[3], marginBottom: spacing[2],
+    borderWidth: 1, borderColor: colors.surface.border,
   },
   brigadeInfo: { flex: 1 },
-  brigadeName: { fontSize: typography.size.base, fontFamily: 'DMSansSemibold', color: colors.ui.slate900 },
-  brigadeComm: { fontSize: typography.size.sm, color: colors.ui.slate600, marginTop: 2, fontFamily: 'DMSans' },
-  enterBtn: { backgroundColor: colors.brand.green400, borderRadius: radius.sm, paddingHorizontal: spacing[4], paddingVertical: spacing[2] },
-  enterBtnText: { color: colors.ui.white, fontFamily: 'DMSansSemibold', fontSize: typography.size.md },
+  brigadeName: { fontSize: typography.size.base, fontFamily: 'DMSansSemibold', color: colors.text.primary },
+  brigadeComm: { fontSize: typography.size.sm, color: colors.text.secondary, marginTop: 2, fontFamily: 'DMSans' },
+  enterBtn: { backgroundColor: colors.brand.green400, borderRadius: radius.full, paddingHorizontal: spacing[4], paddingVertical: spacing[2] },
+  enterBtnText: { color: colors.text.inverse, fontFamily: 'DMSansSemibold', fontSize: typography.size.md },
   joinSection: { marginTop: spacing[4] },
   input: {
-    borderWidth: 1, borderColor: colors.ui.slate200, borderRadius: radius.sm, padding: spacing[3],
-    fontSize: typography.size.base, marginBottom: spacing[2], backgroundColor: colors.ui.white, letterSpacing: 2,
-    fontFamily: 'DMSans',
+    borderWidth: 1, borderColor: colors.surface.inputBorder, borderRadius: radius.sm, padding: spacing[3],
+    fontSize: typography.size.base, marginBottom: spacing[2], backgroundColor: colors.surface.input, letterSpacing: 2,
+    fontFamily: 'DMSans', color: colors.text.primary,
   },
   searchBtn: {
-    backgroundColor: colors.brand.green400, borderRadius: radius.sm, padding: spacing[3], alignItems: 'center', marginBottom: spacing[2],
+    backgroundColor: colors.brand.green400, borderRadius: radius.full, padding: spacing[3], alignItems: 'center', marginBottom: spacing[2],
   },
-  searchBtnText: { color: colors.ui.white, fontFamily: 'DMSansSemibold' },
+  searchBtnText: { color: colors.text.inverse, fontFamily: 'DMSansSemibold' },
   preview: {
-    backgroundColor: colors.ui.white, borderRadius: radius.md, padding: spacing[4],
-    borderWidth: 1, borderColor: colors.brand.green400, marginBottom: spacing[2],
+    backgroundColor: colors.surface.card, borderRadius: radius.md, padding: spacing[4],
+    borderWidth: 1, borderColor: colors.surface.borderBrand, marginBottom: spacing[2],
   },
-  previewName: { fontSize: typography.size.base, fontFamily: 'DMSansSemibold', color: colors.ui.slate900, marginBottom: 2 },
-  previewComm: { fontSize: typography.size.sm, color: colors.ui.slate600, marginBottom: spacing[3], fontFamily: 'DMSans' },
+  previewName: { fontSize: typography.size.base, fontFamily: 'DMSansSemibold', color: colors.text.primary, marginBottom: 2 },
+  previewComm: { fontSize: typography.size.sm, color: colors.text.secondary, marginBottom: spacing[3], fontFamily: 'DMSans' },
 })

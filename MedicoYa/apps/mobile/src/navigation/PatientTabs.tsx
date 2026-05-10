@@ -23,8 +23,8 @@ export default function PatientTabs() {
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: colors.brand.green400,
-        tabBarInactiveTintColor: colors.ui.slate600,
-        tabBarStyle: { borderTopColor: colors.ui.slate200 },
+        tabBarInactiveTintColor: colors.text.muted,
+        tabBarStyle: { backgroundColor: colors.ui.slate800, borderTopColor: colors.surface.border },
       }}
     >
       <Tab.Screen name="Home" component={HomeScreen} options={{ title: t('nav.home') }} />

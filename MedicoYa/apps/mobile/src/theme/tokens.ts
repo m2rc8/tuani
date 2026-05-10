@@ -1,11 +1,10 @@
-import { brand, ui, status, text } from './colors'
+import { brand, teal, ui, status, surface, text } from './colors'
 
-export const colors = { brand, ui, status, text }
+export const colors = { brand, teal, ui, status, surface, text }
 
 export const typography = {
   fontDisplay: 'DMSerifDisplay',
   fontBody:    'DMSans',
-
   size: {
     xs:      10,
     sm:      12,
@@ -16,7 +15,6 @@ export const typography = {
     xxl:     36,
     display: 52,
   },
-
   weight: {
     regular:  '400' as const,
     medium:   '500' as const,

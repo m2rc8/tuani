@@ -33,9 +33,9 @@ export default function DoctorRoot() {
         options={{
           headerShown: true,
           title: 'En consulta',
-          headerStyle: { backgroundColor: colors.ui.white },
+          headerStyle: { backgroundColor: colors.ui.slate800 },
           headerTintColor: colors.brand.green400,
-          headerTitleStyle: { fontFamily: 'DMSansSemibold', fontSize: typography.size.base },
+          headerTitleStyle: { fontFamily: 'DMSansSemibold', fontSize: typography.size.base, color: colors.text.primary },
         }}
       />
       <Stack.Screen
@@ -44,9 +44,9 @@ export default function DoctorRoot() {
         options={{
           headerShown: true,
           title: 'Completar consulta',
-          headerStyle: { backgroundColor: colors.ui.white },
+          headerStyle: { backgroundColor: colors.ui.slate800 },
           headerTintColor: colors.brand.green400,
-          headerTitleStyle: { fontFamily: 'DMSansSemibold', fontSize: typography.size.base },
+          headerTitleStyle: { fontFamily: 'DMSansSemibold', fontSize: typography.size.base, color: colors.text.primary },
         }}
       />
       <Stack.Screen
@@ -54,9 +54,9 @@ export default function DoctorRoot() {
         component={PrescriptionScreen}
         options={{
           headerShown: true,
-          headerStyle: { backgroundColor: colors.ui.white },
+          headerStyle: { backgroundColor: colors.ui.slate800 },
           headerTintColor: colors.brand.green400,
-          headerTitleStyle: { fontFamily: 'DMSansSemibold', fontSize: typography.size.base },
+          headerTitleStyle: { fontFamily: 'DMSansSemibold', fontSize: typography.size.base, color: colors.text.primary },
         }}
       />
       <Stack.Screen
@@ -65,9 +65,9 @@ export default function DoctorRoot() {
         options={{
           headerShown: true,
           title: 'Brigadas',
-          headerStyle: { backgroundColor: colors.ui.white },
+          headerStyle: { backgroundColor: colors.ui.slate800 },
           headerTintColor: colors.brand.green400,
-          headerTitleStyle: { fontFamily: 'DMSansSemibold', fontSize: typography.size.base },
+          headerTitleStyle: { fontFamily: 'DMSansSemibold', fontSize: typography.size.base, color: colors.text.primary },
         }}
       />
       <Stack.Screen
@@ -76,9 +76,9 @@ export default function DoctorRoot() {
         options={{
           headerShown: true,
           title: 'Brigada',
-          headerStyle: { backgroundColor: colors.ui.white },
+          headerStyle: { backgroundColor: colors.ui.slate800 },
           headerTintColor: colors.brand.green400,
-          headerTitleStyle: { fontFamily: 'DMSansSemibold', fontSize: typography.size.base },
+          headerTitleStyle: { fontFamily: 'DMSansSemibold', fontSize: typography.size.base, color: colors.text.primary },
         }}
       />
       <Stack.Screen
@@ -87,9 +87,9 @@ export default function DoctorRoot() {
         options={{
           headerShown: true,
           title: 'Nueva consulta',
-          headerStyle: { backgroundColor: colors.ui.white },
+          headerStyle: { backgroundColor: colors.ui.slate800 },
           headerTintColor: colors.brand.green400,
-          headerTitleStyle: { fontFamily: 'DMSansSemibold', fontSize: typography.size.base },
+          headerTitleStyle: { fontFamily: 'DMSansSemibold', fontSize: typography.size.base, color: colors.text.primary },
         }}
       />
     </Stack.Navigator>

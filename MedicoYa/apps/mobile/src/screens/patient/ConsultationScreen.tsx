@@ -95,7 +95,7 @@ function RatingCard({ consultationId, onRated }: RatingCardProps) {
         testID="rating-submit"
       >
         {submitting
-          ? <ActivityIndicator color={colors.ui.white} />
+          ? <ActivityIndicator color={colors.text.inverse} />
           : <Text style={styles.ratingBtnText}>{t('consultation.rate_submit')}</Text>}
       </TouchableOpacity>
     </View>
@@ -247,53 +247,55 @@ export default function ConsultationScreen({ navigation, route }: any) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.ui.white },
+  container: { flex: 1, backgroundColor: colors.surface.base },
   messageList: { padding: spacing[4], paddingBottom: spacing[2] },
   bubble: { maxWidth: '80%', borderRadius: radius.md, padding: spacing[3], marginBottom: spacing[2] },
-  bubbleMine: { backgroundColor: colors.brand.green50, alignSelf: 'flex-end' },
-  bubbleTheirs: { backgroundColor: colors.ui.slate200, alignSelf: 'flex-start' },
-  bubbleTextMine: { color: colors.brand.green600, fontSize: typography.size.base, fontFamily: 'DMSans' },
-  bubbleTextTheirs: { color: colors.ui.slate900, fontSize: typography.size.base, fontFamily: 'DMSans' },
+  bubbleMine: { backgroundColor: colors.surface.cardBrand, alignSelf: 'flex-end' },
+  bubbleTheirs: { backgroundColor: colors.surface.card, alignSelf: 'flex-start' },
+  bubbleTextMine: { color: colors.text.brand, fontSize: typography.size.base, fontFamily: 'DMSans' },
+  bubbleTextTheirs: { color: colors.text.primary, fontSize: typography.size.base, fontFamily: 'DMSans' },
   prescriptionCard: {
-    backgroundColor: colors.brand.green50, borderWidth: 1, borderColor: colors.brand.green400,
+    backgroundColor: colors.surface.cardBrand, borderWidth: 1, borderColor: colors.surface.borderBrand,
     borderRadius: radius.md, padding: spacing[4], marginTop: spacing[2],
   },
-  prescriptionTitle: { fontSize: typography.size.md, fontFamily: 'DMSansSemibold', color: colors.brand.green600, marginBottom: spacing[1] },
-  prescriptionDiagnosis: { fontSize: typography.size.base, fontFamily: 'DMSansSemibold', color: colors.ui.slate900, marginBottom: spacing[1] },
-  prescriptionMeds: { fontSize: typography.size.md, color: colors.ui.slate600, marginBottom: spacing[3], fontFamily: 'DMSans' },
-  viewBtn: { backgroundColor: colors.brand.green400, borderRadius: radius.sm, padding: spacing[3], alignItems: 'center' },
-  viewBtnText: { color: colors.ui.white, fontFamily: 'DMSansSemibold', fontSize: typography.size.md },
+  prescriptionTitle: { fontSize: typography.size.md, fontFamily: 'DMSansSemibold', color: colors.text.brand, marginBottom: spacing[1] },
+  prescriptionDiagnosis: { fontSize: typography.size.base, fontFamily: 'DMSansSemibold', color: colors.text.primary, marginBottom: spacing[1] },
+  prescriptionMeds: { fontSize: typography.size.md, color: colors.text.secondary, marginBottom: spacing[3], fontFamily: 'DMSans' },
+  viewBtn: { backgroundColor: colors.brand.green400, borderRadius: radius.full, padding: spacing[3], alignItems: 'center' },
+  viewBtnText: { color: colors.text.inverse, fontFamily: 'DMSansSemibold', fontSize: typography.size.md },
   inputRow: {
     flexDirection: 'row', padding: spacing[3], borderTopWidth: 1,
-    borderTopColor: colors.ui.slate200, gap: spacing[2], alignItems: 'center',
+    borderTopColor: colors.surface.border, gap: spacing[2], alignItems: 'center',
   },
   input: {
-    flex: 1, borderWidth: 1, borderColor: colors.ui.slate200, borderRadius: radius.md,
+    flex: 1, borderWidth: 1, borderColor: colors.surface.inputBorder, borderRadius: radius.md,
     padding: spacing[3], fontSize: typography.size.base, fontFamily: 'DMSans',
+    backgroundColor: colors.surface.input, color: colors.text.primary,
   },
-  inputDisabled: { backgroundColor: colors.ui.slate200, color: colors.ui.slate600 },
-  sendBtn: { backgroundColor: colors.brand.green400, borderRadius: radius.md, padding: spacing[3] },
-  sendBtnDisabled: { backgroundColor: colors.brand.green400, opacity: 0.5 },
-  sendBtnText: { color: colors.ui.white, fontFamily: 'DMSansSemibold' },
+  inputDisabled: { backgroundColor: colors.surface.card, color: colors.text.muted },
+  sendBtn: { backgroundColor: colors.brand.green400, borderRadius: radius.full, padding: spacing[3] },
+  sendBtnDisabled: { backgroundColor: colors.brand.green400, opacity: 0.4 },
+  sendBtnText: { color: colors.text.inverse, fontFamily: 'DMSansSemibold' },
   msgImage: { width: 200, height: 150, borderRadius: radius.sm },
   ratingCard: {
-    borderWidth: 1, borderColor: colors.ui.slate200, borderRadius: radius.md,
-    padding: spacing[4], marginTop: spacing[3], backgroundColor: colors.ui.white,
+    borderWidth: 1, borderColor: colors.surface.border, borderRadius: radius.md,
+    padding: spacing[4], marginTop: spacing[3], backgroundColor: colors.surface.card,
   },
-  ratingTitle: { fontSize: typography.size.base, fontFamily: 'DMSansSemibold', color: colors.ui.slate900, marginBottom: spacing[3] },
+  ratingTitle: { fontSize: typography.size.base, fontFamily: 'DMSansSemibold', color: colors.text.primary, marginBottom: spacing[3] },
   starsRow: { flexDirection: 'row', gap: spacing[2], marginBottom: spacing[3] },
-  star: { fontSize: 32, color: colors.ui.slate200 },
+  star: { fontSize: 32, color: colors.surface.border },
   starActive: { color: colors.status.amber },
   ratingInput: {
-    borderWidth: 1, borderColor: colors.ui.slate200, borderRadius: radius.sm,
+    borderWidth: 1, borderColor: colors.surface.inputBorder, borderRadius: radius.sm,
     padding: spacing[3], fontSize: typography.size.md, fontFamily: 'DMSans',
     minHeight: 60, textAlignVertical: 'top', marginBottom: spacing[3],
+    backgroundColor: colors.surface.input, color: colors.text.primary,
   },
   ratingBtn: {
-    backgroundColor: colors.brand.green400, borderRadius: radius.sm,
+    backgroundColor: colors.brand.green400, borderRadius: radius.full,
     padding: spacing[3], alignItems: 'center',
   },
-  ratingBtnDisabled: { opacity: 0.5 },
-  ratingBtnText: { color: colors.ui.white, fontFamily: 'DMSansSemibold', fontSize: typography.size.md },
-  ratingThanks: { fontSize: typography.size.base, fontFamily: 'DMSansSemibold', color: colors.brand.green400, textAlign: 'center', paddingVertical: spacing[2] },
+  ratingBtnDisabled: { opacity: 0.4 },
+  ratingBtnText: { color: colors.text.inverse, fontFamily: 'DMSansSemibold', fontSize: typography.size.md },
+  ratingThanks: { fontSize: typography.size.base, fontFamily: 'DMSansSemibold', color: colors.text.brand, textAlign: 'center', paddingVertical: spacing[2] },
 })

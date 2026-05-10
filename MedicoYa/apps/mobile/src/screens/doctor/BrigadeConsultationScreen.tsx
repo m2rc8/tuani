@@ -150,13 +150,13 @@ export default function BrigadeConsultationScreen({ navigation, route }: any) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.brand.green50 },
+  container: { flex: 1, backgroundColor: colors.surface.base },
   content: { padding: spacing[4] },
-  label: { fontSize: typography.size.sm, color: colors.ui.slate600, textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: spacing[1], marginTop: spacing[3], fontFamily: 'DMSansSemibold' },
+  label: { fontSize: typography.size.sm, color: colors.text.secondary, textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: spacing[1], marginTop: spacing[3], fontFamily: 'DMSansSemibold' },
   input: {
-    borderWidth: 1, borderColor: colors.ui.slate200, borderRadius: radius.sm, padding: spacing[3],
-    fontSize: typography.size.base, backgroundColor: colors.ui.white, marginBottom: spacing[1],
-    fontFamily: 'DMSans',
+    borderWidth: 1, borderColor: colors.surface.inputBorder, borderRadius: radius.sm, padding: spacing[3],
+    fontSize: typography.size.base, backgroundColor: colors.surface.input, marginBottom: spacing[1],
+    fontFamily: 'DMSans', color: colors.text.primary,
   },
   multiline: { minHeight: 80, textAlignVertical: 'top' },
   medRow: { marginBottom: spacing[2] },
@@ -164,8 +164,8 @@ const styles = StyleSheet.create({
   removeBtn: { alignSelf: 'flex-start', marginBottom: spacing[1] },
   removeBtnText: { color: colors.status.red, fontSize: typography.size.sm, fontFamily: 'DMSans' },
   addMedBtn: { marginTop: spacing[1], marginBottom: spacing[4] },
-  addMedText: { color: colors.brand.green400, fontFamily: 'DMSansSemibold' },
-  saveBtn: { backgroundColor: colors.brand.green400, borderRadius: radius.md, padding: spacing[4], alignItems: 'center', marginTop: spacing[2] },
-  saveBtnText: { color: colors.ui.white, fontFamily: 'DMSansSemibold', fontSize: typography.size.base },
-  willSync: { fontSize: typography.size.sm, color: colors.ui.slate600, textAlign: 'center', marginTop: spacing[2], fontFamily: 'DMSans' },
+  addMedText: { color: colors.text.brand, fontFamily: 'DMSansSemibold' },
+  saveBtn: { backgroundColor: colors.brand.green400, borderRadius: radius.full, padding: spacing[4], alignItems: 'center', marginTop: spacing[2] },
+  saveBtnText: { color: colors.text.inverse, fontFamily: 'DMSansSemibold', fontSize: typography.size.base },
+  willSync: { fontSize: typography.size.sm, color: colors.text.secondary, textAlign: 'center', marginTop: spacing[2], fontFamily: 'DMSans' },
 })

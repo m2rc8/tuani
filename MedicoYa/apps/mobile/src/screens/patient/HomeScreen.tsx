@@ -158,7 +158,7 @@ export default function HomeScreen({ navigation }: any) {
         accessibilityState={{ disabled: !canSubmit }}
       >
         {submitting
-          ? <ActivityIndicator color={colors.ui.white} />
+          ? <ActivityIndicator color={colors.text.inverse} />
           : <Text style={styles.btnText}>{t('consultation.start_cta')}</Text>}
       </TouchableOpacity>
     </View>
@@ -166,32 +166,32 @@ export default function HomeScreen({ navigation }: any) {
 }
 
 const styles = StyleSheet.create({
-  container:     { flex: 1, padding: spacing[6], backgroundColor: colors.ui.white },
-  title:         { fontSize: typography.size.xl, fontFamily: 'DMSerifDisplay', marginBottom: spacing[4] },
+  container:     { flex: 1, padding: spacing[6], backgroundColor: colors.surface.base },
+  title:         { fontSize: typography.size.xl, fontFamily: 'DMSerifDisplay', marginBottom: spacing[4], color: colors.text.primary },
   badge:         {
-    backgroundColor: colors.brand.green50, borderRadius: radius.sm, padding: spacing[3], marginBottom: spacing[4], alignItems: 'center',
+    backgroundColor: colors.surface.cardBrand, borderRadius: radius.sm, padding: spacing[3], marginBottom: spacing[4], alignItems: 'center',
   },
   badgeWarn:     { backgroundColor: colors.status.amber + '20' },
-  badgeText:     { fontSize: typography.size.md, color: colors.brand.green600, fontFamily: 'DMSansSemibold' },
+  badgeText:     { fontSize: typography.size.md, color: colors.text.brand, fontFamily: 'DMSansSemibold' },
   badgeTextWarn: { color: colors.status.amber },
   input:         {
-    borderWidth: 1, borderColor: colors.ui.slate200, borderRadius: radius.md,
+    borderWidth: 1, borderColor: colors.surface.inputBorder, borderRadius: radius.md,
     padding: spacing[3], fontSize: typography.size.base, minHeight: 140, marginBottom: spacing[2],
-    fontFamily: 'DMSans',
+    fontFamily: 'DMSans', backgroundColor: colors.surface.input, color: colors.text.primary,
   },
-  counter:       { fontSize: typography.size.sm, color: colors.ui.slate600, marginBottom: spacing[3], textAlign: 'right', fontFamily: 'DMSans' },
+  counter:       { fontSize: typography.size.sm, color: colors.text.secondary, marginBottom: spacing[3], textAlign: 'right', fontFamily: 'DMSans' },
   photoBtn:      {
-    borderWidth: 1, borderColor: colors.ui.slate200, borderRadius: radius.sm,
+    borderWidth: 1, borderColor: colors.surface.border, borderRadius: radius.sm,
     padding: spacing[3], alignItems: 'center', marginBottom: spacing[3],
   },
-  photoBtnText:  { color: colors.ui.slate600, fontSize: typography.size.md, fontFamily: 'DMSans' },
+  photoBtnText:  { color: colors.text.secondary, fontSize: typography.size.md, fontFamily: 'DMSans' },
   photoRow:      { flexDirection: 'row', alignItems: 'center', marginBottom: spacing[3], gap: spacing[3] },
   thumbnail:     { width: 60, height: 60, borderRadius: radius.sm },
   removePhoto:   { color: colors.status.red, fontSize: typography.size.md, fontFamily: 'DMSans' },
   btn:           {
-    backgroundColor: colors.brand.green400, borderRadius: radius.md,
+    backgroundColor: colors.brand.green400, borderRadius: radius.full,
     padding: spacing[4], alignItems: 'center',
   },
-  btnDisabled:   { backgroundColor: colors.brand.green400, opacity: 0.5 },
-  btnText:       { color: colors.ui.white, fontSize: typography.size.base, fontFamily: 'DMSansSemibold' },
+  btnDisabled:   { backgroundColor: colors.brand.green400, opacity: 0.4 },
+  btnText:       { color: colors.text.inverse, fontSize: typography.size.base, fontFamily: 'DMSansSemibold' },
 })

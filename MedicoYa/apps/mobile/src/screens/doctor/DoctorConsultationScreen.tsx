@@ -141,7 +141,7 @@ export default function DoctorConsultationScreen({ navigation, route }: any) {
           testID="confirm-payment-btn"
         >
           {confirmingPayment
-            ? <ActivityIndicator color={colors.ui.white} />
+            ? <ActivityIndicator color={colors.text.inverse} />
             : <Text style={styles.paymentBarText}>
                 {priceLps
                   ? t('doctor.confirm_payment_amount', { amount: parseFloat(priceLps).toFixed(2) })
@@ -189,42 +189,42 @@ export default function DoctorConsultationScreen({ navigation, route }: any) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.ui.white },
+  container: { flex: 1, backgroundColor: colors.surface.base },
   completeBar: {
     backgroundColor: colors.brand.green400, padding: spacing[3], alignItems: 'center',
-    borderBottomWidth: 1, borderBottomColor: colors.brand.green50,
+    borderBottomWidth: 1, borderBottomColor: colors.surface.borderBrand,
   },
-  completeBarText: { color: colors.ui.white, fontFamily: 'DMSansSemibold', fontSize: typography.size.base },
+  completeBarText: { color: colors.text.inverse, fontFamily: 'DMSansSemibold', fontSize: typography.size.base },
   paymentBar: {
     backgroundColor: colors.status.amber, padding: spacing[3], alignItems: 'center',
     borderBottomWidth: 1, borderBottomColor: colors.status.amber,
   },
-  paymentBarText: { color: colors.ui.white, fontFamily: 'DMSansSemibold', fontSize: typography.size.md },
+  paymentBarText: { color: colors.text.inverse, fontFamily: 'DMSansSemibold', fontSize: typography.size.md },
   paymentConfirmed: {
-    backgroundColor: colors.brand.green50, padding: spacing[3], alignItems: 'center',
-    borderBottomWidth: 1, borderBottomColor: colors.brand.green50,
+    backgroundColor: colors.surface.cardBrand, padding: spacing[3], alignItems: 'center',
+    borderBottomWidth: 1, borderBottomColor: colors.surface.borderBrand,
   },
-  paymentConfirmedText: { color: colors.brand.green600, fontFamily: 'DMSansSemibold', fontSize: typography.size.md },
+  paymentConfirmedText: { color: colors.text.brand, fontFamily: 'DMSansSemibold', fontSize: typography.size.md },
   symptomsHeader: {
-    backgroundColor: colors.brand.green50, borderRadius: radius.md, padding: spacing[3],
-    marginBottom: spacing[3], borderWidth: 1, borderColor: colors.ui.slate200,
+    backgroundColor: colors.surface.card, borderRadius: radius.md, padding: spacing[3],
+    marginBottom: spacing[3], borderWidth: 1, borderColor: colors.surface.borderBrand,
   },
-  symptomsText: { fontSize: typography.size.md, color: colors.ui.slate900, marginBottom: spacing[2], lineHeight: 20, fontFamily: 'DMSans' },
+  symptomsText: { fontSize: typography.size.md, color: colors.text.secondary, marginBottom: spacing[2], lineHeight: 20, fontFamily: 'DMSans' },
   symptomPhoto: { width: '100%', height: 200, borderRadius: radius.sm },
   messageList: { padding: spacing[4], paddingBottom: spacing[2] },
   bubble: { maxWidth: '80%', borderRadius: radius.md, padding: spacing[3], marginBottom: spacing[2] },
-  bubbleMine: { backgroundColor: colors.brand.green50, alignSelf: 'flex-end' },
-  bubbleTheirs: { backgroundColor: colors.ui.slate200, alignSelf: 'flex-start' },
-  bubbleTextMine: { color: colors.brand.green600, fontSize: typography.size.base, fontFamily: 'DMSans' },
-  bubbleTextTheirs: { color: colors.ui.slate900, fontSize: typography.size.base, fontFamily: 'DMSans' },
+  bubbleMine: { backgroundColor: colors.surface.cardBrand, alignSelf: 'flex-end' },
+  bubbleTheirs: { backgroundColor: colors.surface.card, alignSelf: 'flex-start' },
+  bubbleTextMine: { color: colors.text.brand, fontSize: typography.size.base, fontFamily: 'DMSans' },
+  bubbleTextTheirs: { color: colors.text.primary, fontSize: typography.size.base, fontFamily: 'DMSans' },
   msgImage: { width: 200, height: 150, borderRadius: radius.sm },
   inputRow: {
     flexDirection: 'row', padding: spacing[3], borderTopWidth: 1,
-    borderTopColor: colors.ui.slate200, gap: spacing[2], alignItems: 'center',
+    borderTopColor: colors.surface.border, gap: spacing[2], alignItems: 'center',
   },
-  input: { flex: 1, borderWidth: 1, borderColor: colors.ui.slate200, borderRadius: radius.md, padding: spacing[3], fontSize: typography.size.base, fontFamily: 'DMSans' },
-  inputDisabled: { backgroundColor: colors.ui.slate200, color: colors.ui.slate600 },
-  sendBtn: { backgroundColor: colors.brand.green400, borderRadius: radius.md, padding: spacing[3] },
-  sendBtnDisabled: { backgroundColor: colors.brand.green400, opacity: 0.5 },
-  sendBtnText: { color: colors.ui.white, fontFamily: 'DMSansSemibold' },
+  input: { flex: 1, borderWidth: 1, borderColor: colors.surface.inputBorder, borderRadius: radius.md, padding: spacing[3], fontSize: typography.size.base, fontFamily: 'DMSans', backgroundColor: colors.surface.input, color: colors.text.primary },
+  inputDisabled: { backgroundColor: colors.surface.card, color: colors.text.muted },
+  sendBtn: { backgroundColor: colors.brand.green400, borderRadius: radius.full, padding: spacing[3] },
+  sendBtnDisabled: { backgroundColor: colors.brand.green400, opacity: 0.4 },
+  sendBtnText: { color: colors.text.inverse, fontFamily: 'DMSansSemibold' },
 })

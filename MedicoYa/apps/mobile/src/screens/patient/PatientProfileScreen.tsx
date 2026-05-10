@@ -113,7 +113,7 @@ export default function PatientProfileScreen() {
         testID="save-btn"
       >
         {saving
-          ? <ActivityIndicator color={colors.ui.white} />
+          ? <ActivityIndicator color={colors.text.inverse} />
           : <Text style={styles.saveBtnText}>{saved ? t('profile.saved') : t('profile.save')}</Text>
         }
       </TouchableOpacity>
@@ -144,33 +144,33 @@ export default function PatientProfileScreen() {
 }
 
 const styles = StyleSheet.create({
-  loading:         { flex: 1, alignItems: 'center', justifyContent: 'center' },
-  container:       { padding: spacing[6], backgroundColor: colors.ui.white, flexGrow: 1 },
-  title:           { fontSize: typography.size.xl, fontFamily: 'DMSerifDisplay', marginBottom: spacing[6] },
-  label:           { fontSize: typography.size.md, color: colors.ui.slate600, marginBottom: spacing[2], marginTop: spacing[3], fontFamily: 'DMSans' },
+  loading:         { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.surface.base },
+  container:       { padding: spacing[6], backgroundColor: colors.surface.base, flexGrow: 1 },
+  title:           { fontSize: typography.size.xl, fontFamily: 'DMSerifDisplay', marginBottom: spacing[6], color: colors.text.primary },
+  label:           { fontSize: typography.size.md, color: colors.text.secondary, marginBottom: spacing[2], marginTop: spacing[3], fontFamily: 'DMSans' },
   input:           {
-    borderWidth: 1, borderColor: colors.ui.slate200, borderRadius: radius.sm,
-    padding: spacing[3], fontSize: typography.size.base, color: colors.ui.slate900,
-    fontFamily: 'DMSans',
+    borderWidth: 1, borderColor: colors.surface.inputBorder, borderRadius: radius.sm,
+    padding: spacing[3], fontSize: typography.size.base, color: colors.text.primary,
+    fontFamily: 'DMSans', backgroundColor: colors.surface.input,
   },
   multiline:       { minHeight: 80, textAlignVertical: 'top' },
   saveBtn:         {
-    backgroundColor: colors.brand.green400, borderRadius: radius.sm,
+    backgroundColor: colors.brand.green400, borderRadius: radius.full,
     padding: spacing[4], alignItems: 'center', marginTop: spacing[6],
   },
-  saveBtnDisabled: { opacity: 0.6 },
-  saveBtnText:     { color: colors.ui.white, fontFamily: 'DMSansSemibold', fontSize: typography.size.base },
+  saveBtnDisabled: { opacity: 0.4 },
+  saveBtnText:     { color: colors.text.inverse, fontFamily: 'DMSansSemibold', fontSize: typography.size.base },
   langRow:         { flexDirection: 'row', gap: spacing[2], marginBottom: spacing[2] },
   langBtn:         {
     paddingVertical: spacing[2], paddingHorizontal: spacing[4],
-    borderWidth: 1, borderColor: colors.ui.slate200, borderRadius: radius.sm,
+    borderWidth: 1, borderColor: colors.surface.border, borderRadius: radius.sm,
   },
-  langBtnActive:   { borderColor: colors.brand.green400, backgroundColor: colors.brand.green50 },
-  langText:        { color: colors.ui.slate600, fontFamily: 'DMSansMedium' },
-  langTextActive:  { color: colors.brand.green400, fontFamily: 'DMSansSemibold' },
+  langBtnActive:   { borderColor: colors.surface.borderBrand, backgroundColor: colors.surface.cardBrand },
+  langText:        { color: colors.text.secondary, fontFamily: 'DMSansMedium' },
+  langTextActive:  { color: colors.text.brand, fontFamily: 'DMSansSemibold' },
   logoutBtn:       {
     marginTop: spacing[8], padding: spacing[4], backgroundColor: colors.status.red,
-    borderRadius: radius.sm, alignItems: 'center',
+    borderRadius: radius.full, alignItems: 'center',
   },
-  logoutText:      { color: colors.ui.white, fontFamily: 'DMSansSemibold', fontSize: typography.size.base },
+  logoutText:      { color: colors.text.primary, fontFamily: 'DMSansSemibold', fontSize: typography.size.base },
 })

@@ -17,11 +17,11 @@ interface ConsultationListItem {
 }
 
 const STATUS_COLORS: Record<ConsultationStatus, string> = {
-  pending: colors.status.amber,
-  active: colors.status.blue,
+  pending:   colors.status.amber,
+  active:    colors.status.blue,
   completed: colors.brand.green400,
-  rejected: colors.status.red,
-  cancelled: colors.ui.slate600,
+  rejected:  colors.status.red,
+  cancelled: colors.text.muted,
 }
 
 export default function PatientHistoryScreen({ navigation }: any) {
@@ -61,9 +61,10 @@ export default function PatientHistoryScreen({ navigation }: any) {
     <FlatList
       data={items}
       keyExtractor={(i) => i.id}
+      style={styles.screen}
       contentContainerStyle={[styles.list, { paddingTop: insets.top + spacing[4] }]}
       renderItem={({ item }) => {
-        const color = STATUS_COLORS[item.status] ?? colors.ui.slate600
+        const color = STATUS_COLORS[item.status] ?? colors.text.muted
         const date = item.created_at ? new Date(item.created_at).toLocaleDateString() : '—'
         return (
           <TouchableOpacity
@@ -90,16 +91,17 @@ export default function PatientHistoryScreen({ navigation }: any) {
 }
 
 const styles = StyleSheet.create({
-  center: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-  emptyText: { fontSize: typography.size.base, color: colors.ui.slate600, fontFamily: 'DMSans' },
+  screen: { flex: 1, backgroundColor: colors.surface.base },
+  center: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.surface.base },
+  emptyText: { fontSize: typography.size.base, color: colors.text.secondary, fontFamily: 'DMSans' },
   list: { padding: spacing[4] },
   card: {
-    backgroundColor: colors.ui.white, borderRadius: radius.md, padding: spacing[4],
-    marginBottom: spacing[3], borderWidth: 1, borderColor: colors.ui.slate200,
+    backgroundColor: colors.surface.card, borderRadius: radius.md, padding: spacing[4],
+    marginBottom: spacing[3], borderWidth: 1, borderColor: colors.surface.border,
   },
   row: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: spacing[2] },
-  date: { fontSize: typography.size.md, color: colors.ui.slate600, fontFamily: 'DMSans' },
+  date: { fontSize: typography.size.md, color: colors.text.secondary, fontFamily: 'DMSans' },
   badge: { borderRadius: radius.sm, paddingVertical: 2, paddingHorizontal: spacing[2] },
   badgeText: { fontSize: typography.size.sm, fontFamily: 'DMSansSemibold' },
-  diagnosis: { fontSize: typography.size.base, color: colors.ui.slate900, fontFamily: 'DMSansMedium' },
+  diagnosis: { fontSize: typography.size.base, color: colors.text.primary, fontFamily: 'DMSansMedium' },
 })

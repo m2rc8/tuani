@@ -23,8 +23,8 @@ export default function DoctorTabs() {
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: colors.brand.green400,
-        tabBarInactiveTintColor: colors.ui.slate600,
-        tabBarStyle: { borderTopColor: colors.ui.slate200 },
+        tabBarInactiveTintColor: colors.text.muted,
+        tabBarStyle: { backgroundColor: colors.ui.slate800, borderTopColor: colors.surface.border },
       }}
     >
       <Tab.Screen name="Queue" component={QueueScreen} options={{ title: t('nav.queue') }} />

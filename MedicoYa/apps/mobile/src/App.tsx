@@ -68,5 +68,5 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
-  splash: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.ui.white },
+  splash: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.surface.base },
 })
