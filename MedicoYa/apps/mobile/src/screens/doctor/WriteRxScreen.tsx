@@ -57,94 +57,100 @@ export default function WriteRxScreen({ navigation, route }: any) {
   }
 
   return (
-    <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-    <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
-      <Text style={styles.label}>{t('doctor.diagnosis_label')}</Text>
-      <TextInput
-        style={styles.input}
-        value={diagnosis}
-        onChangeText={setDiagnosis}
-        multiline
-        numberOfLines={3}
-        textAlignVertical="top"
-        testID="diagnosis-input"
-      />
-
-      <Text style={styles.label}>{t('doctor.diagnosis_code_label')}</Text>
-      <TextInput
-        style={styles.input}
-        value={diagnosisCode}
-        onChangeText={setDiagnosisCode}
-        testID="diagnosis-code-input"
-      />
-
-      <Text style={styles.label}>{t('consultation.medications')}</Text>
-      {medications.map((med, i) => (
-        <View key={i} style={styles.medRow}>
-          <TextInput
-            style={[styles.input, styles.medInput]}
-            placeholder={t('doctor.medication_name')}
-            value={med.name}
-            onChangeText={(v) => updateMed(i, 'name', v)}
-            testID={`med-name-${i}`}
-          />
-          <TextInput
-            style={[styles.input, styles.medInput]}
-            placeholder={t('doctor.medication_dose')}
-            value={med.dose}
-            onChangeText={(v) => updateMed(i, 'dose', v)}
-            testID={`med-dose-${i}`}
-          />
-          <TextInput
-            style={[styles.input, styles.medInput]}
-            placeholder={t('doctor.medication_frequency')}
-            value={med.frequency}
-            onChangeText={(v) => updateMed(i, 'frequency', v)}
-            testID={`med-freq-${i}`}
-          />
-          {medications.length > 1 && (
-            <TouchableOpacity onPress={() => removeMedication(i)} testID={`remove-med-${i}`}>
-              <Text style={styles.removeText}>{t('doctor.remove_medication')}</Text>
-            </TouchableOpacity>
-          )}
-        </View>
-      ))}
-      <TouchableOpacity style={styles.addMedBtn} onPress={addMedication} testID="add-medication-btn">
-        <Text style={styles.addMedText}>{t('doctor.add_medication')}</Text>
-      </TouchableOpacity>
-
-      <Text style={styles.label}>{t('doctor.instructions_label')}</Text>
-      <TextInput
-        style={[styles.input, styles.multiline]}
-        value={instructions}
-        onChangeText={setInstructions}
-        multiline
-        numberOfLines={3}
-        textAlignVertical="top"
-        testID="instructions-input"
-      />
-
-      <Text style={styles.label}>{t('doctor.price_label')}</Text>
-      <TextInput
-        style={styles.input}
-        value={priceLps}
-        onChangeText={setPriceLps}
-        keyboardType="numeric"
-        testID="price-input"
-      />
-
-      <TouchableOpacity
-        style={[styles.submitBtn, !canSubmit && styles.submitBtnDisabled]}
-        onPress={handleSubmit}
-        disabled={!canSubmit}
-        testID="submit-btn"
-        accessibilityState={{ disabled: !canSubmit }}
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    >
+      <ScrollView
+        contentContainerStyle={styles.container}
+        keyboardShouldPersistTaps="handled"
       >
-        {submitting
-          ? <ActivityIndicator color="#fff" />
-          : <Text style={styles.submitBtnText}>{t('doctor.submit_rx')}</Text>}
-      </TouchableOpacity>
-    </ScrollView>
+        <Text style={styles.label}>{t('doctor.diagnosis_label')}</Text>
+        <TextInput
+          style={styles.input}
+          value={diagnosis}
+          onChangeText={setDiagnosis}
+          multiline
+          numberOfLines={3}
+          textAlignVertical="top"
+          testID="diagnosis-input"
+        />
+
+        <Text style={styles.label}>{t('doctor.diagnosis_code_label')}</Text>
+        <TextInput
+          style={styles.input}
+          value={diagnosisCode}
+          onChangeText={setDiagnosisCode}
+          testID="diagnosis-code-input"
+        />
+
+        <Text style={styles.label}>{t('consultation.medications')}</Text>
+        {medications.map((med, i) => (
+          <View key={i} style={styles.medRow}>
+            <TextInput
+              style={[styles.input, styles.medInput]}
+              placeholder={t('doctor.medication_name')}
+              value={med.name}
+              onChangeText={(v) => updateMed(i, 'name', v)}
+              testID={`med-name-${i}`}
+            />
+            <TextInput
+              style={[styles.input, styles.medInput]}
+              placeholder={t('doctor.medication_dose')}
+              value={med.dose}
+              onChangeText={(v) => updateMed(i, 'dose', v)}
+              testID={`med-dose-${i}`}
+            />
+            <TextInput
+              style={[styles.input, styles.medInput]}
+              placeholder={t('doctor.medication_frequency')}
+              value={med.frequency}
+              onChangeText={(v) => updateMed(i, 'frequency', v)}
+              testID={`med-freq-${i}`}
+            />
+            {medications.length > 1 && (
+              <TouchableOpacity onPress={() => removeMedication(i)} testID={`remove-med-${i}`}>
+                <Text style={styles.removeText}>{t('doctor.remove_medication')}</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+        ))}
+        <TouchableOpacity style={styles.addMedBtn} onPress={addMedication} testID="add-medication-btn">
+          <Text style={styles.addMedText}>{t('doctor.add_medication')}</Text>
+        </TouchableOpacity>
+
+        <Text style={styles.label}>{t('doctor.instructions_label')}</Text>
+        <TextInput
+          style={[styles.input, styles.multiline]}
+          value={instructions}
+          onChangeText={setInstructions}
+          multiline
+          numberOfLines={3}
+          textAlignVertical="top"
+          testID="instructions-input"
+        />
+
+        <Text style={styles.label}>{t('doctor.price_label')}</Text>
+        <TextInput
+          style={styles.input}
+          value={priceLps}
+          onChangeText={setPriceLps}
+          keyboardType="numeric"
+          testID="price-input"
+        />
+
+        <TouchableOpacity
+          style={[styles.submitBtn, !canSubmit && styles.submitBtnDisabled]}
+          onPress={handleSubmit}
+          disabled={!canSubmit}
+          testID="submit-btn"
+          accessibilityState={{ disabled: !canSubmit }}
+        >
+          {submitting
+            ? <ActivityIndicator color="#fff" />
+            : <Text style={styles.submitBtnText}>{t('doctor.submit_rx')}</Text>}
+        </TouchableOpacity>
+      </ScrollView>
     </KeyboardAvoidingView>
   )
 }
