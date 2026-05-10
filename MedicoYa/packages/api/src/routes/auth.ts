@@ -4,6 +4,7 @@ import { parsePhoneNumberFromString } from 'libphonenumber-js'
 import { z } from 'zod'
 import { AuthService } from '../services/AuthService'
 import { Language } from '@prisma/client'
+import { requireAuth } from '../middleware/requireAuth'
 
 const sendOtpSchema = z.object({
   phone: z.string().min(1),
@@ -123,6 +124,17 @@ export function createAuthRouter(authService: AuthService): Router {
         }
         throw err
       }
+    }
+  )
+
+  router.put(
+    '/language',
+    requireAuth,
+    async (req: Request, res: Response): Promise<void> => {
+      const lang = z.enum(['es', 'en']).safeParse(req.body?.language)
+      if (!lang.success) { res.status(400).json({ error: 'language must be es or en' }); return }
+      await authService.updateLanguage(req.user!.sub, lang.data === 'es' ? Language.es : Language.en)
+      res.json({ ok: true })
     }
   )
 

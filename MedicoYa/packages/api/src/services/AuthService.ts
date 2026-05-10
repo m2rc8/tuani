@@ -96,4 +96,8 @@ export class AuthService {
       },
     }
   }
+
+  async updateLanguage(userId: string, language: Language): Promise<void> {
+    await this.db.user.update({ where: { id: userId }, data: { preferred_language: language } })
+  }
 }

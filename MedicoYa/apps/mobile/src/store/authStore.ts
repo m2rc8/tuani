@@ -61,6 +61,15 @@ export const useAuthStore = create<AuthState>((set) => ({
     }
     set({ language: lang })
     await i18n.changeLanguage(lang)
+    // sync to server — fire and forget, don't block UI
+    const token = await SecureStore.getItemAsync(TOKEN_KEY)
+    if (token) {
+      fetch(`${process.env.EXPO_PUBLIC_API_URL ?? ''}/api/auth/language`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ language: lang }),
+      }).catch(() => {})
+    }
   },
 
   hydrate: async () => {
