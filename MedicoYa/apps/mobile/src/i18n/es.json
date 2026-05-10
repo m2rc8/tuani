@@ -67,9 +67,13 @@
     "rate_thanks":  "¡Gracias por tu calificación!",
     "rate_comment": "Comentario (opcional)",
     "avg_rating":   "calificaciones",
-    "video_call":    "Videollamada",
-    "video_end":     "Terminar",
-    "video_waiting": "Esperando al otro participante..."
+    "video_call":     "Videollamada",
+    "video_end":      "Terminar",
+    "video_waiting":  "Esperando al otro participante...",
+    "video_incoming": "Videollamada entrante",
+    "video_accept":   "Aceptar",
+    "video_decline":  "Rechazar",
+    "video_declined": "Llamada rechazada"
   },
   "history": {
     "title": "Historial",

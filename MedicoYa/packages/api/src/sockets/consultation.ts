@@ -44,6 +44,21 @@ export function registerConsultationHandlers(
       }
     })
 
+    socket.on('video_call_invite', async ({ consultation_id }: { consultation_id: string }) => {
+      try {
+        const c = await db.consultation.findUnique({ where: { id: consultation_id } })
+        if (!c) return
+        const userId = socket.data.user.sub
+        if (c.patient_id !== userId && c.doctor_id !== userId) return
+        // broadcast to room EXCLUDING the sender
+        socket.to(consultation_id).emit('video_call_invite', { consultation_id, from_user_id: userId })
+      } catch { /* ignore */ }
+    })
+
+    socket.on('video_call_declined', ({ consultation_id }: { consultation_id: string }) => {
+      socket.to(consultation_id).emit('video_call_declined', { consultation_id })
+    })
+
     socket.on(
       'send_message',
       async ({

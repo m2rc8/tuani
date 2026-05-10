@@ -44,6 +44,34 @@ export default function DoctorConsultationScreen({ navigation, route }: any) {
     if (data.status === 'completed') await setStatus('completed')
   }, [consultationId, setStatus])
 
+  const handleVideoInvite = useCallback(
+    (_data: { consultation_id: string; from_user_id: string }) => {
+      Alert.alert(
+        t('consultation.video_incoming'),
+        '',
+        [
+          {
+            text: t('consultation.video_decline'),
+            style: 'cancel',
+            onPress: () => socketService.emit('video_call_declined', { consultation_id: consultationId }),
+          },
+          {
+            text: t('consultation.video_accept'),
+            onPress: () => navigation.navigate('VideoCallScreen', { consultationId }),
+          },
+        ]
+      )
+    },
+    [t, consultationId, navigation],
+  )
+
+  const handleVideoDeclined = useCallback(
+    (_data: { consultation_id: string }) => {
+      Alert.alert(t('consultation.video_declined'))
+    },
+    [t],
+  )
+
   useEffect(() => {
     useConsultationStore.getState().clear()
 
@@ -51,6 +79,8 @@ export default function DoctorConsultationScreen({ navigation, route }: any) {
     socketService.emit('join_consultation', { consultation_id: consultationId })
     socketService.on('receive_message', handleReceiveMessage)
     socketService.on('consultation_updated', handleConsultationUpdated)
+    socketService.on('video_call_invite', handleVideoInvite)
+    socketService.on('video_call_declined', handleVideoDeclined)
 
     api.get<ConsultationDetail & { messages: Message[] }>(`/api/consultations/${consultationId}`)
       .then(({ data }) => {
@@ -66,9 +96,11 @@ export default function DoctorConsultationScreen({ navigation, route }: any) {
     return () => {
       socketService.off('receive_message', handleReceiveMessage)
       socketService.off('consultation_updated', handleConsultationUpdated)
+      socketService.off('video_call_invite', handleVideoInvite)
+      socketService.off('video_call_declined', handleVideoDeclined)
       if (scrollTimer.current) clearTimeout(scrollTimer.current)
     }
-  }, [consultationId, handleReceiveMessage, handleConsultationUpdated, baseURL, token])
+  }, [consultationId, handleReceiveMessage, handleConsultationUpdated, handleVideoInvite, handleVideoDeclined, baseURL, token])
 
   const handleConfirmPayment = async () => {
     setConfirmingPayment(true)
@@ -169,7 +201,10 @@ export default function DoctorConsultationScreen({ navigation, route }: any) {
       {!isCompleted && (
         <TouchableOpacity
           style={styles.videoBtn}
-          onPress={() => navigation.navigate('VideoCallScreen', { consultationId })}
+          onPress={() => {
+            socketService.emit('video_call_invite', { consultation_id: consultationId })
+            navigation.navigate('VideoCallScreen', { consultationId })
+          }}
           testID="video-call-btn"
         >
           <Text style={styles.videoBtnText}>{t('consultation.video_call')}</Text>

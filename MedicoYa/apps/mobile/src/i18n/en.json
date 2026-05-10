@@ -67,9 +67,13 @@
     "rate_thanks":  "Thanks for your rating!",
     "rate_comment": "Comment (optional)",
     "avg_rating":   "ratings",
-    "video_call":    "Video call",
-    "video_end":     "End call",
-    "video_waiting": "Waiting for the other participant..."
+    "video_call":     "Video call",
+    "video_end":      "End call",
+    "video_waiting":  "Waiting for the other participant...",
+    "video_incoming": "Incoming video call",
+    "video_accept":   "Accept",
+    "video_decline":  "Decline",
+    "video_declined": "Call declined"
   },
   "history": {
     "title": "History",
