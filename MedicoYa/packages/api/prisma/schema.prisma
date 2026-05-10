@@ -8,21 +8,21 @@ datasource db {
 }
 
 model User {
-  id                 String    @id @default(uuid())
-  phone              String    @unique
+  id                 String   @id @default(uuid())
+  phone              String   @unique
   name               String?
   first_name         String?
   last_name          String?
   role               Role
-  preferred_language Language  @default(es)
-  created_at         DateTime  @default(now())
+  preferred_language Language @default(es)
+  created_at         DateTime @default(now())
 
-  doctor                      Doctor?
-  patient                     Patient?
-  messages                    Message[]
-  pushTokens                  PushToken[]
-  brigades                    Brigade[]
-  dental_records_as_dentist   DentalRecord[] @relation("DentistRecords")
+  doctor                   Doctor?
+  patient                  Patient?
+  messages                 Message[]
+  pushTokens               PushToken[]
+  brigades                 Brigade[]
+  dental_visits_as_dentist DentalVisit[] @relation("DentistVisits")
 }
 
 enum Role {
@@ -80,9 +80,9 @@ model Patient {
   registered_by     String?
   registration_mode RegistrationMode @default(self)
 
-  consultations  Consultation[]
-  ratings        Rating[]
-  dental_records DentalRecord[]
+  consultations Consultation[]
+  ratings       Rating[]
+  dental_file   DentalPatientFile?
 }
 
 enum RegistrationMode {
@@ -187,10 +187,10 @@ model Brigade {
   brigade_type String        @default("medical")
   created_at   DateTime      @default(now())
 
-  organizer      User            @relation(fields: [organizer_id], references: [id], onDelete: Restrict)
-  doctors        BrigadeDoctor[]
-  consultations  Consultation[]
-  dental_records DentalRecord[]
+  organizer     User            @relation(fields: [organizer_id], references: [id], onDelete: Restrict)
+  doctors       BrigadeDoctor[]
+  consultations Consultation[]
+  dental_visits DentalVisit[]
 }
 
 model BrigadeDoctor {
@@ -204,28 +204,37 @@ model BrigadeDoctor {
   @@id([brigade_id, doctor_id])
 }
 
-model DentalRecord {
+model DentalPatientFile {
+  id         String   @id @default(uuid())
+  patient_id String   @unique
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  patient Patient       @relation(fields: [patient_id], references: [id])
+  teeth   ToothRecord[]
+  visits  DentalVisit[]
+}
+
+model DentalVisit {
   id             String   @id @default(uuid())
-  patient_id     String
+  file_id        String
   dentist_id     String
   brigade_id     String?
-  record_date    DateTime @default(now())
-  cpod_index     Decimal? @db.Decimal(4, 2)
+  visit_date     DateTime @default(now())
   hygiene_notes  String?
-  referral_to    String?
+  cpod_index     Decimal? @db.Decimal(4, 2)
   treatment_plan String?
-  created_at     DateTime @default(now())
+  referral_to    String?
 
-  patient    Patient           @relation(fields: [patient_id], references: [id])
-  dentist    User              @relation(fields: [dentist_id], references: [id], name: "DentistRecords")
+  file       DentalPatientFile @relation(fields: [file_id], references: [id], onDelete: Cascade)
+  dentist    User              @relation(fields: [dentist_id], references: [id], name: "DentistVisits")
   brigade    Brigade?          @relation(fields: [brigade_id], references: [id])
-  teeth      ToothRecord[]
   treatments DentalTreatment[]
 }
 
 model ToothRecord {
   id                 String  @id @default(uuid())
-  dental_record_id   String
+  file_id            String
   tooth_fdi          Int
   surface_mesial     String  @default("healthy")
   surface_distal     String  @default("healthy")
@@ -234,14 +243,14 @@ model ToothRecord {
   surface_palatal    String  @default("healthy")
   notes              String?
 
-  dental_record DentalRecord @relation(fields: [dental_record_id], references: [id], onDelete: Cascade)
+  file DentalPatientFile @relation(fields: [file_id], references: [id], onDelete: Cascade)
 
-  @@unique([dental_record_id, tooth_fdi])
+  @@unique([file_id, tooth_fdi])
 }
 
 model DentalTreatment {
   id               String    @id @default(uuid())
-  dental_record_id String
+  visit_id         String
   tooth_fdi        Int?
   procedure        String
   status           String    @default("completed")
@@ -255,5 +264,5 @@ model DentalTreatment {
   before_image_url String?
   after_image_url  String?
 
-  dental_record DentalRecord @relation(fields: [dental_record_id], references: [id], onDelete: Cascade)
+  visit DentalVisit @relation(fields: [visit_id], references: [id], onDelete: Cascade)
 }
