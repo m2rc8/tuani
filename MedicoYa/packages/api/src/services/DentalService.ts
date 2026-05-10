@@ -34,6 +34,8 @@ export interface AddTreatmentInput {
   cost_lps?:   number
   notes?:      string
   materials?:  string[]
+  started_at?: string
+  ended_at?:   string
 }
 
 export class DentalService {
@@ -129,7 +131,23 @@ export class DentalService {
         cost_lps:         input.cost_lps,
         notes:            input.notes,
         materials:        input.materials ?? [],
+        started_at:       input.started_at ? new Date(input.started_at) : undefined,
+        ended_at:         input.ended_at   ? new Date(input.ended_at)   : undefined,
       },
+    })
+  }
+
+  async updateTreatmentPlan(recordId: string, plan: string | null) {
+    return this.db.dentalRecord.update({
+      where: { id: recordId },
+      data:  { treatment_plan: plan },
+    })
+  }
+
+  async updateTreatmentImage(treatmentId: string, type: 'before' | 'after', url: string) {
+    return this.db.dentalTreatment.update({
+      where: { id: treatmentId },
+      data:  type === 'before' ? { before_image_url: url } : { after_image_url: url },
     })
   }
 

@@ -23,17 +23,23 @@ export interface DentalTreatment {
   notes?:           string
   materials?:       string[]
   performed_at:     string
+  started_at?:      string | null
+  ended_at?:        string | null
+  before_image_url?: string | null
+  after_image_url?:  string | null
 }
 
 export interface DentalRecord {
-  id:             string
-  patient_id:     string
-  dentist_id:     string
-  brigade_id?:    string
-  record_date:    string
-  cpod_index?:    number
-  hygiene_notes?: string
-  created_at:     string
-  teeth:          ToothRecord[]
-  treatments:     DentalTreatment[]
+  id:              string
+  patient_id:      string
+  dentist_id:      string
+  brigade_id?:     string
+  record_date:     string
+  cpod_index?:     number
+  hygiene_notes?:  string
+  referral_to?:    string | null
+  treatment_plan?: string | null
+  created_at:      string
+  teeth:           ToothRecord[]
+  treatments:      DentalTreatment[]
 }

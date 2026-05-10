@@ -2,8 +2,10 @@ import { Router, Request, Response } from 'express'
 import { PrismaClient, Role } from '@prisma/client'
 import { z } from 'zod'
 import { randomUUID } from 'crypto'
+import multer from 'multer'
 import { requireAuth, requireRole } from '../middleware/requireAuth'
 import { DentalService } from '../services/DentalService'
+import { uploadStream } from '../lib/cloudinary'
 
 const createMinorPatientSchema = z.object({
   first_name:    z.string().min(1).max(60),
@@ -31,13 +33,27 @@ const updateTeethSchema = z.object({
 })
 
 const addTreatmentSchema = z.object({
-  tooth_fdi: z.number().int().optional(),
-  procedure: z.string().min(1).max(100),
-  status:    z.enum(['pending','in_progress','completed']).optional(),
-  priority:  z.enum(['urgent','elective']).optional(),
-  cost_lps:  z.number().positive().optional(),
-  notes:     z.string().max(500).optional(),
-  materials: z.array(z.string().max(100)).optional(),
+  tooth_fdi:  z.number().int().optional(),
+  procedure:  z.string().min(1).max(100),
+  status:     z.enum(['pending','in_progress','completed']).optional(),
+  priority:   z.enum(['urgent','elective']).optional(),
+  cost_lps:   z.number().positive().optional(),
+  notes:      z.string().max(500).optional(),
+  materials:  z.array(z.string().max(100)).optional(),
+  started_at: z.string().datetime().optional(),
+  ended_at:   z.string().datetime().optional(),
+})
+
+const treatmentPlanSchema = z.object({
+  treatment_plan: z.string().max(3000).nullable(),
+})
+
+const upload = multer({
+  storage:    multer.memoryStorage(),
+  limits:     { fileSize: 8 * 1024 * 1024 },
+  fileFilter: (_req, file, cb) => {
+    cb(null, ['image/jpeg', 'image/png', 'image/webp'].includes(file.mimetype))
+  },
 })
 
 export function createDentalRouter(db: PrismaClient): Router {
@@ -137,6 +153,37 @@ export function createDentalRouter(db: PrismaClient): Router {
       try {
         const treatment = await service.addTreatment(req.params.id, parsed.data)
         res.status(201).json(treatment)
+      } catch { res.status(500).json({ error: 'Internal server error' }) }
+    }
+  )
+
+  // Update treatment plan
+  router.patch(
+    '/records/:id/treatment-plan',
+    requireAuth,
+    async (req: Request, res: Response): Promise<void> => {
+      const parsed = treatmentPlanSchema.safeParse(req.body)
+      if (!parsed.success) { res.status(400).json({ error: 'Invalid request' }); return }
+      try {
+        await service.updateTreatmentPlan(req.params.id, parsed.data.treatment_plan)
+        res.json({ ok: true })
+      } catch { res.status(500).json({ error: 'Internal server error' }) }
+    }
+  )
+
+  // Upload before/after image for a treatment
+  router.post(
+    '/records/:id/treatments/:treatmentId/images',
+    requireAuth,
+    upload.single('image'),
+    async (req: Request, res: Response): Promise<void> => {
+      const type = req.body?.type as string
+      if (!req.file) { res.status(400).json({ error: 'No image provided' }); return }
+      if (type !== 'before' && type !== 'after') { res.status(400).json({ error: 'type must be before or after' }); return }
+      try {
+        const url       = await uploadStream(req.file.buffer, 'medicoya/dental')
+        const treatment = await service.updateTreatmentImage(req.params.treatmentId, type, url)
+        res.json(treatment)
       } catch { res.status(500).json({ error: 'Internal server error' }) }
     }
   )

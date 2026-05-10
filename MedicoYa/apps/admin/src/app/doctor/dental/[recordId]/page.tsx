@@ -29,12 +29,17 @@ interface DentalTreatment {
   notes?: string
   materials?: string[]
   performed_at: string
+  started_at?: string | null
+  ended_at?: string | null
+  before_image_url?: string | null
+  after_image_url?: string | null
 }
 
 interface DentalRecord {
   id: string
   patient_id: string
   referral_to?: string | null
+  treatment_plan?: string | null
   teeth: ToothRecord[]
   treatments: DentalTreatment[]
 }
@@ -71,6 +76,11 @@ export default function DentalRecordPage({ params }: { params: Promise<{ recordI
   const [saving,        setSaving]        = useState(false)
   const [saveMsg,       setSaveMsg]       = useState('')
 
+  // Treatment plan
+  const [treatmentPlan,  setTreatmentPlan]  = useState('')
+  const [savingPlan,     setSavingPlan]     = useState(false)
+  const [planMsg,        setPlanMsg]        = useState('')
+
   // Referral
   const [referralTo,   setReferralTo]   = useState('')
   const [savingRef,    setSavingRef]    = useState(false)
@@ -82,6 +92,8 @@ export default function DentalRecordPage({ params }: { params: Promise<{ recordI
   const [costLps,      setCostLps]      = useState('')
   const [txNotes,      setTxNotes]      = useState('')
   const [txMaterials,  setTxMaterials]  = useState('')
+  const [txStartedAt,  setTxStartedAt]  = useState('')
+  const [txEndedAt,    setTxEndedAt]    = useState('')
   const [addingTx,     setAddingTx]     = useState(false)
   const [txErr,        setTxErr]        = useState('')
   const [showTxForm,   setShowTxForm]   = useState(false)
@@ -94,6 +106,7 @@ export default function DentalRecordPage({ params }: { params: Promise<{ recordI
       .then(data => {
         setRecord(data)
         setReferralTo(data.referral_to ?? '')
+        setTreatmentPlan(data.treatment_plan ?? '')
         const m = new Map<number, ToothRecord>()
         for (const t of data.teeth) m.set(t.tooth_fdi, t)
         setTeethMap(m)
@@ -159,6 +172,24 @@ export default function DentalRecordPage({ params }: { params: Promise<{ recordI
     }
   }
 
+  // ── Save treatment plan
+  async function handleSavePlan() {
+    if (!record) return
+    setSavingPlan(true); setPlanMsg('')
+    try {
+      await apiFetch(`/api/dental/records/${record.id}/treatment-plan`, {
+        method: 'PATCH',
+        body:   JSON.stringify({ treatment_plan: treatmentPlan.trim() || null }),
+      })
+      setRecord(prev => prev ? { ...prev, treatment_plan: treatmentPlan.trim() || null } : prev)
+      setPlanMsg('Plan guardado.')
+    } catch (err) {
+      setPlanMsg(err instanceof Error ? err.message : 'Error al guardar.')
+    } finally {
+      setSavingPlan(false)
+    }
+  }
+
   // ── Save referral
   async function handleSaveReferral() {
     if (!record) return
@@ -186,10 +217,12 @@ export default function DentalRecordPage({ params }: { params: Promise<{ recordI
     try {
       const mats = txMaterials.split(',').map(m => m.trim()).filter(Boolean)
       const body: Record<string, unknown> = { procedure: procedure.trim() }
-      if (txToothFdi.trim()) body.tooth_fdi = parseInt(txToothFdi, 10)
-      if (costLps.trim())    body.cost_lps  = parseFloat(costLps)
-      if (txNotes.trim())    body.notes     = txNotes.trim()
-      if (mats.length > 0)   body.materials = mats
+      if (txToothFdi.trim()) body.tooth_fdi  = parseInt(txToothFdi, 10)
+      if (costLps.trim())    body.cost_lps   = parseFloat(costLps)
+      if (txNotes.trim())    body.notes      = txNotes.trim()
+      if (mats.length > 0)   body.materials  = mats
+      if (txStartedAt)       body.started_at = new Date(txStartedAt).toISOString()
+      if (txEndedAt)         body.ended_at   = new Date(txEndedAt).toISOString()
 
       const newTx = await apiFetch<DentalTreatment>(`/api/dental/records/${record.id}/treatments`, {
         method: 'POST',
@@ -197,12 +230,35 @@ export default function DentalRecordPage({ params }: { params: Promise<{ recordI
       })
       setRecord(prev => prev ? { ...prev, treatments: [...prev.treatments, newTx] } : prev)
       setProcedure(''); setTxToothFdi(''); setCostLps(''); setTxNotes(''); setTxMaterials('')
+      setTxStartedAt(''); setTxEndedAt('')
       setShowTxForm(false)
     } catch (err) {
       setTxErr(err instanceof Error ? err.message : 'Error al agregar tratamiento.')
     } finally {
       setAddingTx(false)
     }
+  }
+
+  // ── Upload before/after image
+  async function handleImageUpload(tx: DentalTreatment, type: 'before' | 'after', file: File) {
+    const { getToken } = await import('../../../lib/auth')
+    const formData = new FormData()
+    formData.append('image', file)
+    formData.append('type', type)
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/dental/records/${record!.id}/treatments/${tx.id}/images`,
+      {
+        method:  'POST',
+        headers: { Authorization: `Bearer ${getToken()}` },
+        body:    formData,
+      }
+    )
+    if (!res.ok) throw new Error(`HTTP ${res.status}`)
+    const updated: DentalTreatment = await res.json()
+    setRecord(prev => prev ? {
+      ...prev,
+      treatments: prev.treatments.map(t => t.id === updated.id ? updated : t),
+    } : prev)
   }
 
   // ── Render states
@@ -277,6 +333,26 @@ export default function DentalRecordPage({ params }: { params: Promise<{ recordI
             />
           ) : (
             <p className="text-slate-500 text-sm">Selecciona un diente para editar sus superficies.</p>
+          )}
+        </div>
+      </div>
+
+      {/* Treatment plan */}
+      <div className="bg-slate-800 rounded-lg p-4 border border-slate-700 mb-6">
+        <h2 className="text-xs font-semibold text-sky-400 uppercase tracking-wider mb-3">Plan de tratamiento</h2>
+        <textarea
+          value={treatmentPlan}
+          onChange={e => setTreatmentPlan(e.target.value)}
+          placeholder="Describe el plan de tratamiento general del paciente..."
+          rows={4}
+          className={INPUT_CLASS + ' resize-none'}
+        />
+        <div className="flex items-center gap-3 mt-2">
+          <button onClick={handleSavePlan} disabled={savingPlan} className={BTN_GREEN}>
+            {savingPlan ? 'Guardando...' : 'Guardar plan'}
+          </button>
+          {planMsg && (
+            <span className={`text-xs ${planMsg.startsWith('Error') ? 'text-red-400' : 'text-green-400'}`}>{planMsg}</span>
           )}
         </div>
       </div>
@@ -372,6 +448,27 @@ export default function DentalRecordPage({ params }: { params: Promise<{ recordI
                 className={INPUT_CLASS}
               />
             </div>
+            <div className="flex gap-3">
+              <div className="flex-1">
+                <label className={LABEL_CLASS}>Fecha/hora inicio</label>
+                <input
+                  type="datetime-local"
+                  value={txStartedAt}
+                  onChange={e => setTxStartedAt(e.target.value)}
+                  className={INPUT_CLASS}
+                />
+              </div>
+              <div className="flex-1">
+                <label className={LABEL_CLASS}>Fecha/hora fin</label>
+                <input
+                  type="datetime-local"
+                  value={txEndedAt}
+                  onChange={e => setTxEndedAt(e.target.value)}
+                  min={txStartedAt || undefined}
+                  className={INPUT_CLASS}
+                />
+              </div>
+            </div>
             {txErr && <p className="text-red-400 text-sm">{txErr}</p>}
             <button
               type="submit"
@@ -410,6 +507,12 @@ export default function DentalRecordPage({ params }: { params: Promise<{ recordI
                     </span>
                   </div>
                   {tx.notes && <p className="text-slate-400 text-xs mt-0.5">{tx.notes}</p>}
+                  {(tx.started_at || tx.ended_at) && (
+                    <div className="mt-1 text-xs text-slate-500 space-y-0.5">
+                      {tx.started_at && <p>Inicio: {new Date(tx.started_at).toLocaleString('es-HN')}</p>}
+                      {tx.ended_at   && <p>Fin: {new Date(tx.ended_at).toLocaleString('es-HN')}</p>}
+                    </div>
+                  )}
                   {tx.materials && tx.materials.length > 0 && (
                     <div className="flex flex-wrap gap-1 mt-1">
                       {tx.materials.map((m, i) => (
@@ -417,10 +520,51 @@ export default function DentalRecordPage({ params }: { params: Promise<{ recordI
                       ))}
                     </div>
                   )}
+                  {(tx.before_image_url || tx.after_image_url) && (
+                    <div className="flex gap-3 mt-2">
+                      {tx.before_image_url && (
+                        <div>
+                          <p className="text-xs text-slate-500 mb-1 uppercase tracking-wide">Antes</p>
+                          <a href={tx.before_image_url} target="_blank" rel="noreferrer">
+                            <img src={tx.before_image_url} alt="antes" className="w-28 h-20 object-cover rounded" />
+                          </a>
+                        </div>
+                      )}
+                      {tx.after_image_url && (
+                        <div>
+                          <p className="text-xs text-slate-500 mb-1 uppercase tracking-wide">Después</p>
+                          <a href={tx.after_image_url} target="_blank" rel="noreferrer">
+                            <img src={tx.after_image_url} alt="después" className="w-28 h-20 object-cover rounded" />
+                          </a>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  {/* Upload before/after images */}
+                  <div className="flex gap-2 mt-2">
+                    <label className="cursor-pointer text-xs text-sky-400 hover:text-sky-300">
+                      {tx.before_image_url ? '↻ Antes' : '+ Antes'}
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={e => e.target.files?.[0] && handleImageUpload(tx, 'before', e.target.files[0])}
+                      />
+                    </label>
+                    <label className="cursor-pointer text-xs text-sky-400 hover:text-sky-300">
+                      {tx.after_image_url ? '↻ Después' : '+ Después'}
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={e => e.target.files?.[0] && handleImageUpload(tx, 'after', e.target.files[0])}
+                      />
+                    </label>
+                  </div>
                 </div>
                 <div className="text-right shrink-0">
                   {tx.cost_lps !== undefined && (
-                    <p className="text-white text-sm font-semibold">L {tx.cost_lps.toFixed(2)}</p>
+                    <p className="text-white text-sm font-semibold">L {Number(tx.cost_lps).toFixed(2)}</p>
                   )}
                   <p className="text-slate-500 text-xs">
                     {new Date(tx.performed_at).toLocaleDateString('es-HN', {

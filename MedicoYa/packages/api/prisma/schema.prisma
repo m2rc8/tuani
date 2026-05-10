@@ -205,15 +205,16 @@ model BrigadeDoctor {
 }
 
 model DentalRecord {
-  id            String   @id @default(uuid())
-  patient_id    String
-  dentist_id    String
-  brigade_id    String?
-  record_date   DateTime @default(now())
-  cpod_index    Decimal? @db.Decimal(4, 2)
-  hygiene_notes String?
-  referral_to   String?
-  created_at    DateTime @default(now())
+  id             String   @id @default(uuid())
+  patient_id     String
+  dentist_id     String
+  brigade_id     String?
+  record_date    DateTime @default(now())
+  cpod_index     Decimal? @db.Decimal(4, 2)
+  hygiene_notes  String?
+  referral_to    String?
+  treatment_plan String?
+  created_at     DateTime @default(now())
 
   patient    Patient           @relation(fields: [patient_id], references: [id])
   dentist    User              @relation(fields: [dentist_id], references: [id], name: "DentistRecords")
@@ -239,16 +240,20 @@ model ToothRecord {
 }
 
 model DentalTreatment {
-  id               String   @id @default(uuid())
+  id               String    @id @default(uuid())
   dental_record_id String
   tooth_fdi        Int?
   procedure        String
-  status           String   @default("completed")
-  priority         String   @default("elective")
-  cost_lps         Decimal? @db.Decimal(10, 2)
+  status           String    @default("completed")
+  priority         String    @default("elective")
+  cost_lps         Decimal?  @db.Decimal(10, 2)
   notes            String?
-  materials        String[] @default([])
-  performed_at     DateTime @default(now())
+  materials        String[]  @default([])
+  performed_at     DateTime  @default(now())
+  started_at       DateTime?
+  ended_at         DateTime?
+  before_image_url String?
+  after_image_url  String?
 
   dental_record DentalRecord @relation(fields: [dental_record_id], references: [id], onDelete: Cascade)
 }
