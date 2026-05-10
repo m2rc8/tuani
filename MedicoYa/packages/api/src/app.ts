@@ -22,6 +22,7 @@ import { createBrigadesRouter }     from './routes/brigades'
 import { createSyncRouter }         from './routes/sync'
 import { PatientService } from './services/PatientService'
 import { createPatientsRouter } from './routes/patients'
+import { createDentalRouter }       from './routes/dental'
 
 interface AppDeps {
   authService?:         AuthService
@@ -64,6 +65,7 @@ export function createApp(deps?: AppDeps): { app: express.Express } {
   app.use('/fhir/R4',           createFhirRouter(db))
   app.use('/api/brigades',      createBrigadesRouter(db))
   app.use('/api/sync',          createSyncRouter(db))
+  app.use('/api/dental',        createDentalRouter(db))
   app.get('/health', (_req, res) => res.json({ ok: true }))
 
   return { app }

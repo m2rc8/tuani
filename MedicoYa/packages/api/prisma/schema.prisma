@@ -15,11 +15,12 @@ model User {
   preferred_language Language  @default(es)
   created_at         DateTime  @default(now())
 
-  doctor     Doctor?
-  patient    Patient?
-  messages   Message[]
-  pushTokens PushToken[]
-  brigades   Brigade[]
+  doctor                      Doctor?
+  patient                     Patient?
+  messages                    Message[]
+  pushTokens                  PushToken[]
+  brigades                    Brigade[]
+  dental_records_as_dentist   DentalRecord[] @relation("DentistRecords")
 }
 
 enum Role {
@@ -77,8 +78,9 @@ model Patient {
   registered_by     String?
   registration_mode RegistrationMode @default(self)
 
-  consultations Consultation[]
-  ratings      Rating[]
+  consultations  Consultation[]
+  ratings        Rating[]
+  dental_records DentalRecord[]
 }
 
 enum RegistrationMode {
@@ -181,9 +183,10 @@ model Brigade {
   status       BrigadeStatus @default(active)
   created_at   DateTime      @default(now())
 
-  organizer     User            @relation(fields: [organizer_id], references: [id], onDelete: Restrict)
-  doctors       BrigadeDoctor[]
-  consultations Consultation[]
+  organizer      User            @relation(fields: [organizer_id], references: [id], onDelete: Restrict)
+  doctors        BrigadeDoctor[]
+  consultations  Consultation[]
+  dental_records DentalRecord[]
 }
 
 model BrigadeDoctor {
@@ -195,4 +198,51 @@ model BrigadeDoctor {
   doctor  Doctor  @relation(fields: [doctor_id], references: [id], onDelete: Cascade)
 
   @@id([brigade_id, doctor_id])
+}
+
+model DentalRecord {
+  id            String   @id @default(uuid())
+  patient_id    String
+  dentist_id    String
+  brigade_id    String?
+  record_date   DateTime @default(now())
+  cpod_index    Decimal? @db.Decimal(4, 2)
+  hygiene_notes String?
+  created_at    DateTime @default(now())
+
+  patient    Patient           @relation(fields: [patient_id], references: [id])
+  dentist    User              @relation(fields: [dentist_id], references: [id], name: "DentistRecords")
+  brigade    Brigade?          @relation(fields: [brigade_id], references: [id])
+  teeth      ToothRecord[]
+  treatments DentalTreatment[]
+}
+
+model ToothRecord {
+  id                 String  @id @default(uuid())
+  dental_record_id   String
+  tooth_fdi          Int
+  surface_mesial     String  @default("healthy")
+  surface_distal     String  @default("healthy")
+  surface_occlusal   String  @default("healthy")
+  surface_vestibular String  @default("healthy")
+  surface_palatal    String  @default("healthy")
+  notes              String?
+
+  dental_record DentalRecord @relation(fields: [dental_record_id], references: [id], onDelete: Cascade)
+
+  @@unique([dental_record_id, tooth_fdi])
+}
+
+model DentalTreatment {
+  id               String   @id @default(uuid())
+  dental_record_id String
+  tooth_fdi        Int?
+  procedure        String
+  status           String   @default("completed")
+  priority         String   @default("elective")
+  cost_lps         Decimal? @db.Decimal(10, 2)
+  notes            String?
+  performed_at     DateTime @default(now())
+
+  dental_record DentalRecord @relation(fields: [dental_record_id], references: [id], onDelete: Cascade)
 }

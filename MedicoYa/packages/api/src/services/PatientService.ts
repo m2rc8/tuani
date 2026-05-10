@@ -40,6 +40,14 @@ export class PatientService {
     }
   }
 
+  async getByPhone(phone: string): Promise<{ id: string; name: string | null; phone: string } | null> {
+    const user = await this.db.user.findFirst({
+      where:  { phone, patient: { isNot: null } },
+      select: { id: true, name: true, phone: true },
+    })
+    return user ?? null
+  }
+
   async updateProfile(userId: string, data: UpdateProfileData): Promise<PatientProfile> {
     await this.getProfile(userId)  // existence check + 404 if missing
 

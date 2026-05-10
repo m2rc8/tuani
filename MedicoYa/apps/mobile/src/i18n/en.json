@@ -114,6 +114,19 @@
     "pending_title": "Account under review",
     "pending_body": "Your application is being reviewed by the MedicoYa team. We'll notify you once approved."
   },
+  "dental": {
+    "title":             "Dentistry",
+    "odontogram":        "Odontogram",
+    "treatments":        "Treatments",
+    "save_odontogram":   "Save odontogram",
+    "add_treatment":     "Add treatment",
+    "patient_phone":     "Patient phone",
+    "start_record":      "Start dental record",
+    "patient_not_found": "Patient not found",
+    "check_phone":       "Please check the phone number.",
+    "subtitle":          "Enter the patient's phone number to start a dental record",
+    "tab":               "Dental"
+  },
   "brigade": {
     "title": "Brigades",
     "join_banner": "Join a brigade →",

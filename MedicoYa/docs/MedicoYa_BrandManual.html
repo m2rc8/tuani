@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MédicoYa — Manual de Marca</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green-50: #E8F7F0;
+  --green-100: #C2EAD8;
+  --green-200: #7FD4B0;
+  --green-400: #1DB87A;
+  --green-500: #169960;
+  --green-600: #0F7A4A;
+  --green-700: #085C36;
+  --green-800: #053D23;
+
+  --teal-50: #E3F4F4;
+  --teal-200: #7ECECE;
+  --teal-400: #1DA8A8;
+  --teal-600: #0F6E6E;
+
+  --slate-50: #F4F6F8;
+  --slate-100: #E8ECF0;
+  --slate-200: #CDD4DC;
+  --slate-400: #8A97A6;
+  --slate-600: #4A5568;
+  --slate-800: #1A202C;
+  --slate-900: #0D1117;
+
+  --white: #FFFFFF;
+  --black: #0D1117;
+
+  --font-display: 'DM Serif Display', Georgia, serif;
+  --font-body: 'DM Sans', system-ui, sans-serif;
+
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-xl: 32px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--slate-900);
+  color: var(--white);
+  line-height: 1.6;
+}
+
+.page { max-width: 900px; margin: 0 auto; padding: 0 32px 80px; }
+
+/* ── COVER ── */
+.cover {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 80px 0 60px;
+  border-bottom: 0.5px solid rgba(255,255,255,0.08);
+  position: relative;
+  overflow: hidden;
+}
+
+.cover::before {
+  content: '';
+  position: absolute;
+  top: -120px; right: -180px;
+  width: 560px; height: 560px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(29,184,122,0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.cover-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(29,184,122,0.12);
+  border: 0.5px solid rgba(29,184,122,0.3);
+  border-radius: 100px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--green-400);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 32px;
+  width: fit-content;
+}
+
+.cover-badge span { width: 6px; height: 6px; background: var(--green-400); border-radius: 50%; }
+
+.cover h1 {
+  font-family: var(--font-display);
+  font-size: clamp(52px, 8vw, 88px);
+  font-weight: 400;
+  line-height: 1.0;
+  color: var(--white);
+  margin-bottom: 24px;
+}
+
+.cover h1 em {
+  font-style: italic;
+  color: var(--green-400);
+}
+
+.cover-sub {
+  font-size: 18px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.5);
+  max-width: 480px;
+  margin-bottom: 48px;
+}
+
+.cover-meta {
+  display: flex;
+  gap: 32px;
+  font-size: 13px;
+  color: rgba(255,255,255,0.3);
+}
+
+.cover-meta strong { color: rgba(255,255,255,0.6); font-weight: 500; }
+
+/* ── SECTION ── */
+.section {
+  padding: 80px 0 0;
+}
+
+.section-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--green-400);
+  margin-bottom: 12px;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 4vw, 40px);
+  font-weight: 400;
+  color: var(--white);
+  line-height: 1.15;
+  margin-bottom: 40px;
+}
+
+.divider {
+  height: 0.5px;
+  background: rgba(255,255,255,0.07);
+  margin: 64px 0 0;
+}
+
+/* ── LOGO SECTION ── */
+.logo-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 40px;
+}
+
+.logo-card {
+  border-radius: var(--radius-lg);
+  padding: 48px 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  position: relative;
+}
+
+.logo-card.dark { background: #111B14; border: 0.5px solid rgba(29,184,122,0.15); }
+.logo-card.light { background: #F0F9F4; }
+.logo-card.color { background: var(--green-500); }
+.logo-card.mono { background: var(--slate-800); border: 0.5px solid rgba(255,255,255,0.08); }
+
+.logo-card-label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  position: absolute;
+  top: 16px; left: 20px;
+}
+
+.logo-card.dark .logo-card-label,
+.logo-card.mono .logo-card-label { color: rgba(255,255,255,0.3); }
+.logo-card.light .logo-card-label { color: rgba(0,0,0,0.3); }
+.logo-card.color .logo-card-label { color: rgba(255,255,255,0.5); }
+
+/* LOGO SVG MARKS */
+.logo-mark {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.logo-icon {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+}
+
+.logo-wordmark {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+}
+
+.logo-wordmark .word1 { font-size: 22px; font-weight: 300; letter-spacing: -0.02em; }
+.logo-wordmark .word2 { font-size: 22px; font-weight: 600; letter-spacing: -0.02em; }
+.logo-wordmark .tagline { font-size: 9.5px; font-weight: 400; letter-spacing: 0.12em; text-transform: uppercase; margin-top: 3px; }
+
+.logo-card.dark .logo-wordmark .word1 { color: rgba(255,255,255,0.85); }
+.logo-card.dark .logo-wordmark .word2 { color: var(--green-400); }
+.logo-card.dark .logo-wordmark .tagline { color: rgba(255,255,255,0.3); }
+
+.logo-card.light .logo-wordmark .word1 { color: rgba(15,30,20,0.75); }
+.logo-card.light .logo-wordmark .word2 { color: var(--green-600); }
+.logo-card.light .logo-wordmark .tagline { color: rgba(15,30,20,0.35); }
+
+.logo-card.color .logo-wordmark .word1 { color: rgba(255,255,255,0.85); }
+.logo-card.color .logo-wordmark .word2 { color: #ffffff; }
+.logo-card.color .logo-wordmark .tagline { color: rgba(255,255,255,0.55); }
+
+.logo-card.mono .logo-wordmark .word1 { color: rgba(255,255,255,0.65); }
+.logo-card.mono .logo-wordmark .word2 { color: rgba(255,255,255,0.95); }
+.logo-card.mono .logo-wordmark .tagline { color: rgba(255,255,255,0.28); }
+
+/* ── COLOR PALETTE ── */
+.palette-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+  margin-bottom: 40px;
+}
+
+.swatch {
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.swatch-color {
+  height: 88px;
+  width: 100%;
+  cursor: pointer;
+  transition: transform 0.15s;
+  position: relative;
+}
+
+.swatch-color:hover { transform: scale(1.03); }
+
+.swatch-color .copy-hint {
+  position: absolute;
+  bottom: 8px; right: 8px;
+  font-size: 10px;
+  font-weight: 500;
+  opacity: 0;
+  transition: opacity 0.15s;
+  background: rgba(0,0,0,0.4);
+  color: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+.swatch-color:hover .copy-hint { opacity: 1; }
+
+.swatch-info {
+  padding: 10px 12px;
+  background: rgba(255,255,255,0.04);
+  border: 0.5px solid rgba(255,255,255,0.07);
+  border-top: none;
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+}
+
+.swatch-name { font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.8); margin-bottom: 2px; }
+.swatch-hex { font-size: 11px; color: rgba(255,255,255,0.35); font-family: 'DM Mono', monospace; }
+.swatch-use { font-size: 10px; color: rgba(255,255,255,0.25); margin-top: 3px; }
+
+/* ── TYPOGRAPHY ── */
+.type-samples { display: flex; flex-direction: column; gap: 0; }
+
+.type-row {
+  padding: 28px 0;
+  border-bottom: 0.5px solid rgba(255,255,255,0.06);
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.type-meta { display: flex; flex-direction: column; gap: 4px; padding-top: 6px; }
+.type-role { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--green-400); }
+.type-spec { font-size: 11px; color: rgba(255,255,255,0.3); }
+
+.type-sample-display { font-family: var(--font-display); font-size: 52px; line-height: 1.0; color: var(--white); }
+.type-sample-h1 { font-family: var(--font-display); font-size: 36px; line-height: 1.1; color: var(--white); }
+.type-sample-h2 { font-family: var(--font-body); font-size: 24px; font-weight: 500; color: var(--white); }
+.type-sample-body { font-family: var(--font-body); font-size: 16px; font-weight: 400; color: rgba(255,255,255,0.65); max-width: 480px; line-height: 1.7; }
+.type-sample-ui { font-family: var(--font-body); font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.8); }
+.type-sample-caption { font-family: var(--font-body); font-size: 12px; font-weight: 400; color: rgba(255,255,255,0.35); letter-spacing: 0.03em; }
+
+/* ── UI COMPONENTS ── */
+.components-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
+
+.component-group-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 20px;
+}
+
+.btn-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--font-body); font-size: 14px; font-weight: 500;
+  padding: 12px 24px; border-radius: 100px; border: none; cursor: pointer;
+  transition: all 0.15s; text-decoration: none; white-space: nowrap;
+}
+
+.btn-primary { background: var(--green-400); color: var(--black); }
+.btn-primary:hover { background: var(--green-200); transform: translateY(-1px); }
+
+.btn-secondary {
+  background: rgba(29,184,122,0.1);
+  color: var(--green-400);
+  border: 0.5px solid rgba(29,184,122,0.3);
+}
+.btn-secondary:hover { background: rgba(29,184,122,0.18); }
+
+.btn-ghost {
+  background: rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.7);
+  border: 0.5px solid rgba(255,255,255,0.1);
+}
+.btn-ghost:hover { background: rgba(255,255,255,0.1); }
+
+.btn-danger { background: rgba(220,53,53,0.1); color: #ff6b6b; border: 0.5px solid rgba(220,53,53,0.25); }
+
+.btn-sm { padding: 8px 16px; font-size: 12px; }
+.btn-lg { padding: 16px 32px; font-size: 16px; }
+
+/* PILLS / BADGES */
+.pill-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 12px; border-radius: 100px;
+  font-size: 12px; font-weight: 500;
+}
+.pill-dot { width: 6px; height: 6px; border-radius: 50%; }
+.pill-green { background: rgba(29,184,122,0.12); color: var(--green-400); border: 0.5px solid rgba(29,184,122,0.2); }
+.pill-green .pill-dot { background: var(--green-400); }
+.pill-blue { background: rgba(55,138,221,0.12); color: #74B3F8; border: 0.5px solid rgba(55,138,221,0.2); }
+.pill-blue .pill-dot { background: #74B3F8; }
+.pill-amber { background: rgba(239,159,39,0.12); color: #F5C060; border: 0.5px solid rgba(239,159,39,0.2); }
+.pill-amber .pill-dot { background: #F5C060; }
+.pill-red { background: rgba(226,75,74,0.12); color: #FF8080; border: 0.5px solid rgba(226,75,74,0.2); }
+.pill-red .pill-dot { background: #FF8080; }
+.pill-gray { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.45); border: 0.5px solid rgba(255,255,255,0.1); }
+.pill-gray .pill-dot { background: rgba(255,255,255,0.3); }
+
+/* CARDS */
+.card-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+.ui-card {
+  background: rgba(255,255,255,0.04);
+  border: 0.5px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+}
+
+.ui-card-accent {
+  background: rgba(29,184,122,0.06);
+  border: 0.5px solid rgba(29,184,122,0.18);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+}
+
+.card-header {
+  display: flex; justify-content: space-between;
+  align-items: flex-start; margin-bottom: 16px;
+}
+
+.avatar {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: rgba(29,184,122,0.15);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 600; color: var(--green-400);
+}
+
+.card-name { font-size: 14px; font-weight: 500; color: var(--white); margin-bottom: 2px; }
+.card-sub { font-size: 12px; color: rgba(255,255,255,0.35); }
+
+/* FORM */
+.form-group { margin-bottom: 20px; }
+.form-label { font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.5); margin-bottom: 8px; display: block; letter-spacing: 0.04em; text-transform: uppercase; }
+.form-input {
+  width: 100%;
+  background: rgba(255,255,255,0.04);
+  border: 0.5px solid rgba(255,255,255,0.12);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  font-family: var(--font-body); font-size: 14px; color: var(--white);
+  outline: none; transition: border-color 0.15s;
+}
+.form-input:focus { border-color: var(--green-400); background: rgba(29,184,122,0.04); }
+.form-input::placeholder { color: rgba(255,255,255,0.2); }
+
+/* ICON SYSTEM */
+.icon-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 8px; }
+.icon-item {
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  padding: 16px 8px;
+  background: rgba(255,255,255,0.03);
+  border: 0.5px solid rgba(255,255,255,0.06);
+  border-radius: var(--radius-sm);
+}
+.icon-item svg { width: 24px; height: 24px; }
+.icon-name { font-size: 10px; color: rgba(255,255,255,0.3); text-align: center; }
+
+/* ── SPACING SYSTEM ── */
+.spacing-row { display: flex; align-items: flex-end; gap: 16px; flex-wrap: wrap; }
+.space-item { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.space-bar { background: var(--green-400); opacity: 0.7; border-radius: 2px; width: 20px; }
+.space-label { font-size: 11px; color: rgba(255,255,255,0.35); }
+
+/* ── MOTION ── */
+.motion-demo {
+  display: flex; gap: 20px; flex-wrap: wrap;
+}
+.motion-card {
+  background: rgba(255,255,255,0.04);
+  border: 0.5px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius-md);
+  padding: 20px 24px;
+  cursor: pointer;
+  transition: all var(--duration, 200ms) var(--ease, ease);
+  min-width: 160px;
+  text-align: center;
+}
+.motion-card:hover { transform: translateY(-3px); background: rgba(29,184,122,0.08); border-color: rgba(29,184,122,0.25); }
+.motion-card-label { font-size: 12px; color: rgba(255,255,255,0.4); margin-bottom: 6px; }
+.motion-card-value { font-size: 14px; font-weight: 500; color: var(--white); }
+
+/* ── VOICE ── */
+.voice-grid { display: flex; flex-direction: column; gap: 0; }
+.voice-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  padding: 20px 0;
+  border-bottom: 0.5px solid rgba(255,255,255,0.06);
+}
+.voice-col-label { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.25); margin-bottom: 10px; }
+.voice-bad {
+  background: rgba(226,75,74,0.06);
+  border: 0.5px solid rgba(226,75,74,0.15);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  font-size: 13px;
+  color: rgba(255,255,255,0.5);
+}
+.voice-good {
+  background: rgba(29,184,122,0.06);
+  border: 0.5px solid rgba(29,184,122,0.15);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  font-size: 13px;
+  color: rgba(255,255,255,0.75);
+}
+
+/* ── APP PREVIEW ── */
+.app-preview-container {
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+  padding: 8px 0 24px;
+}
+
+.phone-frame {
+  flex-shrink: 0;
+  width: 200px;
+  background: #111B14;
+  border: 1.5px solid rgba(29,184,122,0.2);
+  border-radius: 28px;
+  overflow: hidden;
+  padding: 16px 12px;
+}
+
+.phone-status { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+.phone-time { font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.7); }
+.phone-icons { display: flex; gap: 4px; }
+.phone-icons span { width: 12px; height: 6px; background: rgba(255,255,255,0.4); border-radius: 2px; }
+
+.phone-header { margin-bottom: 16px; }
+.phone-greeting { font-size: 10px; color: rgba(255,255,255,0.35); margin-bottom: 2px; }
+.phone-title { font-size: 16px; font-weight: 600; color: var(--white); }
+
+.cta-card {
+  background: var(--green-500);
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+.cta-card-label { font-size: 9px; font-weight: 500; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
+.cta-card-title { font-size: 13px; font-weight: 600; color: white; margin-bottom: 10px; }
+.cta-card-btn { background: white; color: var(--green-700); font-size: 11px; font-weight: 600; padding: 6px 14px; border-radius: 100px; display: inline-block; }
+
+.mini-card { background: rgba(255,255,255,0.05); border: 0.5px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 10px 12px; margin-bottom: 8px; }
+.mini-card-row { display: flex; justify-content: space-between; align-items: center; }
+.mini-card-name { font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.8); }
+.mini-card-sub { font-size: 9px; color: rgba(255,255,255,0.3); }
+.mini-pill { font-size: 9px; padding: 2px 8px; border-radius: 100px; font-weight: 500; }
+.mini-pill-green { background: rgba(29,184,122,0.15); color: var(--green-400); }
+.mini-pill-amber { background: rgba(239,159,39,0.15); color: #F5C060; }
+
+.phone-nav { display: flex; border-top: 0.5px solid rgba(255,255,255,0.07); padding-top: 10px; margin-top: 8px; }
+.phone-nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; }
+.phone-nav-dot { width: 4px; height: 4px; border-radius: 50%; }
+.phone-nav-label { font-size: 8px; }
+
+/* ── LANDING PREVIEW ── */
+.landing-preview {
+  background: #0A1510;
+  border: 0.5px solid rgba(29,184,122,0.12);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  margin-bottom: 40px;
+}
+
+.lp-nav {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 32px;
+  border-bottom: 0.5px solid rgba(255,255,255,0.05);
+}
+
+.lp-logo { display: flex; align-items: center; gap: 10px; }
+.lp-logo-text { font-size: 15px; font-weight: 600; color: white; }
+.lp-logo-text span { color: var(--green-400); }
+
+.lp-nav-links { display: flex; gap: 24px; }
+.lp-nav-link { font-size: 13px; color: rgba(255,255,255,0.4); text-decoration: none; }
+
+.lp-hero {
+  padding: 72px 32px 56px;
+  text-align: center;
+  position: relative;
+}
+
+.lp-hero::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 50%; transform: translateX(-50%);
+  width: 400px; height: 300px;
+  background: radial-gradient(circle, rgba(29,184,122,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.lp-eyebrow {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(29,184,122,0.1);
+  border: 0.5px solid rgba(29,184,122,0.25);
+  border-radius: 100px; padding: 4px 12px;
+  font-size: 11px; font-weight: 500; color: var(--green-400);
+  margin-bottom: 20px;
+}
+
+.lp-hero-title {
+  font-family: var(--font-display);
+  font-size: 40px; font-weight: 400; line-height: 1.05;
+  color: white; margin-bottom: 16px;
+}
+.lp-hero-title em { font-style: italic; color: var(--green-400); }
+
+.lp-hero-sub {
+  font-size: 15px; color: rgba(255,255,255,0.45);
+  max-width: 420px; margin: 0 auto 32px; line-height: 1.6;
+}
+
+.lp-btn-row { display: flex; gap: 12px; justify-content: center; }
+.lp-btn-cta { background: var(--green-400); color: black; font-weight: 600; font-size: 13px; padding: 12px 24px; border-radius: 100px; border: none; cursor: pointer; }
+.lp-btn-ghost { background: transparent; color: rgba(255,255,255,0.5); font-size: 13px; padding: 12px 24px; border-radius: 100px; border: 0.5px solid rgba(255,255,255,0.12); cursor: pointer; }
+
+.lp-stats {
+  display: flex; justify-content: center; gap: 40px;
+  padding: 24px 32px;
+  border-top: 0.5px solid rgba(255,255,255,0.05);
+}
+.lp-stat-number { font-family: var(--font-display); font-size: 28px; color: white; line-height: 1; }
+.lp-stat-label { font-size: 11px; color: rgba(255,255,255,0.3); margin-top: 4px; }
+
+/* ── TOAST / FEEDBACK ── */
+.toast-row { display: flex; flex-direction: column; gap: 10px; }
+.toast {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 18px;
+  border-radius: var(--radius-md);
+  border: 0.5px solid;
+  font-size: 13px;
+}
+.toast-success { background: rgba(29,184,122,0.08); border-color: rgba(29,184,122,0.2); color: rgba(255,255,255,0.75); }
+.toast-warning { background: rgba(239,159,39,0.08); border-color: rgba(239,159,39,0.2); color: rgba(255,255,255,0.75); }
+.toast-error { background: rgba(226,75,74,0.08); border-color: rgba(226,75,74,0.2); color: rgba(255,255,255,0.75); }
+.toast-info { background: rgba(55,138,221,0.08); border-color: rgba(55,138,221,0.2); color: rgba(255,255,255,0.75); }
+.toast-icon { width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; }
+.toast-success .toast-icon { background: rgba(29,184,122,0.2); color: var(--green-400); }
+.toast-warning .toast-icon { background: rgba(239,159,39,0.2); color: #F5C060; }
+.toast-error .toast-icon { background: rgba(226,75,74,0.2); color: #FF8080; }
+.toast-info .toast-icon { background: rgba(55,138,221,0.2); color: #74B3F8; }
+
+/* ── DO / DON'T ── */
+.do-dont { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.do-box, .dont-box {
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+.do-label, .dont-label {
+  padding: 8px 16px;
+  font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+}
+.do-label { background: rgba(29,184,122,0.12); color: var(--green-400); }
+.dont-label { background: rgba(226,75,74,0.12); color: #FF8080; }
+.do-content, .dont-content {
+  padding: 20px;
+  background: rgba(255,255,255,0.03);
+  border: 0.5px solid rgba(255,255,255,0.07);
+  border-top: none;
+  font-size: 13px;
+  line-height: 1.6;
+  color: rgba(255,255,255,0.6);
+  min-height: 80px;
+}
+
+/* ── COPIED FEEDBACK ── */
+.copied-msg {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  background: var(--green-400); color: black;
+  padding: 10px 20px; border-radius: 100px;
+  font-size: 13px; font-weight: 600;
+  opacity: 0; transition: opacity 0.2s;
+  pointer-events: none; z-index: 1000;
+}
+.copied-msg.show { opacity: 1; }
+
+/* ── TABLE OF CONTENTS ── */
+.toc {
+  background: rgba(255,255,255,0.03);
+  border: 0.5px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius-lg);
+  padding: 28px 32px;
+  margin-top: 48px;
+}
+.toc-title { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 16px; }
+.toc-list { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 4px 24px; }
+.toc-list li { display: flex; align-items: center; gap: 10px; }
+.toc-num { font-size: 11px; color: var(--green-400); font-weight: 600; min-width: 20px; }
+.toc-list a { font-size: 13px; color: rgba(255,255,255,0.5); text-decoration: none; }
+.toc-list a:hover { color: var(--green-400); }
+
+@media (max-width: 600px) {
+  .logo-grid, .card-row, .voice-row, .do-dont, .toc-list { grid-template-columns: 1fr; }
+  .type-row { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- COVER -->
+  <div class="cover">
+    <div class="cover-badge"><span></span> Manual de marca v1.0</div>
+    <h1>Médi<em>co</em>Ya<br>Brand Manual</h1>
+    <p class="cover-sub">Guía completa de identidad visual para la app, landing site y materiales de comunicación.</p>
+    <div class="cover-meta">
+      <div><strong>Dominio</strong> medicoya.net</div>
+      <div><strong>Versión</strong> 1.0 — Mayo 2026</div>
+      <div><strong>Idiomas</strong> ES / EN</div>
+    </div>
+
+    <div class="toc">
+      <div class="toc-title">Contenido</div>
+      <ul class="toc-list">
+        <li><span class="toc-num">01</span><a href="#logo">Logotipo</a></li>
+        <li><span class="toc-num">02</span><a href="#colors">Paleta de colores</a></li>
+        <li><span class="toc-num">03</span><a href="#typography">Tipografía</a></li>
+        <li><span class="toc-num">04</span><a href="#components">Componentes UI</a></li>
+        <li><span class="toc-num">05</span><a href="#icons">Sistema de iconos</a></li>
+        <li><span class="toc-num">06</span><a href="#spacing">Espaciado</a></li>
+        <li><span class="toc-num">07</span><a href="#motion">Movimiento</a></li>
+        <li><span class="toc-num">08</span><a href="#voice">Voz y tono</a></li>
+        <li><span class="toc-num">09</span><a href="#app">Previsualización app</a></li>
+        <li><span class="toc-num">10</span><a href="#landing">Previsualización landing</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ── 01 LOGO ── -->
+  <div class="section" id="logo">
+    <div class="section-label">01 — Logotipo</div>
+    <div class="section-title">Marca e identidad</div>
+
+    <div class="logo-grid">
+      <!-- Dark bg -->
+      <div class="logo-card dark">
+        <div class="logo-card-label">Fondo oscuro — Uso principal</div>
+        <div class="logo-mark" style="margin-top:12px">
+          <svg class="logo-icon" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="44" height="44" rx="12" fill="#1DB87A" fill-opacity="0.15"/>
+            <path d="M22 8C14.268 8 8 14.268 8 22C8 29.732 14.268 36 22 36C29.732 36 36 29.732 36 22C36 14.268 29.732 8 22 8Z" fill="#1DB87A" fill-opacity="0.2"/>
+            <path d="M22 12C16.477 12 12 16.477 12 22C12 27.523 16.477 32 22 32C27.523 32 32 27.523 32 22" stroke="#1DB87A" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M20 22H24M22 20V24" stroke="#1DB87A" stroke-width="2" stroke-linecap="round"/>
+            <path d="M28 14L32 10M30 10H32V12" stroke="#1DB87A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <div class="logo-wordmark">
+            <span class="word1">Médico</span>
+            <span class="word2">Ya</span>
+            <span class="tagline">medicoya.net</span>
+          </div>
+        </div>
+      </div>
+      <!-- Light bg -->
+      <div class="logo-card light">
+        <div class="logo-card-label">Fondo claro</div>
+        <div class="logo-mark" style="margin-top:12px">
+          <svg class="logo-icon" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="44" height="44" rx="12" fill="#0F7A4A" fill-opacity="0.1"/>
+            <path d="M22 8C14.268 8 8 14.268 8 22C8 29.732 14.268 36 22 36C29.732 36 36 29.732 36 22C36 14.268 29.732 8 22 8Z" fill="#0F7A4A" fill-opacity="0.15"/>
+            <path d="M22 12C16.477 12 12 16.477 12 22C12 27.523 16.477 32 22 32C27.523 32 32 27.523 32 22" stroke="#0F7A4A" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M20 22H24M22 20V24" stroke="#0F7A4A" stroke-width="2" stroke-linecap="round"/>
+            <path d="M28 14L32 10M30 10H32V12" stroke="#0F7A4A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <div class="logo-wordmark">
+            <span class="word1">Médico</span>
+            <span class="word2">Ya</span>
+            <span class="tagline">medicoya.net</span>
+          </div>
+        </div>
+      </div>
+      <!-- Color -->
+      <div class="logo-card color">
+        <div class="logo-card-label">Fondo de marca</div>
+        <div class="logo-mark" style="margin-top:12px">
+          <svg class="logo-icon" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="44" height="44" rx="12" fill="rgba(255,255,255,0.15)"/>
+            <path d="M22 8C14.268 8 8 14.268 8 22C8 29.732 14.268 36 22 36C29.732 36 36 29.732 36 22C36 14.268 29.732 8 22 8Z" fill="rgba(255,255,255,0.1)"/>
+            <path d="M22 12C16.477 12 12 16.477 12 22C12 27.523 16.477 32 22 32C27.523 32 32 27.523 32 22" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M20 22H24M22 20V24" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            <path d="M28 14L32 10M30 10H32V12" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <div class="logo-wordmark">
+            <span class="word1">Médico</span>
+            <span class="word2">Ya</span>
+            <span class="tagline">medicoya.net</span>
+          </div>
+        </div>
+      </div>
+      <!-- Mono -->
+      <div class="logo-card mono">
+        <div class="logo-card-label">Monocromático</div>
+        <div class="logo-mark" style="margin-top:12px">
+          <svg class="logo-icon" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="44" height="44" rx="12" fill="rgba(255,255,255,0.06)"/>
+            <path d="M22 8C14.268 8 8 14.268 8 22C8 29.732 14.268 36 22 36C29.732 36 36 29.732 36 22C36 14.268 29.732 8 22 8Z" fill="rgba(255,255,255,0.04)"/>
+            <path d="M22 12C16.477 12 12 16.477 12 22C12 27.523 16.477 32 22 32C27.523 32 32 27.523 32 22" stroke="rgba(255,255,255,0.7)" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M20 22H24M22 20V24" stroke="rgba(255,255,255,0.85)" stroke-width="2" stroke-linecap="round"/>
+            <path d="M28 14L32 10M30 10H32V12" stroke="rgba(255,255,255,0.7)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <div class="logo-wordmark">
+            <span class="word1">Médico</span>
+            <span class="word2">Ya</span>
+            <span class="tagline">medicoya.net</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="do-dont">
+      <div class="do-box">
+        <div class="do-label">✓ Correcto</div>
+        <div class="do-content">Usar el logo sobre fondos oscuros (#0D1117 a #1A202C), fondos claros (#F0F9F4), o fondos de marca verde (#169960). Mantener espacio protegido alrededor del logo de al menos 1× la altura del ícono.</div>
+      </div>
+      <div class="dont-box">
+        <div class="dont-label">✗ Incorrecto</div>
+        <div class="dont-content">No rotar el logo, no distorsionar proporciones, no colocar sobre fondos con poco contraste, no usar colores no aprobados para el ícono, no agregar sombras ni efectos.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ── 02 COLORS ── -->
+  <div class="section" id="colors">
+    <div class="section-label">02 — Paleta de colores</div>
+    <div class="section-title">Sistema de color</div>
+
+    <div class="palette-grid" id="swatches"></div>
+
+    <div style="background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.07);border-radius:var(--radius-md);padding:20px 24px;margin-top:8px">
+      <div style="font-size:12px;font-weight:600;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px">Jerarquía de uso</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;font-size:13px;">
+        <div><span style="color:var(--green-400);font-weight:500">Verde Médico</span><br><span style="color:rgba(255,255,255,0.4);font-size:12px">CTAs, iconos activos, estados de éxito</span></div>
+        <div><span style="color:rgba(255,255,255,0.8);font-weight:500">Slate oscuro</span><br><span style="color:rgba(255,255,255,0.4);font-size:12px">Fondos app, fondos dark mode</span></div>
+        <div><span style="color:#F0F9F4;font-weight:500">Verde menta</span><br><span style="color:rgba(255,255,255,0.4);font-size:12px">Fondos light mode, tarjetas</span></div>
+        <div><span style="color:#74B3F8;font-weight:500">Azul info</span><br><span style="color:rgba(255,255,255,0.4);font-size:12px">Links, estados informativos</span></div>
+        <div><span style="color:#F5C060;font-weight:500">Ámbar</span><br><span style="color:rgba(255,255,255,0.4);font-size:12px">Advertencias, estados pendientes</span></div>
+        <div><span style="color:#FF8080;font-weight:500">Rojo</span><br><span style="color:rgba(255,255,255,0.4);font-size:12px">Errores, urgencias médicas</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ── 03 TYPOGRAPHY ── -->
+  <div class="section" id="typography">
+    <div class="section-label">03 — Tipografía</div>
+    <div class="section-title">Sistema tipográfico</div>
+
+    <div style="background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.07);border-radius:var(--radius-md);padding:20px 24px;margin-bottom:32px;display:flex;gap:32px;flex-wrap:wrap">
+      <div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px">Display / Headings</div>
+        <div style="font-family:var(--font-display);font-size:28px;color:white">DM Serif Display</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.3);margin-top:4px">Elegance + trust</div>
+      </div>
+      <div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px">Body / UI</div>
+        <div style="font-family:var(--font-body);font-size:28px;font-weight:400;color:white">DM Sans</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.3);margin-top:4px">Clean + accessible</div>
+      </div>
+    </div>
+
+    <div class="type-samples">
+      <div class="type-row">
+        <div class="type-meta">
+          <span class="type-role">Display</span>
+          <span class="type-spec">DM Serif Display / 52px / 400</span>
+        </div>
+        <div class="type-sample-display">Tu médico,<br><em>donde estés</em></div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">
+          <span class="type-role">Heading 1</span>
+          <span class="type-spec">DM Serif Display / 36px / 400</span>
+        </div>
+        <div class="type-sample-h1">Consulta médica en 20 minutos</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">
+          <span class="type-role">Heading 2</span>
+          <span class="type-spec">DM Sans / 24px / 500</span>
+        </div>
+        <div class="type-sample-h2">¿Cómo funciona MédicoYa?</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">
+          <span class="type-role">Body</span>
+          <span class="type-spec">DM Sans / 16px / 400 / lh 1.7</span>
+        </div>
+        <div class="type-sample-body">Conectamos pacientes con médicos hondureños verificados para consultas por chat o videollamada desde L.150, pagando con Tigo Money desde cualquier celular.</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">
+          <span class="type-role">UI Label</span>
+          <span class="type-spec">DM Sans / 14px / 500</span>
+        </div>
+        <div class="type-sample-ui">Consultar ahora — Consult now</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">
+          <span class="type-role">Caption</span>
+          <span class="type-spec">DM Sans / 12px / 400 / ls 0.03em</span>
+        </div>
+        <div class="type-sample-caption">Receta válida hasta el 3 de junio de 2026 · Código MYA-2026-04421</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ── 04 COMPONENTS ── -->
+  <div class="section" id="components">
+    <div class="section-label">04 — Componentes UI</div>
+    <div class="section-title">Biblioteca de componentes</div>
+
+    <div class="components-grid">
+      <!-- Buttons -->
+      <div>
+        <div class="component-group-title">Botones</div>
+        <div class="btn-row">
+          <button class="btn btn-primary btn-lg">Consultar ahora</button>
+          <button class="btn btn-primary">Consultar ahora</button>
+          <button class="btn btn-primary btn-sm">Consultar</button>
+        </div>
+        <div class="btn-row" style="margin-top:12px">
+          <button class="btn btn-secondary">Ver médicos</button>
+          <button class="btn btn-ghost">Cancelar</button>
+          <button class="btn btn-danger btn-sm">Cancelar cita</button>
+        </div>
+      </div>
+
+      <!-- Pills -->
+      <div>
+        <div class="component-group-title">Etiquetas de estado</div>
+        <div class="pill-row">
+          <span class="pill pill-green"><span class="pill-dot"></span>Disponible</span>
+          <span class="pill pill-green"><span class="pill-dot"></span>Available</span>
+          <span class="pill pill-amber"><span class="pill-dot"></span>En espera</span>
+          <span class="pill pill-blue"><span class="pill-dot"></span>En consulta</span>
+          <span class="pill pill-red"><span class="pill-dot"></span>Urgente</span>
+          <span class="pill pill-gray"><span class="pill-dot"></span>Completada</span>
+        </div>
+      </div>
+
+      <!-- Cards -->
+      <div>
+        <div class="component-group-title">Tarjetas</div>
+        <div class="card-row">
+          <div class="ui-card">
+            <div class="card-header">
+              <div style="display:flex;align-items:center;gap:10px">
+                <div class="avatar">RL</div>
+                <div>
+                  <div class="card-name">Dr. Rafael Laínez</div>
+                  <div class="card-sub">Médico general</div>
+                </div>
+              </div>
+              <span class="pill pill-green" style="font-size:11px"><span class="pill-dot"></span>En línea</span>
+            </div>
+            <div style="font-size:13px;color:rgba(255,255,255,0.4);margin-bottom:14px">Tiempo de espera estimado: 8 min</div>
+            <button class="btn btn-primary" style="width:100%;justify-content:center;font-size:13px;padding:10px">Iniciar consulta</button>
+          </div>
+          <div class="ui-card-accent">
+            <div style="font-size:11px;color:var(--green-400);font-weight:600;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px">Tu próxima cita</div>
+            <div class="card-name" style="margin-bottom:4px">Dra. María Rivera</div>
+            <div class="card-sub" style="margin-bottom:16px">Mañana · 10:00 AM</div>
+            <div style="display:flex;gap:8px">
+              <button class="btn btn-secondary btn-sm">Ver detalles</button>
+              <button class="btn btn-ghost btn-sm">Reagendar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form -->
+      <div>
+        <div class="component-group-title">Formularios</div>
+        <div style="max-width:420px">
+          <div class="form-group">
+            <label class="form-label">Número de teléfono / Phone number</label>
+            <input class="form-input" type="tel" placeholder="+504 9999-9999">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Síntomas / Symptoms</label>
+            <textarea class="form-input" rows="3" placeholder="Describe cómo te sientes... / Describe how you feel..."></textarea>
+          </div>
+          <button class="btn btn-primary" style="width:100%;justify-content:center">Continuar / Continue</button>
+        </div>
+      </div>
+
+      <!-- Toasts -->
+      <div>
+        <div class="component-group-title">Mensajes de feedback</div>
+        <div class="toast-row">
+          <div class="toast toast-success"><div class="toast-icon">✓</div>Consulta iniciada — tu médico está en línea</div>
+          <div class="toast toast-warning"><div class="toast-icon">!</div>Tiempo de espera mayor al habitual — 25 min</div>
+          <div class="toast toast-error"><div class="toast-icon">✗</div>Sin conexión — reconectando automáticamente</div>
+          <div class="toast toast-info"><div class="toast-icon">i</div>Tu receta es válida por 30 días · Código QR activo</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ── 05 ICONS ── -->
+  <div class="section" id="icons">
+    <div class="section-label">05 — Iconos</div>
+    <div class="section-title">Sistema de iconos médicos</div>
+    <div class="icon-grid" id="icon-grid"></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ── 06 SPACING ── -->
+  <div class="section" id="spacing">
+    <div class="section-label">06 — Espaciado</div>
+    <div class="section-title">Sistema de espaciado</div>
+    <div class="spacing-row" id="spacing-row"></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ── 07 MOTION ── -->
+  <div class="section" id="motion">
+    <div class="section-label">07 — Movimiento</div>
+    <div class="section-title">Principios de animación</div>
+    <div class="motion-demo">
+      <div class="motion-card" style="--duration:150ms;--ease:ease-out">
+        <div class="motion-card-label">Rápido</div>
+        <div class="motion-card-value">150ms ease-out</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.25);margin-top:4px">Hovers, toggles</div>
+      </div>
+      <div class="motion-card" style="--duration:250ms;--ease:cubic-bezier(0.4,0,0.2,1)">
+        <div class="motion-card-label">Estándar</div>
+        <div class="motion-card-value">250ms ease</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.25);margin-top:4px">Transiciones de pantalla</div>
+      </div>
+      <div class="motion-card" style="--duration:400ms;--ease:cubic-bezier(0.34,1.56,0.64,1)">
+        <div class="motion-card-label">Springy</div>
+        <div class="motion-card-value">400ms spring</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.25);margin-top:4px">Modales, sheets</div>
+      </div>
+      <div class="motion-card" style="--duration:600ms;--ease:ease-in-out">
+        <div class="motion-card-label">Lento</div>
+        <div class="motion-card-value">600ms ease-in-out</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.25);margin-top:4px">Skeleton loaders</div>
+      </div>
+    </div>
+    <div style="margin-top:20px;padding:16px 20px;background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.07);border-radius:var(--radius-md)">
+      <div style="font-size:12px;color:rgba(255,255,255,0.3);margin-bottom:6px;font-weight:500">Regla de oro</div>
+      <div style="font-size:13px;color:rgba(255,255,255,0.55);line-height:1.6">Nunca animar más de 2 propiedades simultáneamente. Siempre usar <code style="background:rgba(255,255,255,0.08);padding:2px 6px;border-radius:4px;font-size:12px">transform</code> y <code style="background:rgba(255,255,255,0.08);padding:2px 6px;border-radius:4px;font-size:12px">opacity</code> para animaciones de rendimiento. Los usuarios con <code style="background:rgba(255,255,255,0.08);padding:2px 6px;border-radius:4px;font-size:12px">prefers-reduced-motion</code> deben ver la UI sin animaciones.</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ── 08 VOICE ── -->
+  <div class="section" id="voice">
+    <div class="section-label">08 — Voz y tono</div>
+    <div class="section-title">Cómo habla MédicoYa</div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:32px">
+      <div style="padding:16px;background:rgba(29,184,122,0.06);border:0.5px solid rgba(29,184,122,0.15);border-radius:var(--radius-md)">
+        <div style="font-size:18px;margin-bottom:8px">🤝</div>
+        <div style="font-size:13px;font-weight:500;color:rgba(255,255,255,0.8);margin-bottom:4px">Cercano</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.35)">Sin tecnicismos innecesarios</div>
+      </div>
+      <div style="padding:16px;background:rgba(29,184,122,0.06);border:0.5px solid rgba(29,184,122,0.15);border-radius:var(--radius-md)">
+        <div style="font-size:18px;margin-bottom:8px">✅</div>
+        <div style="font-size:13px;font-weight:500;color:rgba(255,255,255,0.8);margin-bottom:4px">Claro</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.35)">Instrucciones directas</div>
+      </div>
+      <div style="padding:16px;background:rgba(29,184,122,0.06);border:0.5px solid rgba(29,184,122,0.15);border-radius:var(--radius-md)">
+        <div style="font-size:18px;margin-bottom:8px">💚</div>
+        <div style="font-size:13px;font-weight:500;color:rgba(255,255,255,0.8);margin-bottom:4px">Empático</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.35)">Reconoce las emociones</div>
+      </div>
+      <div style="padding:16px;background:rgba(29,184,122,0.06);border:0.5px solid rgba(29,184,122,0.15);border-radius:var(--radius-md)">
+        <div style="font-size:18px;margin-bottom:8px">⚡</div>
+        <div style="font-size:13px;font-weight:500;color:rgba(255,255,255,0.8);margin-bottom:4px">Ágil</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.35)">Nunca burocrático</div>
+      </div>
+    </div>
+
+    <div class="voice-grid">
+      <div class="voice-row">
+        <div>
+          <div class="voice-col-label">✗ No decir</div>
+          <div class="voice-bad">"Por favor diligenciar el formulario de admisión de telemedicina antes de proceder con el servicio."</div>
+        </div>
+        <div>
+          <div class="voice-col-label">✓ Decir</div>
+          <div class="voice-good">"Cuéntanos qué sientes — un médico te atiende en minutos."</div>
+        </div>
+      </div>
+      <div class="voice-row">
+        <div>
+          <div class="voice-bad">"Error: el sistema no puede procesar su solicitud en este momento."</div>
+        </div>
+        <div>
+          <div class="voice-good">"Sin conexión. Reconectando... tus datos están guardados."</div>
+        </div>
+      </div>
+      <div class="voice-row">
+        <div>
+          <div class="voice-bad">"Su consulta ha sido finalizada exitosamente por el profesional médico."</div>
+        </div>
+        <div>
+          <div class="voice-good">"Consulta completada. Tu receta está lista — muéstrala en la farmacia."</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ── 09 APP PREVIEW ── -->
+  <div class="section" id="app">
+    <div class="section-label">09 — App móvil</div>
+    <div class="section-title">Previsualización de pantallas</div>
+
+    <div class="app-preview-container">
+      <!-- Inicio -->
+      <div class="phone-frame">
+        <div class="phone-status">
+          <span class="phone-time">9:41</span>
+          <div class="phone-icons"><span></span><span></span><span style="width:18px"></span></div>
+        </div>
+        <div class="phone-header">
+          <div class="phone-greeting">Buenos días,</div>
+          <div class="phone-title">María García</div>
+        </div>
+        <div class="cta-card">
+          <div class="cta-card-label">¿No te sientes bien?</div>
+          <div class="cta-card-title">Consulta ahora<br>en 20 minutos</div>
+          <span class="cta-card-btn">Iniciar →</span>
+        </div>
+        <div style="font-size:10px;color:rgba(255,255,255,0.3);margin-bottom:6px;font-weight:500;text-transform:uppercase;letter-spacing:0.06em">Médicos disponibles</div>
+        <div class="mini-card">
+          <div class="mini-card-row">
+            <div>
+              <div class="mini-card-name">Dr. Laínez</div>
+              <div class="mini-card-sub">General · 8 min</div>
+            </div>
+            <span class="mini-pill mini-pill-green">Online</span>
+          </div>
+        </div>
+        <div class="mini-card">
+          <div class="mini-card-row">
+            <div>
+              <div class="mini-card-name">Dra. Rivera</div>
+              <div class="mini-card-sub">Pediatría · 15 min</div>
+            </div>
+            <span class="mini-pill mini-pill-green">Online</span>
+          </div>
+        </div>
+        <div class="phone-nav">
+          <div class="phone-nav-item"><div class="phone-nav-dot" style="background:var(--green-400)"></div><span class="phone-nav-label" style="color:var(--green-400)">Inicio</span></div>
+          <div class="phone-nav-item"><div class="phone-nav-dot" style="background:rgba(255,255,255,0.15)"></div><span class="phone-nav-label" style="color:rgba(255,255,255,0.25)">Consultas</span></div>
+          <div class="phone-nav-item"><div class="phone-nav-dot" style="background:rgba(255,255,255,0.15)"></div><span class="phone-nav-label" style="color:rgba(255,255,255,0.25)">Recetas</span></div>
+          <div class="phone-nav-item"><div class="phone-nav-dot" style="background:rgba(255,255,255,0.15)"></div><span class="phone-nav-label" style="color:rgba(255,255,255,0.25)">Perfil</span></div>
+        </div>
+      </div>
+
+      <!-- Chat -->
+      <div class="phone-frame">
+        <div class="phone-status">
+          <span class="phone-time">9:53</span>
+          <div class="phone-icons"><span></span><span></span><span style="width:18px"></span></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
+          <div style="width:30px;height:30px;border-radius:50%;background:rgba(29,184,122,0.2);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:var(--green-400)">RL</div>
+          <div>
+            <div style="font-size:12px;font-weight:500;color:white">Dr. Laínez</div>
+            <div style="font-size:9px;color:var(--green-400)">● En línea</div>
+          </div>
+        </div>
+        <div style="background:rgba(255,255,255,0.06);border-radius:0 10px 10px 10px;padding:8px 10px;margin-bottom:8px;font-size:11px;color:rgba(255,255,255,0.75);max-width:140px">Hola María, ¿cuánto llevas con la fiebre?</div>
+        <div style="background:var(--green-600);border-radius:10px 0 10px 10px;padding:8px 10px;margin-bottom:8px;font-size:11px;color:white;max-width:140px;margin-left:auto">Desde ayer, como 38.5°</div>
+        <div style="background:rgba(255,255,255,0.06);border-radius:0 10px 10px 10px;padding:8px 10px;margin-bottom:8px;font-size:11px;color:rgba(255,255,255,0.75);max-width:140px">¿Dolor de garganta?</div>
+        <div style="background:var(--green-600);border-radius:10px 0 10px 10px;padding:8px 10px;margin-bottom:16px;font-size:11px;color:white;max-width:140px;margin-left:auto">Sí, bastante</div>
+        <div style="display:flex;gap:6px;align-items:center">
+          <div style="flex:1;background:rgba(255,255,255,0.06);border:0.5px solid rgba(255,255,255,0.1);border-radius:100px;padding:7px 12px;font-size:10px;color:rgba(255,255,255,0.25)">Escribir...</div>
+          <div style="width:28px;height:28px;background:var(--green-400);border-radius:50%;display:flex;align-items:center;justify-content:center;">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1.5 6L10.5 1.5L7.5 6L10.5 10.5L1.5 6Z" fill="#0D1117"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Receta -->
+      <div class="phone-frame">
+        <div class="phone-status">
+          <span class="phone-time">10:12</span>
+          <div class="phone-icons"><span></span><span></span><span style="width:18px"></span></div>
+        </div>
+        <div style="font-size:14px;font-weight:600;color:white;margin-bottom:4px">Tu receta</div>
+        <div style="font-size:10px;color:rgba(255,255,255,0.3);margin-bottom:14px">3 mayo 2026 · Dr. Laínez</div>
+        <div style="background:rgba(255,255,255,0.05);border:0.5px solid rgba(255,255,255,0.08);border-radius:12px;padding:14px;text-align:center;margin-bottom:10px">
+          <svg width="64" height="64" viewBox="0 0 64 64" fill="none" style="margin:0 auto 6px;display:block">
+            <rect x="4" y="4" width="18" height="18" rx="2" fill="rgba(29,184,122,0.4)"/>
+            <rect x="42" y="4" width="18" height="18" rx="2" fill="rgba(29,184,122,0.4)"/>
+            <rect x="4" y="42" width="18" height="18" rx="2" fill="rgba(29,184,122,0.4)"/>
+            <rect x="8" y="8" width="10" height="10" rx="1" fill="rgba(29,184,122,0.8)"/>
+            <rect x="46" y="8" width="10" height="10" rx="1" fill="rgba(29,184,122,0.8)"/>
+            <rect x="8" y="46" width="10" height="10" rx="1" fill="rgba(29,184,122,0.8)"/>
+            <rect x="28" y="4" width="6" height="6" rx="1" fill="rgba(29,184,122,0.5)"/>
+            <rect x="36" y="4" width="4" height="4" rx="1" fill="rgba(29,184,122,0.3)"/>
+            <rect x="28" y="12" width="4" height="8" rx="1" fill="rgba(29,184,122,0.4)"/>
+            <rect x="42" y="28" width="6" height="6" rx="1" fill="rgba(29,184,122,0.5)"/>
+            <rect x="50" y="28" width="4" height="10" rx="1" fill="rgba(29,184,122,0.3)"/>
+            <rect x="4" y="28" width="8" height="4" rx="1" fill="rgba(29,184,122,0.4)"/>
+            <rect x="14" y="28" width="4" height="8" rx="1" fill="rgba(29,184,122,0.3)"/>
+            <rect x="28" y="28" width="10" height="10" rx="1" fill="rgba(29,184,122,0.5)"/>
+            <rect x="4" y="34" width="6" height="6" rx="1" fill="rgba(29,184,122,0.3)"/>
+            <rect x="28" y="42" width="4" height="6" rx="1" fill="rgba(29,184,122,0.4)"/>
+            <rect x="34" y="48" width="6" height="4" rx="1" fill="rgba(29,184,122,0.3)"/>
+          </svg>
+          <div style="font-size:9px;color:rgba(255,255,255,0.3)">MYA-2026-04421 · válido 30 días</div>
+        </div>
+        <div style="font-size:10px;font-weight:600;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px">Diagnóstico</div>
+        <div style="font-size:12px;color:white;margin-bottom:10px">Faringitis viral aguda</div>
+        <div style="font-size:10px;font-weight:600;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px">Medicamentos</div>
+        <div class="mini-card" style="margin-bottom:4px">
+          <div class="mini-card-name">Paracetamol 500mg</div>
+          <div class="mini-card-sub">1 cada 8h · 5 días</div>
+        </div>
+        <div class="mini-card">
+          <div class="mini-card-name">Ibuprofeno 400mg</div>
+          <div class="mini-card-sub">Con comida · si hay dolor</div>
+        </div>
+        <button class="btn btn-primary btn-sm" style="width:100%;justify-content:center;margin-top:10px;border-radius:8px">Compartir con farmacia</button>
+      </div>
+
+      <!-- Brigade mode -->
+      <div class="phone-frame">
+        <div class="phone-status">
+          <span class="phone-time">8:30</span>
+          <div class="phone-icons"><span></span><span></span><span style="width:18px"></span></div>
+        </div>
+        <div style="background:rgba(29,184,122,0.08);border:0.5px solid rgba(29,184,122,0.2);border-radius:10px;padding:8px 10px;margin-bottom:12px;display:flex;align-items:center;gap:6px">
+          <div style="width:6px;height:6px;border-radius:50%;background:var(--green-400)"></div>
+          <div style="font-size:10px;color:var(--green-400);font-weight:500">Modo brigada activo</div>
+        </div>
+        <div style="font-size:14px;font-weight:600;color:white;margin-bottom:2px">Brigada Choluteca</div>
+        <div style="font-size:10px;color:rgba(255,255,255,0.3);margin-bottom:12px">Aldea La Montañita · 3–5 mayo</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px">
+          <div style="background:rgba(255,255,255,0.05);border:0.5px solid rgba(255,255,255,0.08);border-radius:8px;padding:10px;text-align:center">
+            <div style="font-size:22px;font-weight:600;color:white">47</div>
+            <div style="font-size:9px;color:rgba(255,255,255,0.3)">Atendidos</div>
+          </div>
+          <div style="background:rgba(29,184,122,0.08);border:0.5px solid rgba(29,184,122,0.2);border-radius:8px;padding:10px;text-align:center">
+            <div style="font-size:22px;font-weight:600;color:var(--green-400)">12</div>
+            <div style="font-size:9px;color:rgba(29,184,122,0.6)">En cola</div>
+          </div>
+        </div>
+        <div style="font-size:10px;font-weight:600;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px">Sin sincronizar</div>
+        <div style="background:rgba(239,159,39,0.08);border:0.5px solid rgba(239,159,39,0.2);border-radius:8px;padding:10px;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <div style="font-size:11px;color:#F5C060">5 consultas offline</div>
+          <div style="font-size:10px;color:rgba(239,159,39,0.5)">Sin señal</div>
+        </div>
+        <button class="btn btn-primary btn-sm" style="width:100%;justify-content:center;border-radius:8px">+ Nueva consulta</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ── 10 LANDING ── -->
+  <div class="section" id="landing">
+    <div class="section-label">10 — Landing site</div>
+    <div class="section-title">Previsualización medicoya.net</div>
+
+    <div class="landing-preview">
+      <div class="lp-nav">
+        <div class="lp-logo">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+            <rect width="28" height="28" rx="8" fill="rgba(29,184,122,0.15)"/>
+            <path d="M14 4C8.477 4 4 8.477 4 14C4 19.523 8.477 24 14 24C19.523 24 24 19.523 24 14C24 8.477 19.523 19.523 4 14" stroke="#1DB87A" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M12 14H16M14 12V16" stroke="#1DB87A" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M18 7L22 3M20 3H22V5" stroke="#1DB87A" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="lp-logo-text">Médico<span>Ya</span></span>
+        </div>
+        <div class="lp-nav-links">
+          <a class="lp-nav-link" href="#">Cómo funciona</a>
+          <a class="lp-nav-link" href="#">Médicos</a>
+          <a class="lp-nav-link" href="#">Brigadas</a>
+          <a class="lp-nav-link" href="#">Precios</a>
+        </div>
+        <button class="btn btn-primary btn-sm">Consultar ahora</button>
+      </div>
+
+      <div class="lp-hero">
+        <div class="lp-eyebrow">🇭🇳 Telemedicina para Honduras</div>
+        <div class="lp-hero-title">Tu médico,<br><em>donde estés</em></div>
+        <div class="lp-hero-sub">Consulta médica en 20 minutos desde tu celular. Médicos hondureños verificados. Desde L.150.</div>
+        <div class="lp-btn-row">
+          <button class="lp-btn-cta">Consultar ahora →</button>
+          <button class="lp-btn-ghost">¿Eres médico?</button>
+        </div>
+      </div>
+
+      <div class="lp-stats">
+        <div style="text-align:center">
+          <div class="lp-stat-number">20<span style="font-size:16px;color:rgba(255,255,255,0.4)">min</span></div>
+          <div class="lp-stat-label">Tiempo promedio de atención</div>
+        </div>
+        <div style="text-align:center">
+          <div class="lp-stat-number">L.150</div>
+          <div class="lp-stat-label">Precio por consulta</div>
+        </div>
+        <div style="text-align:center">
+          <div class="lp-stat-number">24<span style="font-size:16px;color:rgba(255,255,255,0.4)">/7</span></div>
+          <div class="lp-stat-label">Disponibilidad</div>
+        </div>
+        <div style="text-align:center">
+          <div class="lp-stat-number">🇭🇳</div>
+          <div class="lp-stat-label">Médicos locales verificados</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="padding:60px 0 0;text-align:center;border-top:0.5px solid rgba(255,255,255,0.06);margin-top:64px">
+    <div style="font-family:var(--font-display);font-size:22px;color:rgba(255,255,255,0.2);margin-bottom:8px">MédicoYa</div>
+    <div style="font-size:12px;color:rgba(255,255,255,0.15)">Manual de marca v1.0 · medicoya.net · Mayo 2026</div>
+  </div>
+
+</div>
+
+<!-- COPIED FEEDBACK -->
+<div class="copied-msg" id="copied">¡Copiado!</div>
+
+<script>
+const colors = [
+  { name: 'Verde Médico', hex: '#1DB87A', use: 'Color principal · CTAs' },
+  { name: 'Verde Oscuro', hex: '#0F7A4A', use: 'Hover · Fondos de marca' },
+  { name: 'Verde Suave', hex: '#E8F7F0', use: 'Fondos light mode' },
+  { name: 'Verde Menta', hex: '#7FD4B0', use: 'Acentos secundarios' },
+  { name: 'Teal', hex: '#1DA8A8', use: 'Información médica' },
+  { name: 'Slate 900', hex: '#0D1117', use: 'Fondo principal dark' },
+  { name: 'Slate 800', hex: '#1A202C', use: 'Cards dark mode' },
+  { name: 'Slate 600', hex: '#4A5568', use: 'Texto secundario' },
+  { name: 'Slate 200', hex: '#CDD4DC', use: 'Bordes y divisores' },
+  { name: 'Blanco', hex: '#FFFFFF', use: 'Fondo light mode' },
+  { name: 'Azul info', hex: '#378ADD', use: 'Links · Información' },
+  { name: 'Ámbar', hex: '#EF9F27', use: 'Advertencias · Espera' },
+  { name: 'Rojo', hex: '#E24B4A', use: 'Errores · Urgencias' },
+  { name: 'Verde éxito', hex: '#639922', use: 'Confirmaciones' },
+];
+
+const grid = document.getElementById('swatches');
+colors.forEach(c => {
+  const needsDark = ['#FFFFFF','#E8F7F0','#7FD4B0','#CDD4DC'].includes(c.hex);
+  const textColor = needsDark ? '#1A202C' : '#fff';
+  grid.innerHTML += `
+    <div class="swatch">
+      <div class="swatch-color" style="background:${c.hex}" onclick="copyHex('${c.hex}')" title="Click para copiar">
+        <div class="copy-hint" style="color:${textColor}">Copiar</div>
+      </div>
+      <div class="swatch-info">
+        <div class="swatch-name">${c.name}</div>
+        <div class="swatch-hex">${c.hex}</div>
+        <div class="swatch-use">${c.use}</div>
+      </div>
+    </div>`;
+});
+
+const icons = [
+  { name: 'Stethoscope', d: 'M12 4C9.8 4 8 5.8 8 8v5c0 2.8 2.2 5 5 5h2c2.8 0 5-2.2 5-5V8c0-2.2-1.8-4-4-4h-4z M15 18v2a3 3 0 006 0v-3' },
+  { name: 'Pill', d: 'M4.5 12.5l8-8a4.95 4.95 0 017 7l-8 8a4.95 4.95 0 01-7-7z M8.5 8.5l7 7' },
+  { name: 'Heart pulse', d: 'M19.5 12.572L12 20l-7.5-7.428A5 5 0 1112 6.006a5 5 0 117.5 6.572 M3 12h3l2-5 3 9 2-4 1 2h3' },
+  { name: 'User MD', d: 'M8 7a4 4 0 108 0 4 4 0 00-8 0 M6 21v-2a4 4 0 014-4h4a4 4 0 014 4v2 M16 10v2 M17 11h-2' },
+  { name: 'QR code', d: 'M4 4h6v6H4z M14 4h6v6h-6z M4 14h6v6H4z M14 14h2v2h-2z M18 14h2 M14 18v2 M18 18h2v2h-2z' },
+  { name: 'Chat', d: 'M8 9h8 M8 13h6 M18.364 4.636a9 9 0 010 12.728M5.636 4.636a9 9 0 000 12.728' },
+  { name: 'Video', d: 'M15 10l5-3v10l-5-3V10z M3 7a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V7z' },
+  { name: 'Location', d: 'M12 11.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z M17 9c0 5-5 8-5 8S7 14 7 9a5 5 0 0110 0z' },
+  { name: 'Clipboard', d: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2 M9 5a2 2 0 002 2h2a2 2 0 002-2 9 9 0 00-4 0 M9 12h6 M9 16h4' },
+  { name: 'Shield', d: 'M12 3l8 4v5c0 4.4-3.4 8.5-8 9.5C7.4 20.5 4 16.4 4 12V7l8-4z M9 12l2 2 4-4' },
+  { name: 'Offline', d: 'M12 20h.01 M8.5 16.5A5 5 0 0112 15a5 5 0 013.5 1.5 M5 12.5A9.969 9.969 0 0112 10a9.97 9.97 0 017 2.5 M2 8.82A15.97 15.97 0 0112 6c2.5 0 4.847.597 6.92 1.654' },
+  { name: 'Calendar', d: 'M4 5h16a1 1 0 011 1v13a1 1 0 01-1 1H4a1 1 0 01-1-1V6a1 1 0 011-1z M16 3v4 M8 3v4 M3 9h18 M9 14h.01 M12 14h.01 M15 14h.01 M9 17h.01 M12 17h.01' },
+];
+
+const iconGrid = document.getElementById('icon-grid');
+icons.forEach(ic => {
+  iconGrid.innerHTML += `
+    <div class="icon-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#1DB87A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="${ic.d}"/>
+      </svg>
+      <span class="icon-name">${ic.name}</span>
+    </div>`;
+});
+
+const spaces = [4,8,12,16,24,32,40,48,64,80];
+const sr = document.getElementById('spacing-row');
+spaces.forEach(s => {
+  sr.innerHTML += `
+    <div class="space-item">
+      <div class="space-bar" style="height:${s}px"></div>
+      <span class="space-label">${s}px</span>
+    </div>`;
+});
+
+function copyHex(hex) {
+  navigator.clipboard.writeText(hex).then(() => {
+    const msg = document.getElementById('copied');
+    msg.textContent = `¡${hex} copiado!`;
+    msg.classList.add('show');
+    setTimeout(() => msg.classList.remove('show'), 1800);
+  });
+}
+</script>
+</body>
+</html>

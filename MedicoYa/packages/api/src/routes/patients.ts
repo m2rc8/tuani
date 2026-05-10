@@ -15,6 +15,21 @@ export function createPatientsRouter(service: PatientService): Router {
   const router = Router()
 
   router.get(
+    '/by-phone/:phone',
+    requireAuth,
+    requireRole(Role.doctor),
+    async (req: Request, res: Response): Promise<void> => {
+      try {
+        const patient = await service.getByPhone(req.params.phone)
+        if (!patient) { res.status(404).json({ error: 'Patient not found' }); return }
+        res.json(patient)
+      } catch (err) {
+        if (!handlePatientError(err, res)) throw err
+      }
+    }
+  )
+
+  router.get(
     '/me',
     requireAuth,
     requireRole(Role.patient),

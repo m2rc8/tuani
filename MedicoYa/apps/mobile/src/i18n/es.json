@@ -114,6 +114,19 @@
     "pending_title": "Cuenta en revisión",
     "pending_body": "Tu solicitud está siendo revisada por el equipo de MedicoYa. Te notificaremos cuando sea aprobada."
   },
+  "dental": {
+    "title":             "Odontología",
+    "odontogram":        "Odontograma",
+    "treatments":        "Tratamientos",
+    "save_odontogram":   "Guardar odontograma",
+    "add_treatment":     "Agregar tratamiento",
+    "patient_phone":     "Teléfono del paciente",
+    "start_record":      "Iniciar ficha dental",
+    "patient_not_found": "Paciente no encontrado",
+    "check_phone":       "Verifica el número de teléfono.",
+    "subtitle":          "Ingresa el teléfono del paciente para iniciar una ficha dental",
+    "tab":               "Dental"
+  },
   "brigade": {
     "title": "Brigadas",
     "join_banner": "Unirse a una brigada →",
