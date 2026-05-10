@@ -33,7 +33,6 @@
           "photosPermission": "MédicoYa needs photo library access to attach symptom photos."
         }
       ],
-      "@sentry/react-native",
       "expo-font"
     ],
     "extra": {
