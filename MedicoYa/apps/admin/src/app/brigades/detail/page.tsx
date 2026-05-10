@@ -3,7 +3,7 @@ import { Suspense, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { apiFetch } from '../../../lib/api'
-import { getRole } from '../../../lib/auth'
+import { getRole, getToken } from '../../../lib/auth'
 
 interface BrigadeDashboard {
   total:          number
@@ -13,9 +13,15 @@ interface BrigadeDashboard {
 }
 
 interface BrigadeReport {
+  brigade_name:         string
+  community:            string
+  start_date:           string | null
+  end_date:             string | null
   patient_count:        number
+  total_consultations:  number
   by_registration_mode: { self: number; brigade_doctor: number }
   top_diagnoses:        { diagnosis: string; count: number }[]
+  top_medications:      { name: string; count: number }[]
 }
 
 export default function BrigadeDetailPage() {
@@ -50,6 +56,20 @@ function BrigadeDetail() {
 
   function setTab(t: 'dashboard' | 'report') {
     router.push(`/brigades/detail?id=${id}&tab=${t}`)
+  }
+
+  async function downloadPdf() {
+    const token = getToken()
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/brigades/${id}/report?format=pdf`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    const blob = await res.blob()
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `reporte-brigada-${id}.pdf`
+    a.click()
+    URL.revokeObjectURL(url)
   }
 
   return (
@@ -107,6 +127,9 @@ function BrigadeDetail() {
                   <p className="text-xs text-slate-500 mt-1">
                     {report.by_registration_mode.brigade_doctor} brigada · {report.by_registration_mode.self} propio
                   </p>
+                  <p className="text-xs text-slate-500 mt-1">
+                    Total consultas: {report.total_consultations}
+                  </p>
                 </div>
                 <div className="bg-slate-900 rounded-lg p-4">
                   <p className="text-sky-400 text-sm font-semibold mb-3">Top diagnósticos</p>
@@ -123,6 +146,27 @@ function BrigadeDetail() {
                     </div>
                   )}
                 </div>
+                <div className="bg-slate-900 rounded-lg p-4">
+                  <p className="text-sky-400 text-sm font-semibold mb-3">Medicamentos más usados</p>
+                  {report.top_medications.length === 0 ? (
+                    <p className="text-slate-500 text-sm">Sin medicamentos aún.</p>
+                  ) : (
+                    <div className="flex flex-col gap-2">
+                      {report.top_medications.map((m, i) => (
+                        <div key={m.name ?? i} className="flex justify-between text-sm">
+                          <span className="text-slate-400">{m.name}</span>
+                          <span className="text-white font-medium">{m.count}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                <button
+                  onClick={downloadPdf}
+                  className="bg-sky-600 hover:bg-sky-500 text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors self-start"
+                >
+                  Descargar PDF
+                </button>
               </div>
             ) : null
           )}

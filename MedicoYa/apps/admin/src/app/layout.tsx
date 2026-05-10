@@ -15,7 +15,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     if (!token && pathname !== '/') router.replace('/')
     if (token && pathname === '/') {
       const role = getRole()
-      router.replace(role === 'coordinator' ? '/brigades' : '/doctors')
+      if (role === 'coordinator') router.replace('/brigades')
+      else if (role === 'doctor') router.replace('/my-consultations')
+      else router.replace('/doctors')
     }
   }, [pathname, router])
 

@@ -12,11 +12,15 @@ const COORDINATOR_NAV = [
   { href: '/brigades', label: '🚑 Brigadas' },
 ]
 
+const DOCTOR_NAV = [
+  { href: '/my-consultations', label: '📋 Mis consultas' },
+]
+
 export default function Sidebar() {
   const pathname = usePathname()
   const router   = useRouter()
   const role     = getRole()
-  const nav      = role === 'coordinator' ? COORDINATOR_NAV : ADMIN_NAV
+  const nav      = role === 'coordinator' ? COORDINATOR_NAV : role === 'doctor' ? DOCTOR_NAV : ADMIN_NAV
 
   function logout() {
     clearToken()

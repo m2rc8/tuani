@@ -103,7 +103,7 @@ export class BrigadeService {
   }
 
   async getReport(brigadeId: string) {
-    const [topDiagnoses, patientCount, selfCount, brigadeCount] = await Promise.all([
+    const [topDiagnoses, patientCount, selfCount, brigadeCount, brigade, totalConsultations, medRows] = await Promise.all([
       this.db.consultation.groupBy({
         by:      ['diagnosis'],
         where:   { brigade_id: brigadeId, diagnosis: { not: null } },
@@ -118,11 +118,32 @@ export class BrigadeService {
       this.db.patient.count({
         where: { registration_mode: RegistrationMode.brigade_doctor, consultations: { some: { brigade_id: brigadeId } } },
       }),
+      this.db.brigade.findUnique({
+        where:  { id: brigadeId },
+        select: { name: true, community: true, start_date: true, end_date: true },
+      }),
+      this.db.consultation.count({ where: { brigade_id: brigadeId } }),
+      this.db.$queryRaw<{ name: string; count: bigint }[]>`
+        SELECT m->>'name' AS name, COUNT(*) AS count
+        FROM prescriptions p
+        JOIN consultations c ON c.id = p.consultation_id
+        CROSS JOIN LATERAL jsonb_array_elements(p.medications) AS m
+        WHERE c.brigade_id = ${brigadeId}::uuid
+        GROUP BY m->>'name'
+        ORDER BY count DESC
+        LIMIT 5
+      `,
     ])
     return {
+      brigade_name:         brigade?.name ?? '',
+      community:            brigade?.community ?? '',
+      start_date:           brigade?.start_date ?? null,
+      end_date:             brigade?.end_date ?? null,
       patient_count:        patientCount,
+      total_consultations:  totalConsultations,
       by_registration_mode: { self: selfCount, brigade_doctor: brigadeCount },
       top_diagnoses:        topDiagnoses.map(d => ({ diagnosis: d.diagnosis!, count: d._count.diagnosis })),
+      top_medications:      medRows.map(r => ({ name: r.name, count: Number(r.count) })),
     }
   }
 

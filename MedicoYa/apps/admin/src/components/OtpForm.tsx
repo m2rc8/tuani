@@ -42,13 +42,15 @@ export default function OtpForm() {
       const body = await res.json()
       if (!res.ok) { setError(body.error ?? 'Código inválido'); return }
       const role = body.user?.role
-      if (role !== 'admin' && role !== 'coordinator') {
+      if (role !== 'admin' && role !== 'coordinator' && role !== 'doctor') {
         setError('Acceso denegado.')
         return
       }
       setToken(body.token)
-      setRole(role as 'admin' | 'coordinator')
-      router.replace(role === 'coordinator' ? '/brigades' : '/doctors')
+      setRole(role as 'admin' | 'coordinator' | 'doctor')
+      if (role === 'coordinator') router.replace('/brigades')
+      else if (role === 'doctor') router.replace('/my-consultations')
+      else router.replace('/doctors')
     } finally {
       setLoading(false)
     }

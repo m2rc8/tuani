@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express'
 import { PrismaClient, Role } from '@prisma/client'
 import { z } from 'zod'
+import PDFDocument from 'pdfkit'
 import { requireAuth, requireRole } from '../middleware/requireAuth'
 import { requireBrigadeOwner } from '../middleware/requireBrigade'
 import { BrigadeService } from '../services/BrigadeService'
@@ -148,6 +149,80 @@ export function createBrigadesRouter(db: PrismaClient): Router {
     async (req: Request, res: Response): Promise<void> => {
       try {
         const report = await service.getReport(req.params.id)
+
+        if (req.query.format === 'pdf') {
+          const doc = new PDFDocument({ margin: 50, size: 'A4' })
+
+          res.setHeader('Content-Type', 'application/pdf')
+          res.setHeader('Content-Disposition', 'attachment; filename="reporte-brigada.pdf"')
+          doc.pipe(res)
+
+          // Header
+          doc.fontSize(20).font('Helvetica-Bold').text('MédicoYa — Reporte de Brigada', { align: 'center' })
+          doc.moveDown(0.5)
+          doc.fontSize(10).font('Helvetica').fillColor('#666666')
+            .text(`Generado: ${new Date().toLocaleDateString('es-HN', { year: 'numeric', month: 'long', day: 'numeric' })}`, { align: 'center' })
+          doc.fillColor('#000000')
+          doc.moveDown(1)
+
+          // Brigade info
+          doc.fontSize(12).font('Helvetica-Bold').text('Información de la Brigada')
+          doc.moveDown(0.3)
+          doc.fontSize(11).font('Helvetica')
+          doc.text(`Nombre: ${report.brigade_name}`)
+          doc.text(`Comunidad: ${report.community}`)
+          if (report.start_date) {
+            doc.text(`Fecha inicio: ${new Date(report.start_date).toLocaleDateString('es-HN')}`)
+          }
+          if (report.end_date) {
+            doc.text(`Fecha fin: ${new Date(report.end_date).toLocaleDateString('es-HN')}`)
+          }
+          doc.moveDown(1)
+
+          // Resumen
+          doc.fontSize(12).font('Helvetica-Bold').text('Resumen')
+          doc.moveDown(0.3)
+          doc.fontSize(11).font('Helvetica')
+          doc.text(`Total de pacientes: ${report.patient_count}`)
+          doc.text(`Total de consultas: ${report.total_consultations}`)
+          doc.text(`Registrados en brigada: ${report.by_registration_mode.brigade_doctor}`)
+          doc.text(`Registrados por cuenta propia: ${report.by_registration_mode.self}`)
+          doc.moveDown(1)
+
+          // Top diagnósticos
+          doc.fontSize(12).font('Helvetica-Bold').text('Top Diagnósticos')
+          doc.moveDown(0.3)
+          doc.fontSize(11).font('Helvetica')
+          if (report.top_diagnoses.length === 0) {
+            doc.text('Sin diagnósticos registrados.')
+          } else {
+            report.top_diagnoses.forEach((d, i) => {
+              doc.text(`${i + 1}. ${d.diagnosis} (${d.count})`)
+            })
+          }
+          doc.moveDown(1)
+
+          // Medicamentos más usados
+          doc.fontSize(12).font('Helvetica-Bold').text('Medicamentos más usados')
+          doc.moveDown(0.3)
+          doc.fontSize(11).font('Helvetica')
+          if (report.top_medications.length === 0) {
+            doc.text('Sin medicamentos registrados.')
+          } else {
+            report.top_medications.forEach((m, i) => {
+              doc.text(`${i + 1}. ${m.name} (${m.count})`)
+            })
+          }
+
+          // Footer
+          doc.moveDown(2)
+          doc.fontSize(9).fillColor('#999999')
+            .text('MédicoYa — Sistema de Telemedicina', { align: 'center' })
+
+          doc.end()
+          return
+        }
+
         res.json(report)
       } catch {
         res.status(500).json({ error: 'Internal server error' })
