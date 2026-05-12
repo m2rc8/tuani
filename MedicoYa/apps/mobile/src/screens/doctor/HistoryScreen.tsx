@@ -19,11 +19,12 @@ interface ConsultationListItem {
   patient?: { user?: { name?: string | null } } | null
 }
 
-interface DentalRecordListItem {
+interface DentalVisitListItem {
   id: string
-  record_date: string
+  file_id: string
+  visit_date: string
   referral_to?: string | null
-  patient: { user: { name: string | null } }
+  file: { patient: { user: { name?: string | null } } }
   treatments: { id: string }[]
 }
 
@@ -41,7 +42,7 @@ export default function DoctorHistoryScreen({ navigation }: any) {
   const [tab, setTab] = useState<'medical' | 'dental'>('medical')
 
   const [medical, setMedical] = useState<ConsultationListItem[]>([])
-  const [dental,  setDental]  = useState<DentalRecordListItem[]>([])
+  const [dental,  setDental]  = useState<DentalVisitListItem[]>([])
   const [loadingMedical, setLoadingMedical] = useState(true)
   const [loadingDental,  setLoadingDental]  = useState(true)
 
@@ -53,7 +54,7 @@ export default function DoctorHistoryScreen({ navigation }: any) {
       .finally(() => setLoadingMedical(false))
 
     setLoadingDental(true)
-    api.get<DentalRecordListItem[]>('/api/dental/records/mine')
+    api.get<DentalVisitListItem[]>('/api/dental/dentist/mine/visits')
       .then(({ data }) => setDental(data))
       .catch(() => {})
       .finally(() => setLoadingDental(false))
@@ -67,8 +68,8 @@ export default function DoctorHistoryScreen({ navigation }: any) {
     }
   }
 
-  const handlePressDental = (item: DentalRecordListItem) => {
-    navigation.navigate('DentalRecordScreen', { recordId: item.id })
+  const handlePressDental = (item: DentalVisitListItem) => {
+    navigation.navigate('DentalRecordScreen', { visitId: item.id, fileId: item.file_id })
   }
 
   const loading = tab === 'medical' ? loadingMedical : loadingDental
@@ -136,8 +137,8 @@ export default function DoctorHistoryScreen({ navigation }: any) {
             keyExtractor={(i) => i.id}
             contentContainerStyle={styles.list}
             renderItem={({ item }) => {
-              const date = new Date(item.record_date).toLocaleDateString()
-              const patientName = item.patient?.user?.name ?? '—'
+              const date = new Date(item.visit_date).toLocaleDateString()
+              const patientName = item.file?.patient?.user?.name ?? '—'
               return (
                 <TouchableOpacity style={styles.card} onPress={() => handlePressDental(item)}>
                   <View style={styles.row}>
