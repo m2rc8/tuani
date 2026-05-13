@@ -59,6 +59,11 @@ export default function DentalRecordScreen({ navigation: _navigation, route }: a
   const [treatmentPlan, setTreatmentPlan] = useState('')
   const [savingPlan,    setSavingPlan]    = useState(false)
 
+  // Hygiene
+  const [hygieneNotes,  setHygieneNotes]  = useState('')
+  const [cpodIndex,     setCpodIndex]      = useState('')
+  const [savingHygiene, setSavingHygiene]  = useState(false)
+
   // Treatment form
   const [procedure,   setProcedure]   = useState('')
   const [txNotes,     setTxNotes]     = useState('')
@@ -85,6 +90,8 @@ export default function DentalRecordScreen({ navigation: _navigation, route }: a
         setFileTeeth(fileRes.data.teeth)
         setReferralTo(visitRes.data.referral_to ?? '')
         setTreatmentPlan(visitRes.data.treatment_plan ?? '')
+        setHygieneNotes(visitRes.data.hygiene_notes ?? '')
+        setCpodIndex(visitRes.data.cpod_index?.toString() ?? '')
       })
       .catch(() => Alert.alert(t('common.error_generic')))
       .finally(() => setLoading(false))
@@ -153,6 +160,26 @@ export default function DentalRecordScreen({ navigation: _navigation, route }: a
       Alert.alert(t('common.error_generic'))
     } finally {
       setSavingPlan(false)
+    }
+  }
+
+  const handleSaveHygiene = async () => {
+    const cpod = cpodIndex.trim() ? parseInt(cpodIndex.trim(), 10) : null
+    if (cpodIndex.trim() && (isNaN(cpod!) || cpod! < 0 || cpod! > 32)) {
+      Alert.alert('CPOD inválido', 'Debe ser un número entre 0 y 32')
+      return
+    }
+    setSavingHygiene(true)
+    try {
+      await api.patch(`/api/dental/visits/${visitId}`, {
+        hygiene_notes: hygieneNotes.trim() || null,
+        cpod_index:    cpod,
+      })
+      Alert.alert('Guardado')
+    } catch {
+      Alert.alert(t('common.error_generic'))
+    } finally {
+      setSavingHygiene(false)
     }
   }
 
@@ -264,6 +291,37 @@ export default function DentalRecordScreen({ navigation: _navigation, route }: a
               : <Text style={styles.saveBtnText}>Guardar odontograma</Text>}
           </TouchableOpacity>
         )}
+
+        {/* Hygiene + CPOD */}
+        <Text style={styles.sectionTitle}>Higiene oral</Text>
+        <TextInput
+          style={[styles.input, { minHeight: 80 }]}
+          value={hygieneNotes}
+          onChangeText={setHygieneNotes}
+          placeholder="Observaciones de higiene oral..."
+          placeholderTextColor={colors.text.muted}
+          multiline
+          numberOfLines={3}
+        />
+        <Text style={styles.sectionTitle}>Índice CPOD</Text>
+        <TextInput
+          style={styles.input}
+          value={cpodIndex}
+          onChangeText={setCpodIndex}
+          placeholder="0 – 32"
+          placeholderTextColor={colors.text.muted}
+          keyboardType="numeric"
+          maxLength={2}
+        />
+        <TouchableOpacity
+          style={[styles.saveBtn, savingHygiene && styles.saveBtnDisabled]}
+          onPress={handleSaveHygiene}
+          disabled={savingHygiene}
+        >
+          {savingHygiene
+            ? <ActivityIndicator color={colors.text.inverse} />
+            : <Text style={styles.saveBtnText}>Guardar higiene</Text>}
+        </TouchableOpacity>
 
         {/* Treatment plan */}
         <Text style={styles.sectionTitle}>Plan de tratamiento</Text>

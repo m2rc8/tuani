@@ -6,6 +6,7 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useFocusEffect } from '@react-navigation/native'
 import api from '../../lib/api'
+import { useBrigadeStore } from '../../store/brigadeStore'
 import type { DentalPatientFile, DentalVisit } from '../../lib/dentalTypes'
 import Odontogram from './components/Odontogram'
 import { tokens } from '../../theme/tokens'
@@ -28,6 +29,8 @@ function dentistLabel(visit: DentalVisit): string {
 export default function DentalExpedienteScreen({ navigation, route }: any) {
   const { fileId, patientName } = route.params as { fileId: string; patientName?: string }
   const insets = useSafeAreaInsets()
+
+  const activeBrigade = useBrigadeStore(s => s.activeBrigade)
 
   const [file,     setFile]     = useState<DentalPatientFile | null>(null)
   const [loading,  setLoading]  = useState(true)
@@ -52,7 +55,10 @@ export default function DentalExpedienteScreen({ navigation, route }: any) {
   async function handleNewVisit() {
     setCreating(true)
     try {
-      const { data } = await api.post<{ id: string }>(`/api/dental/files/${fileId}/visits`, {})
+      const brigadeBody = activeBrigade?.brigade_type === 'dental'
+        ? { brigade_id: activeBrigade.id }
+        : {}
+      const { data } = await api.post<{ id: string }>(`/api/dental/files/${fileId}/visits`, brigadeBody)
       navigation.navigate('DentalRecordScreen', { visitId: data.id, fileId })
     } catch {
       Alert.alert('Error al crear visita')
