@@ -149,7 +149,8 @@
     "minor_not_found": "No minor patient found with that name.",
     "create_minor": "Register new minor",
     "new_minor": "New minor patient",
-    "search_existing": "Search existing patient"
+    "search_existing": "Search existing patient",
+    "dentist_label": "Dentist"
   },
   "brigade": {
     "title": "Brigades",

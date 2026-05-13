@@ -149,7 +149,8 @@
     "minor_not_found": "No se encontró ningún menor con ese nombre.",
     "create_minor": "Registrar nuevo menor",
     "new_minor": "Nuevo paciente menor",
-    "search_existing": "Buscar paciente existente"
+    "search_existing": "Buscar paciente existente",
+    "dentist_label": "Dentista"
   },
   "brigade": {
     "title": "Brigadas",

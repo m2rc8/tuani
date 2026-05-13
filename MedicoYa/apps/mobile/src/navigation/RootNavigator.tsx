@@ -7,6 +7,7 @@ import WaitingScreen from '../screens/patient/WaitingScreen'
 import ConsultationScreen from '../screens/patient/ConsultationScreen'
 import PrescriptionScreen from '../screens/patient/PrescriptionScreen'
 import VideoCallScreen from '../screens/shared/VideoCallScreen'
+import PatientDentalVisitScreen from '../screens/patient/PatientDentalVisitScreen'
 import DoctorRoot from './DoctorStack'
 
 export type PatientStackParamList = {
@@ -15,6 +16,7 @@ export type PatientStackParamList = {
   ConsultationScreen: { consultationId: string }
   PrescriptionScreen: { consultationId: string }
   VideoCallScreen: { consultationId: string }
+  PatientDentalVisitScreen: { visitId: string; fileId: string }
 }
 
 const PatientStack = createNativeStackNavigator<PatientStackParamList>()
@@ -30,6 +32,11 @@ function PatientRoot() {
       />
       <PatientStack.Screen name="ConsultationScreen" component={ConsultationScreen} />
       <PatientStack.Screen name="PrescriptionScreen" component={PrescriptionScreen} />
+      <PatientStack.Screen
+        name="PatientDentalVisitScreen"
+        component={PatientDentalVisitScreen}
+        options={{ headerShown: true, title: 'Visita dental' }}
+      />
       <PatientStack.Screen
         name="VideoCallScreen"
         component={VideoCallScreen}
