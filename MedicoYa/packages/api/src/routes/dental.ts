@@ -134,6 +134,18 @@ export function createDentalRouter(db: PrismaClient): Router {
   )
 
   router.get(
+    '/files/mine',
+    requireAuth,
+    async (req: Request, res: Response): Promise<void> => {
+      try {
+        const file = await service.getFileByPatient(req.user!.sub)
+        if (!file) { res.status(404).json({ error: 'No dental file' }); return }
+        res.json(file)
+      } catch { res.status(500).json({ error: 'Internal server error' }) }
+    }
+  )
+
+  router.get(
     '/files/:fileId',
     requireAuth,
     async (req: Request, res: Response): Promise<void> => {
