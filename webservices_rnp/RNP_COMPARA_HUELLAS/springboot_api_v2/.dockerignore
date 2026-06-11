@@ -1,0 +1,9 @@
+.git
+.gradle
+.vscode
+.idea
+**/*.iml
+src/test/
+README.md
+data/
+docs/

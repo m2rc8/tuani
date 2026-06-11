@@ -1,0 +1,31 @@
+services:
+  fingerprint-api:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - API_KEY=${API_KEY:?API_KEY env var is required}
+      - HUELLA_BASE_PATH=/data/huellas
+      - AUDIT_FILE_PATH=/data/logs/requests-audit.log
+    volumes:
+      - ./data/huellas:/data/huellas
+      - ./data/logs:/data/logs
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./certs:/etc/nginx/certs:ro
+    depends_on:
+      fingerprint-api:
+        condition: service_healthy
+    restart: unless-stopped
