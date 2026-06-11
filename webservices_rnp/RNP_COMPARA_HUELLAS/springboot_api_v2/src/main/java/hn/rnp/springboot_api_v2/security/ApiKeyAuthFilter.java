@@ -11,6 +11,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 
 @Component
 public class ApiKeyAuthFilter extends OncePerRequestFilter {
@@ -23,7 +25,9 @@ public class ApiKeyAuthFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
         String provided = request.getHeader("X-API-Key");
-        if (apiKey.equals(provided)) {
+        if (provided != null && MessageDigest.isEqual(
+                apiKey.getBytes(StandardCharsets.UTF_8),
+                provided.getBytes(StandardCharsets.UTF_8))) {
             filterChain.doFilter(request, response);
             return;
         }

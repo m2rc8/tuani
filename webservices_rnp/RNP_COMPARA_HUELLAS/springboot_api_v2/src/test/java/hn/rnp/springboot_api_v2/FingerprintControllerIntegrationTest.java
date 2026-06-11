@@ -26,10 +26,11 @@ class FingerprintControllerIntegrationTest {
 
     @BeforeAll
     static void loadImages() throws IOException {
-        byte[] img1 = FingerprintControllerIntegrationTest.class
-                .getResourceAsStream("/huellas/demo_1.png").readAllBytes();
-        byte[] img2 = FingerprintControllerIntegrationTest.class
-                .getResourceAsStream("/huellas/demo_2.png").readAllBytes();
+        var stream1 = FingerprintControllerIntegrationTest.class.getResourceAsStream("/huellas/demo_1.png");
+        var stream2 = FingerprintControllerIntegrationTest.class.getResourceAsStream("/huellas/demo_2.png");
+        if (stream1 == null || stream2 == null) throw new IllegalStateException("Demo fingerprint images missing from test resources");
+        byte[] img1 = stream1.readAllBytes();
+        byte[] img2 = stream2.readAllBytes();
         demo1Base64 = Base64.getEncoder().encodeToString(img1);
         demo2Base64 = Base64.getEncoder().encodeToString(img2);
     }
