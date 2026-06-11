@@ -2,7 +2,6 @@ package hn.rnp.springboot_api_v2.security;
 
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
-import io.github.bucket4j.Refill;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -33,7 +32,10 @@ public class RateLimitFilter extends OncePerRequestFilter {
 
     @PostConstruct
     void init() {
-        bandwidth = Bandwidth.classic(capacity, Refill.greedy(refillPerSecond, Duration.ofSeconds(1)));
+        bandwidth = Bandwidth.builder()
+                .capacity(capacity)
+                .refillGreedy(refillPerSecond, Duration.ofSeconds(1))
+                .build();
     }
 
     @Override
