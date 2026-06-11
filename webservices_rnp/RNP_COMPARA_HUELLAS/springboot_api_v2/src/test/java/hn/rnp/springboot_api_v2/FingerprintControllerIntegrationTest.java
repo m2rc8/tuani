@@ -104,14 +104,9 @@ class FingerprintControllerIntegrationTest {
                 new HttpEntity<>(body, headers),
                 String.class);
 
-        // Accept 200 (success) or 500 (SourceAFIS rejected low-quality synthetic image)
-        // — either way the endpoint is reachable and auth passed
-        assertThat(response.getStatusCode().is2xxSuccessful()
-                || response.getStatusCode().is5xxServerError()).isTrue();
-        if (response.getStatusCode().is2xxSuccessful()) {
-            assertThat(response.getBody()).contains("resultado");
-            assertThat(response.getBody()).contains("score");
-        }
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).contains("resultado");
+        assertThat(response.getBody()).contains("score");
     }
 
     @Test
@@ -145,12 +140,8 @@ class FingerprintControllerIntegrationTest {
                 new HttpEntity<>(form, headers),
                 String.class);
 
-        // Accept 200 (success) or 500 (SourceAFIS rejected low-quality synthetic image)
-        assertThat(response.getStatusCode().is2xxSuccessful()
-                || response.getStatusCode().is5xxServerError()).isTrue();
-        if (response.getStatusCode().is2xxSuccessful()) {
-            assertThat(response.getBody()).contains("type");
-            assertThat(response.getBody()).contains("resp");
-        }
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).contains("type");
+        assertThat(response.getBody()).contains("resp");
     }
 }
