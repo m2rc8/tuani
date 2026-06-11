@@ -73,4 +73,17 @@ class FingerprintControllerIntegrationTest {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
     }
+
+    @Test
+    void getValidateFingerprintReturns405() {
+        HttpHeaders headers = keyHeaders();
+
+        ResponseEntity<String> response = restTemplate.exchange(
+                "/ValidateFinger/validate_fingerprint",
+                HttpMethod.GET,
+                new HttpEntity<>(headers),
+                String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.METHOD_NOT_ALLOWED);
+    }
 }

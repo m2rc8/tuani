@@ -88,19 +88,6 @@ public class FingerprintController {
         }
     }
 
-    @GetMapping("/ValidateFinger/validate_fingerprint")
-    public LegacyValidateResponse validateFingerprintLegacyGet(
-            @RequestParam String huella1,
-            @RequestParam String huella2,
-            @RequestParam(name = "user_rnp_access", required = false) String userRnpAccess,
-            @RequestParam(name = "user_cont_access", required = false) String userContAccess,
-            @RequestParam(name = "user_app_access", required = false) String userAppAccess,
-            @RequestParam(name = "dpi", required = false) Integer dpi,
-            HttpServletRequest request) {
-
-        return handleLegacyRequest(huella1, huella2, userRnpAccess, userContAccess, userAppAccess, dpi, request, "GET /ValidateFinger/validate_fingerprint");
-    }
-
     @PostMapping(value = "/ValidateFinger/validate_fingerprint", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public LegacyValidateResponse validateFingerprintLegacyPost(
             @RequestBody MultiValueMap<String, String> formData,
