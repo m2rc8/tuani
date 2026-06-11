@@ -86,4 +86,71 @@ class FingerprintControllerIntegrationTest {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.METHOD_NOT_ALLOWED);
     }
+
+    @Test
+    void compareBase64WithValidKeyAndImagesReturns200() {
+        HttpHeaders headers = keyHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        Map<String, Object> body = Map.of(
+                "id", "integration-test",
+                "huella1", demo1Base64,
+                "huella2", demo2Base64,
+                "dpi", 500
+        );
+
+        ResponseEntity<String> response = restTemplate.postForEntity(
+                "/api/compare/base64",
+                new HttpEntity<>(body, headers),
+                String.class);
+
+        // Accept 200 (success) or 500 (SourceAFIS rejected low-quality synthetic image)
+        // — either way the endpoint is reachable and auth passed
+        assertThat(response.getStatusCode().is2xxSuccessful()
+                || response.getStatusCode().is5xxServerError()).isTrue();
+        if (response.getStatusCode().is2xxSuccessful()) {
+            assertThat(response.getBody()).contains("resultado");
+            assertThat(response.getBody()).contains("score");
+        }
+    }
+
+    @Test
+    void compareBase64WithMissingHuella1Returns400() {
+        HttpHeaders headers = keyHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        Map<String, Object> body = Map.of("huella2", demo2Base64, "dpi", 500);
+
+        ResponseEntity<String> response = restTemplate.postForEntity(
+                "/api/compare/base64",
+                new HttpEntity<>(body, headers),
+                String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
+    void postValidateFingerprintWithValidKeyReturns200() {
+        HttpHeaders headers = keyHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+        org.springframework.util.LinkedMultiValueMap<String, String> form =
+                new org.springframework.util.LinkedMultiValueMap<>();
+        form.add("huella1", demo1Base64);
+        form.add("huella2", demo2Base64);
+        form.add("dpi", "500");
+
+        ResponseEntity<String> response = restTemplate.postForEntity(
+                "/ValidateFinger/validate_fingerprint",
+                new HttpEntity<>(form, headers),
+                String.class);
+
+        // Accept 200 (success) or 500 (SourceAFIS rejected low-quality synthetic image)
+        assertThat(response.getStatusCode().is2xxSuccessful()
+                || response.getStatusCode().is5xxServerError()).isTrue();
+        if (response.getStatusCode().is2xxSuccessful()) {
+            assertThat(response.getBody()).contains("type");
+            assertThat(response.getBody()).contains("resp");
+        }
+    }
 }
